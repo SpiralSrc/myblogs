@@ -1,11 +1,10 @@
-import BlogForm from "@/components/shared/BlogForm";
 import React from "react";
 
-export default function WritePost() {
+export default function page() {
   return (
     <main className="wrapper">
       <div>
-        <BlogForm />
+        <h1>Post</h1>
       </div>
     </main>
   );
