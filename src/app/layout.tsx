@@ -4,7 +4,10 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const baseUrl = process.env.MY_URL as string;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(`${baseUrl}`),
   title: "SpiralSrc Blogs",
   description: "SpiralSrc blogs",
 };
@@ -17,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="w-screen h-screen">{children}</main>
+        <div className="w-screen h-screen">{children}</div>
       </body>
     </html>
   );
