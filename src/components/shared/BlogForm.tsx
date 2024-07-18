@@ -14,7 +14,7 @@ const BlogForm = () => {
           name=""
           id=""
           placeholder="Tell your story..."
-          className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl border border-transparent focus:ring-transparent focus:border focus:border-red-400/70"
+          className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
         />
         <SubmitButton>Publish</SubmitButton>
       </Form>

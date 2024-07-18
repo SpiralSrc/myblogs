@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function page() {
+export default function page({ params }: { params: { id: string } }) {
   return (
     <main className="wrapper">
       <div>
