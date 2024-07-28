@@ -5,41 +5,42 @@
 /* Firefox */
 * {
   scrollbar-width: none;
-  }
-    
-  
-  /* Chrome, Edge, and Safari */
-  *::-webkit-scrollbar {
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
   width: 0;
   display: none;
-  }
-    
-  
-  body::-webkit-scrollbar {
+}
+
+body::-webkit-scrollbar {
   display: none;
   width: 0;
+}
+
+@layer base {
+  body {
+    color: antiquewhite;
+    background-color: rgb(38, 37, 37);
+    overflow: hidden;
+    scrollbar-width: 0;
   }
 
-body {
-  color: antiquewhite;
-  background-color: rgb(38, 37, 37);
-  overflow: hidden;
-  scrollbar-width: 0;
+  main {
+    @apply w-screen min-h-screen;
+  }
 }
 
 @layer components {
-  .container {
-    @apply w-full h-full m-auto
-  }
   .wrapper {
-    @apply max-w-7xl mx-auto flex flex-col py-24
-
+    @apply max-w-7xl mx-auto flex flex-col py-24 px-5 xl:px-2;
   }
 }
 
 @layer utilities {
   .btn {
     padding: 10px 5px;
+    transition: all 500ms ease-in-out;
   }
   .smooth-effect {
     transition: all 500ms ease-in-out;
