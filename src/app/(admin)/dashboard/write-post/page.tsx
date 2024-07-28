@@ -3,10 +3,10 @@ import React from "react";
 
 export default function WritePost() {
   return (
-    <main className="wrapper">
-      <div>
+    <section>
+      <div className="wrapper">
         <BlogForm />
       </div>
-    </main>
+    </section>
   );
 }
