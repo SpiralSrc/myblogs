@@ -7,7 +7,7 @@ import SubmitButton from "../reusable_ui/SubmitButton";
 import { CategorySchema, PostSchema } from "@/lib/validation";
 import { createPost, deleteImage } from "@/actions/action";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
-import { CloudUpload, Trash2 } from "lucide-react";
+import { CloudUpload, Trash2, X } from "lucide-react";
 
 type AddPostProps = {
   categories?: CategorySchema | undefined;
@@ -16,18 +16,21 @@ type AddPostProps = {
 
 const BlogForm: React.FC<AddPostProps> = ({ post }) => {
   const [title, setTitle] = useState(post?.title || "");
-  const [desc, setDesc] = useState(post?.desc || "");
-  const [content, setContent] = useState(post?.content || "");
-  const [tags, setTags] = useState<any>(post?.tags || "");
-  const [category, setCategory] = useState(post?.category || "");
-  const [imageUrl, setImageUrl] = useState<any>(post?.imageUrl || "");
+  const [desc, setDesc] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+  const [category, setCategory] = useState("");
+  const [imageUrl, setImageUrl] = useState<any>("");
 
   const handleFormSubmit = async (formData: FormData) => {
     formData.set("imageUrl", imageUrl?.secure_url || imageUrl || "");
+    formData.getAll("tags");
 
     const result = post && (await createPost(formData));
   };
 
+  //cloudinary image delete
   const handleImageDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
@@ -47,8 +50,24 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
     }
   };
 
+  //Adding/Deleting Tags
+  const addTag = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    if (tagInput.trim() !== "") {
+      setTags((prev) => [...prev, tagInput]);
+      setTagInput("");
+    }
+  };
+
+  const deleteTag = (id: number) => {
+    setTags((prev) => prev.filter((_, i) => i !== id));
+  };
+
   return (
-    <div className="wrapper">
+    <div>
       <h1 className="text-4xl text-center font-bold mb-10">
         Write a post
       </h1>
@@ -57,6 +76,7 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
           type="hidden"
           name="imageUrl"
           value={imageUrl.secure_url || ""}
+          onChange={(e) => setImageUrl(e.target.value)}
           placeholder=""
         />
         <div className="w-full flex flex-col gap-5 justify-start items-start">
@@ -116,12 +136,38 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
           onChange={(e) => setDesc(e.target.value)}
           placeholder="Description"
         />
-        <Input
-          type="text"
-          name="tags"
-          value={tags}
-          placeholder="Add a tag..."
-        />
+        <div className="w-full flex flex-row gap-2">
+          {tags &&
+            tags.map((tag, i) => {
+              return (
+                <div
+                  key={i}
+                  className="relative flex py-1 pl-1 pr-4 bg-red-400/70 rounded-md"
+                >
+                  <p>{tag}</p>
+                  <X
+                    size={15}
+                    onClick={(e: any) => {
+                      e.stopPropagation();
+                      deleteTag(i);
+                    }}
+                    className="absolute top-0 right-0 rounded-md bg-red-300 text-red-500/50 hover:text-red-500"
+                  />
+                </div>
+              );
+            })}
+        </div>
+        <div className="w-1/2 flex justify-center items-center gap-1">
+          <Input
+            type="text"
+            name="tags"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            placeholder="Add a tag..."
+          />
+          <SubmitButton onClick={addTag}>Add</SubmitButton>
+        </div>
+
         <textarea
           name="content"
           value={content}
@@ -133,6 +179,7 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
           name="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
+          className="py-2 px-5 rounded-xl border border-red-400/70 bg-red-400/70 transition-all focus:outline-none hover:text-red-400/70 hover:bg-red-200"
         >
           <option value="">Choose category...</option>
         </select>

@@ -35,7 +35,9 @@ export async function deleteImage(publicId: string) {
   }
 }
 
-//----------------------------- Add Category ---------------------------------
+//----------------------------- Category ---------------------------------
+
+//create category
 export async function createCategory(formData: FormData) {
   // const { userId } = auth()
 
@@ -55,11 +57,11 @@ export async function createCategory(formData: FormData) {
       });
     }
 
-    const newCategory = new Category({
+    const newCategory = await Category.create({
       name,
     });
 
-    await newCategory.save();
+    newCategory.save();
   } catch (error) {
     console.log(error);
     return new NextResponse("Error adding category", { status: 500 });
@@ -68,6 +70,23 @@ export async function createCategory(formData: FormData) {
   revalidatePath("/dashboard/categories/add-category");
   redirect("/dashboard/categories");
 }
+
+//fetch category
+export const getCategories = async () => {
+  try {
+    dbConnect();
+
+    const data = await Category.find({}).sort({
+      name: "asc",
+    });
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//----------------------------- Post ---------------------------------
 
 //Create Post
 export async function createPost(formData: FormData) {

@@ -12,6 +12,7 @@ export const postSchema = z.object({
 
 export const categorySchema = z.object({
   name: z.string(),
+  // posts: z.array(z.string()).optional(),
 });
 
 export type PostSchema = z.infer<typeof postSchema>;

@@ -29,6 +29,18 @@ body::-webkit-scrollbar {
   main {
     @apply w-screen min-h-screen;
   }
+
+  table {
+    @apply w-full h-full border border-pink-400/30 rounded-xl border-collapse flex flex-col;
+  }
+
+  tr {
+    @apply w-full flex justify-between border-b border-pink-400/30;
+  }
+
+  td {
+    @apply p-3;
+  }
 }
 
 @layer components {
@@ -39,8 +51,9 @@ body::-webkit-scrollbar {
 
 @layer utilities {
   .btn {
-    padding: 10px 5px;
     transition: all 500ms ease-in-out;
+
+    @apply hover:text-red-400/70 py-2 px-3;
   }
   .smooth-effect {
     transition: all 500ms ease-in-out;

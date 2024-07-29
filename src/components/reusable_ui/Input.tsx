@@ -2,17 +2,27 @@ import React from "react";
 
 interface inputProps {
   type: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  onChange: (e: any) => void;
+  defaultValue?: string;
   placeholder: string;
-  name?: string;
-  value?: string;
+  name: string;
+  value: string;
 }
 
-const Input = ({ type, placeholder, name, value }: inputProps) => {
+const Input = ({
+  type,
+  placeholder,
+  name,
+  value,
+  defaultValue,
+  onChange,
+}: inputProps) => {
   return (
     <input
       type={type}
       name={name}
+      onChange={onChange}
+      defaultValue={defaultValue}
       value={value}
       placeholder={placeholder}
       className="w-full py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
