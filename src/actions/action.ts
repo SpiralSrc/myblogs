@@ -8,6 +8,12 @@ import cloudinary from "cloudinary";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
+import {
+  StringMap,
+  StringToBooleanMap,
+  ValidationResponse,
+} from "@/app/_types/validationResponseType";
+import { parseWithZod } from "@conform-to/zod";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -88,47 +94,69 @@ export const getCategories = async () => {
 
 //----------------------------- Post ---------------------------------
 
+// export interface CreatePostErrors<T> {
+//   errors?: {
+//     title?: string[];
+//     desc?: string[];
+//     imageUrl?: string[];
+//     tags?: string[] | null;
+//     content?: string[];
+//     category?: string[];
+//   };
+//   success: boolean;
+//   data?: T
+// }
+
 //Create Post
-export async function createPost(formData: FormData) {
+export async function createPost(
+  prevState: unknown,
+  formData: FormData
+) {
   // const { userId } = auth()
 
   // if(!userId) {
   //     return new NextResponse("Unauthorized", {status: 401})
   // }
+  // const fields = Object.fromEntries(formData.entries());
 
-  const fields = Object.fromEntries(formData.entries());
+  // const result = postSchema.safeParse({ ...fields });
 
-  const validatedFields = postSchema.safeParse({ ...fields });
+  const submission = parseWithZod(formData, { schema: postSchema });
 
-  if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
-    return { success: false, message: "Invalid form data" + "error" };
+  if (submission.status !== "success") {
+    return submission.reply();
   }
 
-  const imageUrl = validatedFields.data.imageUrl;
+  const imageUrl = submission.value.imageUrl;
   const publicId = imageUrl
     .split("/")
     .slice(-2)
     .join("/")
     .split(".")[0];
 
+  const flattenTags = submission.value.tags?.flatMap((tagString) =>
+    tagString.split(",").map((tag) => tag.trim())
+  );
+
   try {
     await dbConnect();
 
-    if (
-      !mongoose.Types.ObjectId.isValid(validatedFields.data.category)
-    ) {
-      return new NextResponse("Invalid category ID");
+    if (!mongoose.Types.ObjectId.isValid(submission.value.category)) {
+      console.log("Invalid category");
     }
 
     const categoryId = new mongoose.Types.ObjectId(
-      validatedFields.data.category
+      submission.value.category
     );
 
     const newPost = new Post({
       data: {
-        ...validatedFields,
+        title: submission.value.title,
+        desc: submission.value.desc,
+        content: submission.value.content,
+        imageUrl: submission.value.imageUrl,
         category: categoryId,
+        tags: flattenTags,
       },
     });
 
@@ -144,18 +172,24 @@ export async function createPost(formData: FormData) {
       "Post added and linked to category:",
       updatedCategory
     );
-  } catch (error) {
-    console.log("Error creating a post!", error);
 
+    revalidatePath("/dashboard/write-post");
+    redirect("/blogs");
+  } catch (error) {
     try {
       await deleteImage(publicId);
+
+      revalidatePath("/dashboard/write-post");
     } catch (error) {
       console.log("Error deleting the image" + error);
     }
 
-    return new NextResponse("Error creating a post", { status: 500 });
-  }
+    // console.log(result.error.flatten().fieldErrors);
+    // return { success: false };
 
-  revalidatePath("/dashboard/write-post");
-  redirect("/blogs");
+    // return {success: false, errors: result.error.flatten().fieldErrors}
+    console.log({
+      errors: submission.reply() && error,
+    });
+  }
 }

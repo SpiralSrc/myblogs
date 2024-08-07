@@ -1,50 +1,68 @@
 "use client";
 
-import React, { useState } from "react";
+import { useFormState } from "react-dom";
 import Form from "../reusable_ui/Form";
 import Input from "../reusable_ui/Input";
-import SubmitButton from "../reusable_ui/SubmitButton";
-import { CategorySchema, PostSchema } from "@/lib/validation";
 import { createPost, deleteImage } from "@/actions/action";
-import { CldImage, CldUploadWidget } from "next-cloudinary";
+import {
+  StringMap,
+  ValidationResponse,
+} from "@/app/_types/validationResponseType";
+import { useState } from "react";
+import SubmitButton from "../reusable_ui/SubmitButton";
 import { CloudUpload, Trash2, X } from "lucide-react";
+import { CldImage, CldUploadWidget } from "next-cloudinary";
+import { useForm } from "@conform-to/react";
+import { parseWithZod } from "@conform-to/zod";
+import { postSchema } from "@/lib/validation";
 
-type AddPostProps = {
-  categories?: CategorySchema | undefined;
-  post?: PostSchema | undefined;
-};
+// const initialState: ValidationResponse<StringMap> = {};
 
-const BlogForm: React.FC<AddPostProps> = ({ post }) => {
-  const [title, setTitle] = useState(post?.title || "");
-  const [desc, setDesc] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+const post: any = {};
+
+const CreatePostForm = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [lastResult, action] = useFormState(createPost, undefined);
+
   const [tagInput, setTagInput] = useState("");
-  const [category, setCategory] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState<any>("");
+  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [desc, setDesc] = useState("");
 
-  const handleFormSubmit = async (formData: FormData) => {
-    formData.set("imageUrl", imageUrl?.secure_url || imageUrl || "");
-    formData.getAll("tags");
+  const [form, fields] = useForm({
+    lastResult,
 
-    // const result = post && (await createPost(formData));
-  };
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: postSchema });
+    },
+
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
+  });
 
   //cloudinary image delete
   const handleImageDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const publicId =
-        imageUrl?.public_id ||
-        post?.imageUrl?.split("/").slice(-2).join("/").split(".")[0];
+      const publicId = imageUrl?.public_id;
+      // ||
+      // post?.imageUrl?.split("/").slice(-2).join("/").split(".")[0];
       if (publicId) {
         await deleteImage(publicId);
+
         // if (post) {
         //   await removePostImage(post.id); // Update the database to remove the image URL
         //   setImageUrl(""); // Clear the image URL from state
         //   router.refresh();
         // }
       }
+      setImageUrl("");
     } catch (error) {
       console.error("Failed to delete image:", error);
     }
@@ -71,17 +89,23 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
       <h1 className="text-4xl text-center font-bold mb-10">
         Write a post
       </h1>
-      <Form>
+      <form
+        id={form.id}
+        onSubmit={form.onSubmit}
+        action={action}
+        className="w-3/4 mx-auto my-5 border border-red-400/70 rounded-xl flex flex-col gap-4 px-5 pt-16 pb-10"
+      >
         <Input
           type="hidden"
-          name="imageUrl"
+          key={fields.imageUrl.key}
+          name={fields.imageUrl.name}
+          defaultValue={fields.imageUrl.initialValue}
           value={imageUrl.secure_url || ""}
-          onChange={(e) => setImageUrl(e.target.value)}
           placeholder=""
         />
         <div className="w-full flex flex-col gap-5 justify-start items-start">
           <CldUploadWidget
-            uploadPreset="essencia"
+            uploadPreset="rae-blog"
             options={{
               autoMinimize: true,
             }}
@@ -122,20 +146,30 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
             }}
           </CldUploadWidget>
         </div>
+
         <Input
           type="text"
-          name="title"
+          key={fields.title.key}
+          name={fields.title.name}
+          defaultValue={fields.title.initialValue}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title"
+          required
         />
+        <p className="text-red-500 text-sm">{fields.title.errors}</p>
         <Input
           type="text"
-          name="desc"
+          key={fields.desc.key}
+          name={fields.desc.name}
+          defaultValue={fields.desc.initialValue}
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
-          placeholder="Description"
+          required
+          placeholder="Short description"
         />
+        <p>{fields.desc.errors}</p>
+
         <div className="w-full flex flex-row gap-2">
           {tags &&
             tags.map((tag, i) => {
@@ -157,10 +191,20 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
               );
             })}
         </div>
+
         <div className="w-1/2 flex justify-center items-center gap-1">
           <Input
+            type="hidden"
+            value={tags as any}
+            key={fields.tags.key}
+            name={fields.tags.name}
+            defaultValue={fields.tags.initialValue as any}
+            placeholder="Tags"
+            // onChange={(e) => setTags(e.target.value)}
+          />
+          <Input
             type="text"
-            name="tags"
+            name=""
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             placeholder="Add a tag..."
@@ -168,25 +212,48 @@ const BlogForm: React.FC<AddPostProps> = ({ post }) => {
           <SubmitButton onClick={addTag}>Add</SubmitButton>
         </div>
 
-        <textarea
-          name="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Tell your story..."
-          className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
-        />
         <select
-          name="category"
+          key={fields.category.key}
+          name={fields.category.name}
+          defaultValue={fields.category.initialValue}
           value={category}
+          required
           onChange={(e) => setCategory(e.target.value)}
           className="py-2 px-5 rounded-xl border border-red-400/70 bg-red-400/70 transition-all focus:outline-none hover:text-red-400/70 hover:bg-red-200"
         >
-          <option value="">Choose category...</option>
+          <option value="">Choose a category...</option>
+          {/* {categories
+            ? categories.map((category: any) => (
+                <option
+                  key={category._id}
+                  value={category._id.toString()}
+                >
+                  {category.name}
+                </option>
+              ))
+            : ""} */}
+          {children}
         </select>
+        <p className="text-red-500 text-sm">
+          {fields.category.errors}
+        </p>
+
+        <textarea
+          required
+          key={fields.content.key}
+          name={fields.content.name}
+          defaultValue={fields.content.initialValue}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
+        ></textarea>
+        <p className="text-red-500 text-sm">
+          {fields.content.errors}
+        </p>
+
         <SubmitButton>Publish</SubmitButton>
-      </Form>
+      </form>
     </div>
   );
 };
-
-export default BlogForm;
+export default CreatePostForm;

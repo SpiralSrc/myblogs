@@ -3,11 +3,6 @@ import { CategorySchema } from "@/lib/validation";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 
-interface CategoryProps {
-  _id: string;
-  category: string;
-}
-
 export default async function page() {
   const categories = await getCategories();
 

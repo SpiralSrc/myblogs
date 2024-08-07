@@ -22,11 +22,12 @@ const postSchema = new mongoose.Schema({
     ref: "Category",
   },
   tags: {
-    type: [],
+    type: [String],
+    required: false,
   },
   userId: {
     type: String,
-    required: true,
+    // required: true,
   },
   createdAt: {
     type: Date,
