@@ -2,7 +2,6 @@ import { getCategories } from "@/actions/action";
 
 const CategoryList = async () => {
   const categories = await getCategories();
-  console.log(categories);
 
   return (
     <>

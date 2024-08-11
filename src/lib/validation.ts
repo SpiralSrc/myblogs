@@ -3,7 +3,7 @@ import { z } from "zod";
 export const postSchema = z.object({
   title: z
     .string({ message: "Title is required" })
-    .min(5, "Title has to be at least 5 characters"),
+    .min(4, "Title has to be at least 4 characters"),
   desc: z
     .string({ message: "Description is required" })
     .min(5, "Description has to be at least 5 characters"),

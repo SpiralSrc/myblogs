@@ -6,9 +6,6 @@ import { CategorySchema } from "@/lib/validation";
 import React from "react";
 
 export default async function WritePost() {
-  const categories = await getCategories();
-  console.log(categories);
-
   return (
     <section>
       <div className="wrapper">

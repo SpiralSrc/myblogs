@@ -7,7 +7,7 @@ import { createPost, deleteImage } from "@/actions/action";
 import {
   StringMap,
   ValidationResponse,
-} from "@/app/_types/validationResponseType";
+} from "@/lib/validationResponseType";
 import { useState } from "react";
 import SubmitButton from "../reusable_ui/SubmitButton";
 import { CloudUpload, Trash2, X } from "lucide-react";
@@ -168,7 +168,7 @@ const CreatePostForm = ({
           required
           placeholder="Short description"
         />
-        <p>{fields.desc.errors}</p>
+        <p className="text-red-500 text-sm">{fields.desc.errors}</p>
 
         <div className="w-full flex flex-row gap-2">
           {tags &&

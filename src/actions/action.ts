@@ -8,11 +8,6 @@ import cloudinary from "cloudinary";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
-import {
-  StringMap,
-  StringToBooleanMap,
-  ValidationResponse,
-} from "@/app/_types/validationResponseType";
 import { parseWithZod } from "@conform-to/zod";
 
 cloudinary.v2.config({
@@ -126,6 +121,7 @@ export async function createPost(
   if (submission.status !== "success") {
     return submission.reply();
   }
+  console.log(submission);
 
   const imageUrl = submission.value.imageUrl;
   const publicId = imageUrl
@@ -141,9 +137,9 @@ export async function createPost(
   try {
     await dbConnect();
 
-    if (!mongoose.Types.ObjectId.isValid(submission.value.category)) {
-      console.log("Invalid category");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(submission.value.category)) {
+    //   console.log("Invalid category");
+    // }
 
     const categoryId = new mongoose.Types.ObjectId(
       submission.value.category
@@ -188,8 +184,11 @@ export async function createPost(
     // return { success: false };
 
     // return {success: false, errors: result.error.flatten().fieldErrors}
-    console.log({
-      errors: submission.reply() && error,
-    });
+    console.log(
+      {
+        errors: submission.reply(),
+      },
+      error
+    );
   }
 }
