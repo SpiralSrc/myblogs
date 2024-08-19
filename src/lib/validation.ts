@@ -1,24 +1,28 @@
 import { z } from "zod";
+// import mongoose from "mongoose";
 
 export const postSchema = z.object({
   title: z
     .string({ message: "Title is required" })
-    .min(4, "Title has to be at least 4 characters"),
-  desc: z
-    .string({ message: "Description is required" })
-    .min(5, "Description has to be at least 5 characters"),
-  imageUrl: z.coerce.string().min(5, "Invalid image url"),
+    .min(2, "Title has to be at least 4 characters"),
+
   content: z.coerce
     .string()
-    .min(5, "Content has to be at least 5 characters"),
-  category: z.coerce
-    .string({ message: "Please choose a category" })
-    .min(2, "Invalid category entry"),
-  tags: z.array(z.string()).optional(),
-  // userId: z.coerce.string().optional(),
+    .min(3, "Content has to be at least 5 characters"),
+  category: z.coerce.string(),
+  tags: z.array(z.string().min(1)),
 });
 
 export const categorySchema = z.object({
+  id: z.string(),
+  name: z
+    .string()
+    .min(3, "Category name has to be at least 3 characters"),
+  imageUrl: z.string().min(1),
+  posts: z.array(z.any()).optional(),
+});
+
+export const tagsSchema = z.object({
   id: z.string(),
   name: z
     .string()
@@ -29,3 +33,5 @@ export const categorySchema = z.object({
 export type PostSchema = z.infer<typeof postSchema>;
 
 export type CategorySchema = z.infer<typeof categorySchema>;
+
+export type TagSchema = z.infer<typeof tagsSchema>;

@@ -1,14 +1,11 @@
 "use server";
 
-import { dbConnect } from "@/lib/dbConnect";
-import { Category, Post } from "@/lib/model";
-import { postSchema } from "@/lib/validation";
-import mongoose from "mongoose";
 import cloudinary from "cloudinary";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
-import { parseWithZod } from "@conform-to/zod";
+import { prisma } from "@/lib/prismadb";
+import { postSchema } from "@/lib/validation";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -47,10 +44,9 @@ export async function createCategory(formData: FormData) {
   // }
 
   const name = formData.get("name") as string;
+  const imageUrl = formData.get("imageUrl") as string;
 
   try {
-    await dbConnect();
-
     if (!name) {
       console.log("Invalid entry");
       return new NextResponse("Category name is required!", {
@@ -58,11 +54,12 @@ export async function createCategory(formData: FormData) {
       });
     }
 
-    const newCategory = await Category.create({
-      name,
+    await prisma.category.create({
+      data: {
+        name,
+        imageUrl,
+      },
     });
-
-    newCategory.save();
   } catch (error) {
     console.log(error);
     return new NextResponse("Error adding category", { status: 500 });
@@ -75,120 +72,55 @@ export async function createCategory(formData: FormData) {
 //fetch category
 export const getCategories = async () => {
   try {
-    dbConnect();
-
-    const data = await Category.find({}).sort({
-      name: "asc",
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
     });
 
-    return data;
+    return categories;
   } catch (error) {
-    console.log(error);
+    throw new Error("Failed to create category!");
   }
 };
 
 //----------------------------- Post ---------------------------------
 
-// export interface CreatePostErrors<T> {
-//   errors?: {
-//     title?: string[];
-//     desc?: string[];
-//     imageUrl?: string[];
-//     tags?: string[] | null;
-//     content?: string[];
-//     category?: string[];
-//   };
-//   success: boolean;
-//   data?: T
-// }
-
-//Create Post
-export async function createPost(
-  prevState: unknown,
-  formData: FormData
-) {
-  // const { userId } = auth()
-
-  // if(!userId) {
-  //     return new NextResponse("Unauthorized", {status: 401})
-  // }
-  // const fields = Object.fromEntries(formData.entries());
-
-  // const result = postSchema.safeParse({ ...fields });
-
-  const submission = parseWithZod(formData, { schema: postSchema });
-
-  if (submission.status !== "success") {
-    return submission.reply();
-  }
-  console.log(submission);
-
-  const imageUrl = submission.value.imageUrl;
-  const publicId = imageUrl
-    .split("/")
-    .slice(-2)
-    .join("/")
-    .split(".")[0];
-
-  const flattenTags = submission.value.tags?.flatMap((tagString) =>
-    tagString.split(",").map((tag) => tag.trim())
-  );
-
+//Prisma
+export async function createPost(formData: FormData) {
   try {
-    await dbConnect();
-
-    // if (!mongoose.Types.ObjectId.isValid(submission.value.category)) {
-    //   console.log("Invalid category");
-    // }
-
-    const categoryId = new mongoose.Types.ObjectId(
-      submission.value.category
-    );
-
-    const newPost = new Post({
-      data: {
-        title: submission.value.title,
-        desc: submission.value.desc,
-        content: submission.value.content,
-        imageUrl: submission.value.imageUrl,
-        category: categoryId,
-        tags: flattenTags,
-      },
+    const parsedData = postSchema.parse({
+      title: formData.get("title"),
+      content: formData.get("content"),
+      category: formData.get("category"),
+      tags: formData.getAll("tags[]"),
     });
 
-    const savedPost = await newPost.save();
-
-    const updatedCategory = await Category.findByIdAndUpdate(
-      categoryId,
-      { $push: { posts: savedPost._id } },
-      { new: true }
-    );
-
-    console.log(
-      "Post added and linked to category:",
-      updatedCategory
-    );
-
-    revalidatePath("/dashboard/write-post");
-    redirect("/blogs");
-  } catch (error) {
-    try {
-      await deleteImage(publicId);
-
-      revalidatePath("/dashboard/write-post");
-    } catch (error) {
-      console.log("Error deleting the image" + error);
+    const cat = await prisma.category.findFirst({
+      where: { id: parsedData.category },
+    });
+    if (!cat) {
+      throw new Error(`Category not found: ${parsedData.category}`);
     }
 
-    // console.log(result.error.flatten().fieldErrors);
-    // return { success: false };
-
-    // return {success: false, errors: result.error.flatten().fieldErrors}
-    console.log(
-      {
-        errors: submission.reply(),
+    const newPost = await prisma.post.create({
+      data: {
+        title: parsedData.title,
+        content: parsedData.content,
+        category: { connect: { id: cat.id } },
+        tags: {
+          create: parsedData.tags.map((tag) => ({ name: tag })),
+        },
       },
-      error
-    );
+    });
+  } catch (error) {
+    console.error(error);
+    throw new NextResponse("Failed to create post!", { status: 500 });
   }
+  revalidatePath("/dashboard/write-post");
+  redirect("/dashboard");
 }
