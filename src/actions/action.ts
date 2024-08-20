@@ -99,6 +99,7 @@ export async function createPost(formData: FormData) {
       category: formData.get("category"),
       tags: formData.getAll("tags[]"),
     });
+    console.log(parsedData.tags);
 
     const cat = await prisma.category.findFirst({
       where: { id: parsedData.category },
@@ -107,13 +108,29 @@ export async function createPost(formData: FormData) {
       throw new Error(`Category not found: ${parsedData.category}`);
     }
 
+    const tagsToConnectOrCreate = parsedData.tags.map(async (tag) => {
+      const existingTag = await prisma.tag.findUnique({
+        where: { name: tag },
+      });
+      if (existingTag) {
+        return { connect: { id: existingTag.id } };
+      } else {
+        return { create: { name: tag } };
+      }
+    });
+
+    const tags = await Promise.all(tagsToConnectOrCreate);
+
     const newPost = await prisma.post.create({
       data: {
         title: parsedData.title,
         content: parsedData.content,
         category: { connect: { id: cat.id } },
         tags: {
-          create: parsedData.tags.map((tag) => ({ name: tag })),
+          connectOrCreate: parsedData.tags.map((tag) => ({
+            where: { name: tag },
+            create: { name: tag },
+          })),
         },
       },
     });

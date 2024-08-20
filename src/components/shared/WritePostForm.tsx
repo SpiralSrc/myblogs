@@ -36,14 +36,15 @@ const WritePostForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const handleSubmit = async (e: any) => {
-    // e.preventDefault();
+  const handleSubmit = async () => {
     const formData = new FormData();
 
     formData.set("title", title);
     formData.set("content", content);
     formData.set("category", category);
-    formData.set("tags", JSON.stringify(tags));
+    tags.forEach((tag) => {
+      formData.append("tags[]", tag);
+    });
 
     try {
       await createPost(formData);
