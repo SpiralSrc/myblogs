@@ -7,10 +7,27 @@ import { useState } from "react";
 import SubmitButton from "../reusable_ui/SubmitButton";
 import CategoryList from "./CategoryList";
 import { X } from "lucide-react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import ReactMarkdown from "react-markdown";
 
-// const initialState: ValidationResponse<StringMap> = {};
-
-const post: any = {};
+const CodeBlock = ({ children, className, node, ...rest }: any) => {
+  const match = /language-(\w+)/.exec(className || "");
+  return match ? (
+    <SyntaxHighlighter
+      {...rest}
+      PreTag="div"
+      language={match[1]}
+      style={dark}
+    >
+      {String(children).replace(/\n$/, "")}
+    </SyntaxHighlighter>
+  ) : (
+    <code {...rest} className={className}>
+      {children}
+    </code>
+  );
+};
 
 const WritePostForm = () => {
   const [tagInput, setTagInput] = useState("");
@@ -126,6 +143,10 @@ const WritePostForm = () => {
           onChange={(e) => setContent(e.target.value)}
           className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
         ></textarea>
+        <ReactMarkdown components={{ code: CodeBlock }}>
+          {content}
+        </ReactMarkdown>
+
         {/* <p className="text-red-500 text-sm">
           {fields.content.errors}
         </p> */}
@@ -136,3 +157,11 @@ const WritePostForm = () => {
   );
 };
 export default WritePostForm;
+
+const Component = ({ value, language }: any) => {
+  return (
+    <SyntaxHighlighter language={language ?? null} style={dark}>
+      {value ?? ""}
+    </SyntaxHighlighter>
+  );
+};
