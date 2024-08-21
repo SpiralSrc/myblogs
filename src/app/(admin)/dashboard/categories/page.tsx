@@ -1,5 +1,4 @@
 import { getCategories } from "@/actions/action";
-import { CategorySchema } from "@/lib/validation";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 
@@ -30,7 +29,7 @@ export default async function page() {
             </thead>
             {categories ? (
               categories.map((category) => (
-                <tbody key={category._id}>
+                <tbody key={category.id}>
                   <tr className="border-pink-400/5">
                     <td>{category.name}</td>
                     <td className="flex w-1/4 justify-end items-center gap-3">
@@ -38,10 +37,14 @@ export default async function page() {
                         size={15}
                         className="text-teal-300/20 hover:text-teal-500 smooth-effect"
                       />
-                      <Trash2
-                        size={15}
-                        className="text-red-300/20 hover:text-red-500 smooth-effect"
-                      />
+                      <Link
+                        href={`/dashboard/categories/${category.id}/delete`}
+                      >
+                        <Trash2
+                          size={15}
+                          className="text-red-300/20 hover:text-red-500 smooth-effect"
+                        />
+                      </Link>
                     </td>
                   </tr>
                 </tbody>

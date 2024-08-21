@@ -14,20 +14,22 @@ export const postSchema = z.object({
 });
 
 export const categorySchema = z.object({
-  id: z.string(),
-  name: z
+  name: z.coerce
     .string()
     .min(3, "Category name has to be at least 3 characters"),
-  imageUrl: z.string().min(1),
+  imageUrl: z.coerce.string().min(1),
   posts: z.array(z.any()).optional(),
 });
 
 export const tagsSchema = z.object({
-  id: z.string(),
   name: z
     .string()
     .min(3, "Category name has to be at least 3 characters"),
   posts: z.array(z.any()).optional(),
+});
+
+export const commentSchema = z.object({
+  text: z.string().min(2).max(250),
 });
 
 export type PostSchema = z.infer<typeof postSchema>;
@@ -35,3 +37,5 @@ export type PostSchema = z.infer<typeof postSchema>;
 export type CategorySchema = z.infer<typeof categorySchema>;
 
 export type TagSchema = z.infer<typeof tagsSchema>;
+
+export type CommentSchema = z.infer<typeof commentSchema>;

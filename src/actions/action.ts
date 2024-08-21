@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prismadb";
-import { postSchema } from "@/lib/validation";
+import { categorySchema, postSchema } from "@/lib/validation";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -43,29 +43,83 @@ export async function createCategory(formData: FormData) {
   //     return new NextResponse("Unauthorized", {status: 401})
   // }
 
-  const name = formData.get("name") as string;
-  const imageUrl = formData.get("imageUrl") as string;
-
   try {
-    if (!name) {
+    const parsedData = categorySchema.parse({
+      name: formData.get("name"),
+      imageUrl: formData.get("imageUrl"),
+    });
+
+    if (!parsedData.name || !parsedData.imageUrl) {
       console.log("Invalid entry");
-      return new NextResponse("Category name is required!", {
+      throw new NextResponse("Category name is required!", {
         status: 400,
       });
     }
 
     await prisma.category.create({
       data: {
-        name,
-        imageUrl,
+        name: parsedData.name,
+        imageUrl: parsedData.imageUrl,
       },
     });
   } catch (error) {
     console.log(error);
-    return new NextResponse("Error adding category", { status: 500 });
+    throw new NextResponse("Error adding category", { status: 500 });
   }
 
   revalidatePath("/dashboard/categories/add-category");
+  redirect("/dashboard/categories");
+}
+
+//update category
+export async function updateCategory(id: string, formData: FormData) {
+  // const { userId } = auth()
+
+  // if(!userId) {
+  //     return new NextResponse("Unauthorized", {status: 401})
+  // }
+
+  try {
+    const parsedData = categorySchema.parse({
+      name: formData.get("name"),
+      imageUrl: formData.get("imageUrl"),
+    });
+
+    if (!parsedData.name || !parsedData.imageUrl) {
+      console.log("Invalid entry");
+      throw new NextResponse("Category name is required!", {
+        status: 400,
+      });
+    }
+
+    await prisma.category.update({
+      where: {
+        id,
+      },
+      data: {
+        name: parsedData.name,
+        imageUrl: parsedData.imageUrl,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw new NextResponse("Error adding category", { status: 500 });
+  }
+
+  revalidatePath("/dashboard/categories/add-category");
+  redirect("/dashboard/categories");
+}
+
+export async function deleteCategory(formData: FormData) {
+  const id = formData.get("id") as string;
+
+  await prisma.category.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  revalidatePath("/dashboard/categories");
   redirect("/dashboard/categories");
 }
 
@@ -99,7 +153,6 @@ export async function createPost(formData: FormData) {
       category: formData.get("category"),
       tags: formData.getAll("tags[]"),
     });
-    console.log(parsedData.tags);
 
     const cat = await prisma.category.findFirst({
       where: { id: parsedData.category },
@@ -140,4 +193,18 @@ export async function createPost(formData: FormData) {
   }
   revalidatePath("/dashboard/write-post");
   redirect("/dashboard");
+}
+
+//delete Post
+export async function deletePost(formData: FormData) {
+  const id = formData.get("id") as string;
+
+  await prisma.post.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  revalidatePath("/dashboard/categories");
+  redirect("/dashboard/categories");
 }
