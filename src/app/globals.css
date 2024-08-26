@@ -47,6 +47,12 @@ body::-webkit-scrollbar {
   .wrapper {
     @apply max-w-7xl mx-auto flex flex-col py-24 px-5 xl:px-2;
   }
+
+  .post-body {
+    color: antiquewhite;
+
+    @apply prose-blockquote:text-inherit prose-blockquote:w-[95%] prose-blockquote:mx-auto prose-pre:bg-transparent prose-blockquote:border-none;
+  }
 }
 
 @layer utilities {

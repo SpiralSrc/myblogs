@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function DeletePostPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
   return (
     <div className="wrapper h-screen">
@@ -23,7 +23,7 @@ export default function DeletePostPage({
               No
             </Link>
             <form action={deletePost}>
-              <input type="hidden" name="id" value={params.id} />
+              <input type="hidden" name="id" value={params.slug} />
               <SubmitButton>Yes</SubmitButton>
             </form>
           </div>

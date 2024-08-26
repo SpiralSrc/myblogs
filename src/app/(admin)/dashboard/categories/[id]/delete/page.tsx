@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function DeleteCategoryPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
   return (
     <div className="wrapper h-screen">
@@ -23,7 +23,7 @@ export default function DeleteCategoryPage({
               No
             </Link>
             <form action={deleteCategory}>
-              <input type="hidden" name="id" value={params.id} />
+              <input type="hidden" name="id" value={params.slug} />
               <SubmitButton>Yes</SubmitButton>
             </form>
           </div>

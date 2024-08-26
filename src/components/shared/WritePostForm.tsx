@@ -7,21 +7,29 @@ import { useState } from "react";
 import SubmitButton from "../reusable_ui/SubmitButton";
 import CategoryList from "./CategoryList";
 import { X } from "lucide-react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SyntaxHighlighter from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
+import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import CopyButton from "./CopyButton";
 
 const CodeBlock = ({ children, className, node, ...rest }: any) => {
   const match = /language-(\w+)/.exec(className || "");
   return match ? (
-    <SyntaxHighlighter
-      {...rest}
-      PreTag="div"
-      language={match[1]}
-      style={dark}
-    >
-      {String(children).replace(/\n$/, "")}
-    </SyntaxHighlighter>
+    <div className="w-[90%] mx-auto">
+      <div>
+        <CopyButton code={String(children).replace(/\n$/, "")} />
+      </div>
+
+      <SyntaxHighlighter
+        {...rest}
+        showLineNumbers
+        PreTag="div"
+        language={match[1]}
+        style={kimbieDark}
+      >
+        {String(children).replace(/\n$/, "")}
+      </SyntaxHighlighter>
+    </div>
   ) : (
     <code {...rest} className={className}>
       {children}
@@ -144,7 +152,10 @@ const WritePostForm = () => {
           onChange={(e) => setContent(e.target.value)}
           className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
         ></textarea>
-        <ReactMarkdown components={{ code: CodeBlock }}>
+        <ReactMarkdown
+          components={{ code: CodeBlock }}
+          className="w-[98%] mx-auto max-w-none prose prose-stone post-body"
+        >
           {content}
         </ReactMarkdown>
 
@@ -158,11 +169,3 @@ const WritePostForm = () => {
   );
 };
 export default WritePostForm;
-
-const Component = ({ value, language }: any) => {
-  return (
-    <SyntaxHighlighter language={language ?? null} style={dark}>
-      {value ?? ""}
-    </SyntaxHighlighter>
-  );
-};

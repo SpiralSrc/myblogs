@@ -37,8 +37,77 @@ const config: Config = {
         "darker-overlay": "rgba(255, 255, 255, 1)",
         "sm-overlay": "rgba(167, 99, 99, 0.233)",
       },
+      colors: {
+        primary: "antiquewhite",
+        secondary: "grey",
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: "antiquewhite",
+            h2: {
+              paddingLeft: "20px",
+              color: "inherit",
+              textTransform: "capitalize",
+            },
+            h3: {
+              paddingLeft: "20px",
+              color: "inherit",
+              textTransform: "capitalize",
+            },
+            h4: {
+              paddingLeft: "20px",
+              color: "inherit",
+              textTransform: "capitalize",
+            },
+            a: {
+              display: "flex",
+              color: "inherit",
+              textDecoration: "none",
+
+              "&:hover": {
+                color: "#f59f99b0",
+                transition: "all 500ms ease",
+              },
+            },
+            button: {
+              borderRadius: "20px",
+              placeItem: "end",
+              padding: "10px",
+              marginLeft: "20px",
+              borderWidth: "1px",
+              borderColor: "rgba(54, 41, 41, 0.122)",
+              backgroundColor: "rgba(54, 41, 41, 0.222)",
+
+              "&:hover": {
+                borderWidth: "1px",
+                borderColor: "rgba(54, 41, 41, 0.622)",
+                boxShadow: "0 20px 25px -5px rgb(0 0 0/ 0.1)",
+              },
+            },
+            hr: {
+              borderColor: "rgba(54, 41, 41, 0.322)",
+              marginLeft: "20px",
+              marginRight: "20px",
+            },
+            ul: {
+              marginLeft: "25px",
+              marginRight: "25px",
+            },
+            ol: {
+              marginLeft: "25px",
+              marginRight: "25px",
+              color: "inherit",
+            },
+            p: {
+              paddingLeft: "20px",
+              paddingRight: "20px",
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
 export default config;

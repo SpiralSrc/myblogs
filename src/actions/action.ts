@@ -191,8 +191,8 @@ export async function createPost(formData: FormData) {
     console.error(error);
     throw new NextResponse("Failed to create post!", { status: 500 });
   }
-  revalidatePath("/dashboard/write-post");
-  redirect("/dashboard");
+  revalidatePath("/dashboard/posts/write-post");
+  redirect("/dashboard/posts");
 }
 
 //delete Post
@@ -205,6 +205,6 @@ export async function deletePost(formData: FormData) {
     },
   });
 
-  revalidatePath("/dashboard/categories");
-  redirect("/dashboard/categories");
+  revalidatePath("/dashboard/posts");
+  redirect("/dashboard/posts");
 }
