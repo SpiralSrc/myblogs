@@ -46,6 +46,7 @@ export async function createCategory(formData: FormData) {
   try {
     const parsedData = categorySchema.parse({
       name: formData.get("name"),
+      slug: formData.get("name"),
       imageUrl: formData.get("imageUrl"),
     });
 
@@ -56,9 +57,14 @@ export async function createCategory(formData: FormData) {
       });
     }
 
+    const newSlug = parsedData.name
+      .replace(/\s+/g, "-")
+      .toLowerCase();
+
     await prisma.category.create({
       data: {
         name: parsedData.name,
+        slug: newSlug,
         imageUrl: parsedData.imageUrl,
       },
     });
@@ -82,6 +88,7 @@ export async function updateCategory(id: string, formData: FormData) {
   try {
     const parsedData = categorySchema.parse({
       name: formData.get("name"),
+      slug: formData.get("name"),
       imageUrl: formData.get("imageUrl"),
     });
 
@@ -92,12 +99,17 @@ export async function updateCategory(id: string, formData: FormData) {
       });
     }
 
+    const newSlug = parsedData.name
+      .replace(/\s+/g, "-")
+      .toLowerCase();
+
     await prisma.category.update({
       where: {
         id,
       },
       data: {
         name: parsedData.name,
+        slug: newSlug,
         imageUrl: parsedData.imageUrl,
       },
     });
@@ -127,14 +139,17 @@ export async function deleteCategory(formData: FormData) {
 export const getCategories = async () => {
   try {
     const categories = await prisma.category.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
+      // select: {
+      //   id: true,
+      //   name: true,
+      //   slug: true,
+      // },
       orderBy: {
         name: "asc",
       },
     });
+
+    if (!categories) return null;
 
     return categories;
   } catch (error) {
@@ -149,10 +164,15 @@ export async function createPost(formData: FormData) {
   try {
     const parsedData = postSchema.parse({
       title: formData.get("title"),
+      slug: formData.get("title"),
       content: formData.get("content"),
       category: formData.get("category"),
       tags: formData.getAll("tags[]"),
     });
+
+    const newSlug = parsedData.title
+      .replace(/\s+/g, "-")
+      .toLowerCase();
 
     const cat = await prisma.category.findFirst({
       where: { id: parsedData.category },
@@ -177,6 +197,7 @@ export async function createPost(formData: FormData) {
     const newPost = await prisma.post.create({
       data: {
         title: parsedData.title,
+        slug: newSlug,
         content: parsedData.content,
         category: { connect: { id: cat.id } },
         tags: {

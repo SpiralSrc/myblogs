@@ -10,14 +10,14 @@ import Link from "next/link";
 
 interface PostProps {
   params: {
-    id: string;
+    slug: string;
     name: string;
   };
 }
 
-const getSinglePost = cache(async (id: string) => {
+const getSinglePost = cache(async (slug: string) => {
   const tag = await prisma.post.findFirst({
-    where: { id },
+    where: { slug },
     include: {
       category: true,
       tags: true,
@@ -32,9 +32,9 @@ const getSinglePost = cache(async (id: string) => {
 });
 
 export async function generateMetadata({
-  params: { id },
+  params: { slug },
 }: PostProps): Promise<Metadata> {
-  const post = await getSinglePost(id);
+  const post = await getSinglePost(slug);
 
   return {
     title: post.title + " - Tags",
@@ -71,9 +71,9 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
 export default async function SinglePostPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
-  const id = params.id;
+  const id = params.slug;
 
   const post = await getSinglePost(id);
 
@@ -86,7 +86,7 @@ export default async function SinglePostPage({
         {post?.tags.map((tag) => {
           return (
             <Link
-              href={`/dashboard/tags/${tag.id}`}
+              href={`/dashboard/tags/${tag.name}`}
               key={tag.id}
               className="py-2 px-3 bg-pink-500/20 rounded-md"
             >

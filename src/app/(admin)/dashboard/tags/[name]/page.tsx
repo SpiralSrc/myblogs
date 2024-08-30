@@ -11,9 +11,9 @@ interface TagProps {
   };
 }
 
-const getTags = cache(async (id: string) => {
+const getTags = cache(async (name: string) => {
   const tag = await prisma.tag.findFirst({
-    where: { id },
+    where: { name },
     include: {
       posts: {
         include: {
@@ -29,9 +29,9 @@ const getTags = cache(async (id: string) => {
 });
 
 export async function generateMetadata({
-  params: { id },
+  params: { name },
 }: TagProps): Promise<Metadata> {
-  const tag = await getTags(id);
+  const tag = await getTags(name);
 
   return {
     title: tag.name + " - Tags",
@@ -42,9 +42,9 @@ export async function generateMetadata({
 export default async function SinglePostPage({
   params,
 }: {
-  params: { id: string };
+  params: { name: string };
 }) {
-  const id = params.id;
+  const id = params.name;
 
   const tag = await getTags(id);
 
@@ -68,7 +68,7 @@ export default async function SinglePostPage({
               <tbody key={post.id}>
                 <tr className="border-pink-400/5">
                   <td className="flex-1">
-                    <Link href={`/dashboard/posts/${post.id}`}>
+                    <Link href={`/dashboard/posts/${post.slug}`}>
                       {post.title}
                     </Link>
                   </td>

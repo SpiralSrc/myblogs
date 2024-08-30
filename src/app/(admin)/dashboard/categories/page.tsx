@@ -18,17 +18,17 @@ export default async function page() {
           Add Category
         </Link>
         <div className="w-full h-full flex flex-col mt-20">
-          <table className="w-3/4 mx-auto">
-            <thead>
-              <tr>
-                <td>Category Name</td>
-                <td className="flex w-1/4 justify-end items-center">
-                  Options
-                </td>
-              </tr>
-            </thead>
-            {categories ? (
-              categories.map((category) => (
+          {categories?.length !== 0 ? (
+            <table className="w-3/4 mx-auto">
+              <thead>
+                <tr>
+                  <td>Category Name</td>
+                  <td className="flex w-1/4 justify-end items-center">
+                    Options
+                  </td>
+                </tr>
+              </thead>
+              {categories?.map((category) => (
                 <tbody key={category.id}>
                   <tr className="border-pink-400/5">
                     <td>{category.name}</td>
@@ -38,7 +38,7 @@ export default async function page() {
                         className="text-teal-300/20 hover:text-teal-500 smooth-effect"
                       />
                       <Link
-                        href={`/dashboard/categories/${category.id}/delete`}
+                        href={`/dashboard/categories/${category.slug}/delete`}
                       >
                         <Trash2
                           size={15}
@@ -48,13 +48,13 @@ export default async function page() {
                     </td>
                   </tr>
                 </tbody>
-              ))
-            ) : (
-              <div>
-                <p>No categories added.</p>
-              </div>
-            )}
-          </table>
+              ))}
+            </table>
+          ) : (
+            <div className="w-full h-full flex justify-center items-center">
+              <p>No categories added.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

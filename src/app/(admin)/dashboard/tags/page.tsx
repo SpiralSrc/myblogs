@@ -30,7 +30,7 @@ export default async function page() {
                 <tbody key={tag.id}>
                   <tr className="border-pink-400/5">
                     <td className="flex-1">
-                      <Link href={`/dashboard/tags/${tag.id}`}>
+                      <Link href={`/dashboard/tags/${tag.name}`}>
                         {tag.name}
                       </Link>
                     </td>
