@@ -139,17 +139,12 @@ export async function deleteCategory(formData: FormData) {
 export const getCategories = async () => {
   try {
     const categories = await prisma.category.findMany({
-      // select: {
-      //   id: true,
-      //   name: true,
-      //   slug: true,
-      // },
       orderBy: {
         name: "asc",
       },
     });
 
-    if (!categories) return null;
+    if (!categories) return;
 
     return categories;
   } catch (error) {
@@ -229,3 +224,24 @@ export async function deletePost(formData: FormData) {
   revalidatePath("/dashboard/posts");
   redirect("/dashboard/posts");
 }
+
+//fetch category
+export const getPost = async () => {
+  try {
+    const post = await prisma.post.findMany({
+      orderBy: {
+        title: "asc",
+      },
+      include: {
+        category: true,
+        tags: true,
+      },
+    });
+
+    if (!post) return;
+
+    return post;
+  } catch (error) {
+    throw new Error("Failed to create category!");
+  }
+};

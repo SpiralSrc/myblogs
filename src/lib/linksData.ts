@@ -7,6 +7,10 @@ export const navLinks = [
     name: "About",
     path: "/",
   },
+  {
+    name: "Categories",
+    path: "/categories",
+  },
 ];
 
 export const socialsData = [

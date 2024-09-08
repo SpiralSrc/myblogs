@@ -13,9 +13,7 @@ export default async function page() {
 
   return (
     <div className="wrapper">
-      <h1 className="text-5xl font-bold text-center font-sacramento">
-        All Tags
-      </h1>
+      <h1 className="mt-10">All Tags</h1>
       <div className="w-full flex flex-col">
         <div className="w-full h-full flex flex-col mt-20">
           <table className="w-3/4 mx-auto">

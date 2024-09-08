@@ -79,7 +79,9 @@ export default async function SinglePostPage({
 
   return (
     <div className="wrapper">
-      <h1 className="mt-10">{post?.title}</h1>
+      <h1 className="text-5xl font-bold text-center font-sacramento capitalize mt-10">
+        {post?.title}
+      </h1>
       <div className="flex justify-center items-center gap-5 mt-10">
         {post?.tags.map((tag) => {
           return (
