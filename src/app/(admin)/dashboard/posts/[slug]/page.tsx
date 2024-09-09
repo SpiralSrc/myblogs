@@ -80,18 +80,23 @@ export default async function SinglePostPage({
   return (
     <div className="wrapper">
       <h1 className="mt-10">{post?.title}</h1>
-      <div className="flex justify-center items-center gap-5 mt-10">
-        {post?.tags.map((tag) => {
-          return (
-            <Link
-              href={`/dashboard/tags/${tag.name}`}
-              key={tag.id}
-              className="py-2 px-3 bg-pink-500/20 rounded-md"
-            >
-              {tag.name}
-            </Link>
-          );
-        })}
+      <div className="flex flex-col justify-center items-center gap-5 mt-10">
+        <div>
+          <span className="cat">{post.category.name}</span>
+        </div>
+        <div className="flex gap-5">
+          {post?.tags.map((tag) => {
+            return (
+              <Link
+                href={`/dashboard/tags/${tag.name}`}
+                key={tag.id}
+                className="text-secondary/90"
+              >
+                #{tag.name}
+              </Link>
+            );
+          })}
+        </div>
       </div>
       <div className="p-2 mt-10">
         <ReactMarkdown

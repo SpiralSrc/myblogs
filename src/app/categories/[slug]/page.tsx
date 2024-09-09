@@ -40,7 +40,7 @@ export default async function page({
               {category.posts.length !== 0 ? (
                 category.posts.map((post) => (
                   <Link
-                    href={`/categories/blogs/${post.slug}`}
+                    href={`/blogs/${post.slug}`}
                     key={post.id}
                     className="w-72 flex flex-col gap-5 p-3 rounded-md bg-section-gradient1 backdrop-blur-sm"
                   >
@@ -60,8 +60,10 @@ export default async function page({
                   </Link>
                 ))
               ) : (
-                <div>
-                  <p>No post in this category.</p>
+                <div className="w-full mt-10 flex justify-center">
+                  <p className="text-center font-medium">
+                    No post in this category.
+                  </p>
                 </div>
               )}
             </div>

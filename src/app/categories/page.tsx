@@ -1,3 +1,4 @@
+import Hero from "@/components/home/Hero";
 import { prisma } from "@/lib/prismadb";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,16 +10,17 @@ export default async function page() {
     },
   });
   return (
-    <div>
+    <>
+      <Hero />
       <div className="wrapper">
-        <h1 className="mt-10">All Categories Page</h1>
-        <div className="w-full mt-10 flex justify-center items-center gap-5">
+        <h1>All Categories</h1>
+        <div className="w-full mt-10 flex flex-wrap justify-center items-center gap-10">
           {categories.length !== 0 ? (
             categories.map((category) => (
               <Link
                 href={`/categories/${category.slug}`}
                 key={category.id}
-                className="w-96 flex flex-col rounded-lg overflow-hidden bg-section-gradient2"
+                className="card"
               >
                 <div className="w-full h-52 relative">
                   <Image
@@ -37,12 +39,14 @@ export default async function page() {
               </Link>
             ))
           ) : (
-            <div>
-              <p>There are no categories added.</p>
+            <div className="w-full mt-10 flex justify-center">
+              <p className="text-center font-medium">
+                There are no categories added.
+              </p>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

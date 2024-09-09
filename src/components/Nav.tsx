@@ -1,10 +1,15 @@
+"use client";
+
 import { navLinks } from "@/lib/linksData";
 import SearchBar from "./SearchBar";
 import Link from "next/link";
 import Logo from "../app/icon.png";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Nav = () => {
+  const path = usePathname();
+
   return (
     <nav className="w-screen fixed top-0 left-0 z-30 py-3 bg-slate-500/20 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-5 xl:px-2">
@@ -25,10 +30,12 @@ const Nav = () => {
             SpiralSrc
           </span>
         </Link>
-        <div className="lg:w-1/2 flex justify-between items-center gap-20">
-          <div className="w-2/3 hidden lg:flex">
-            <SearchBar />
-          </div>
+        <div className="flex justify-between items-center gap-20">
+          {path === "/" ? (
+            <div className="w-72 hidden lg:flex">
+              <SearchBar />
+            </div>
+          ) : null}
 
           <ul className="flex justify-center items-center gap-10">
             {navLinks.map((nav) => (

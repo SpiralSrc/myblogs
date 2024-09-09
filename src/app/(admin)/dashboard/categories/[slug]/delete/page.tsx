@@ -23,7 +23,7 @@ export default function DeleteCategoryPage({
               No
             </Link>
             <form action={deleteCategory}>
-              <input type="hidden" name="id" value={params.slug} />
+              <input type="hidden" name="slug" value={params.slug} />
               <SubmitButton>Yes</SubmitButton>
             </form>
           </div>

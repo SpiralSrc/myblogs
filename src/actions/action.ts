@@ -78,7 +78,10 @@ export async function createCategory(formData: FormData) {
 }
 
 //update category
-export async function updateCategory(id: string, formData: FormData) {
+export async function updateCategory(
+  slug: string,
+  formData: FormData
+) {
   // const { userId } = auth()
 
   // if(!userId) {
@@ -100,12 +103,12 @@ export async function updateCategory(id: string, formData: FormData) {
     }
 
     const newSlug = parsedData.name
-      .replace(/\s+/g, "-")
+      .replace(/\s+|\/+/g, "-")
       .toLowerCase();
 
     await prisma.category.update({
       where: {
-        id,
+        slug,
       },
       data: {
         name: parsedData.name,
@@ -123,11 +126,11 @@ export async function updateCategory(id: string, formData: FormData) {
 }
 
 export async function deleteCategory(formData: FormData) {
-  const id = formData.get("id") as string;
+  const slug = formData.get("slug") as string;
 
   await prisma.category.delete({
     where: {
-      id: id,
+      slug,
     },
   });
 
@@ -160,6 +163,7 @@ export async function createPost(formData: FormData) {
     const parsedData = postSchema.parse({
       title: formData.get("title"),
       slug: formData.get("title"),
+      desc: formData.get("desc"),
       content: formData.get("content"),
       category: formData.get("category"),
       tags: formData.getAll("tags[]"),
@@ -193,6 +197,7 @@ export async function createPost(formData: FormData) {
       data: {
         title: parsedData.title,
         slug: newSlug,
+        desc: parsedData.desc,
         content: parsedData.content,
         category: { connect: { id: cat.id } },
         tags: {

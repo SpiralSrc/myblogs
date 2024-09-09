@@ -31,10 +31,15 @@ export default async function page() {
                   <tr className="border-pink-400/5">
                     <td>{category.name}</td>
                     <td className="flex w-1/4 justify-end items-center gap-3">
-                      <Edit
-                        size={15}
-                        className="text-teal-300/20 hover:text-teal-500 smooth-effect"
-                      />
+                      <Link
+                        href={`/dashboard/categories/${category.slug}/edit`}
+                      >
+                        <Edit
+                          size={15}
+                          className="text-teal-300/20 hover:text-teal-500 smooth-effect"
+                        />
+                      </Link>
+
                       <Link
                         href={`/dashboard/categories/${category.slug}/delete`}
                       >

@@ -10,17 +10,17 @@ const BlogList = async ({ query }: { query: string }) => {
     : [];
 
   return (
-    <div className="mt-5">
+    <div className="w-full">
       {Array.isArray(post) && post.length === 0 && (
         <p>No post found.</p>
       )}
-      <div className="flex gap-5">
+      <div className="w-full flex flex-col">
         {Array.isArray(post) &&
           filteredPost.map((item) => (
             <Link
               href={`/categories/blogs/${item.slug}`}
               key={item.id}
-              className="card bg-section-gradient1 backdrop-blur-sm"
+              className="w-full bg-stone-600 backdrop-blur-sm border-b border-secondary/40 p-4"
             >
               <h3 className="font-bold text-lg">{item.title}</h3>
               <div className="flex justify-start items-center gap-4">

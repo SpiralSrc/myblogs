@@ -7,6 +7,7 @@ export default async function BlogsPage() {
     },
     include: {
       category: true,
+      tags: true,
     },
   });
 

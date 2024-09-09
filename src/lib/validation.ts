@@ -5,7 +5,7 @@ export const postSchema = z.object({
   title: z
     .string({ message: "Title is required" })
     .min(2, "Title has to be at least 4 characters"),
-
+  desc: z.coerce.string(),
   content: z.coerce
     .string()
     .min(3, "Content has to be at least 5 characters"),
@@ -18,7 +18,7 @@ export const categorySchema = z.object({
     .string()
     .min(3, "Category name has to be at least 3 characters"),
   imageUrl: z.coerce.string().min(1),
-  posts: z.array(z.any()).optional(),
+  // posts: z.array(z.any()).optional(),
 });
 
 export const tagsSchema = z.object({
