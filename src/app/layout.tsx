@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Sacramento } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 
 const roboto = Roboto({
   subsets: ["cyrillic"],
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className={`${roboto.variable} ${sacramento.variable}`}>
         <Nav />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

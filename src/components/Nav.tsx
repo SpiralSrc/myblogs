@@ -42,13 +42,25 @@ const Nav = () => {
               <Link
                 key={nav.name}
                 href={nav.path}
-                className="smooth-effect hover:text-pink-400"
+                className={`hover:text-pink-400/60 smooth-effect ${
+                  nav.path === path ? "" : "text-secondary/60"
+                }`}
               >
                 <li>{nav.name}</li>
               </Link>
             ))}
           </ul>
         </div>
+
+        <Link
+          href={"https://spiralsrc.dev/"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="py-2 px-3 rounded-full font-bold border border-transparent bg-red-950/20 backdrop-blur-sm hover:text-pink-400/80 hover:border-red-400/20 hover:shadow-lg smooth-effect">
+            Portfolio
+          </span>
+        </Link>
       </div>
     </nav>
   );

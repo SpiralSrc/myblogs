@@ -1,5 +1,5 @@
 import BlogList from "@/components/BlogList";
-import Hero from "@/components/home/Hero";
+import Hero from "@/components/mainpage/Hero";
 import RightSideBar from "@/components/shared/RightSideBar";
 import { prisma } from "@/lib/prismadb";
 import { truncate } from "@/lib/utils/truncate";
@@ -31,8 +31,9 @@ export default async function Home({
         </div>
       )}
       <div className="wrapper">
-        <div className="w-full h-full flex flex-col md:flex-row md:gap-2 gap-10">
+        <div className="w-full h-full flex flex-col md:flex-row gap-5">
           <div className="w-full md:w-[75%] flex flex-col gap-3">
+            <h2 className="text-left mb-3">New Post</h2>
             {newPost && newPost[0] && (
               <Link
                 href={`/blogs/${newPost[0].slug}`}
@@ -47,9 +48,9 @@ export default async function Home({
                   </div>
                   <div className="flex gap-5">
                     {newPost[0].tags.map((tag) => (
-                      <Link key={tag.id} href={`/tags/${tag.name}`}>
+                      <span key={tag.id} className="tag">
                         #{tag.name}
-                      </Link>
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -58,43 +59,45 @@ export default async function Home({
                 </div>
               </Link>
             )}
-            <div className="mt-10 grid grid-cols-2">
-              {newPost &&
-                newPost.slice(1, 5).map((post) => (
-                  <Link
-                    href={`/blogs/${post.slug}`}
-                    key={post.id}
-                    className="card p-2"
-                  >
-                    <h3 className="text-center font-bold text-lg">
-                      {post.title}
-                    </h3>
-                    <div className="flex flex-col justify-center items-center gap-3">
-                      <div>
-                        <span className="cat">
-                          {post.category.name}
-                        </span>
+            <div>
+              <h3 className="text-left font-bold text-xl mt-10">
+                Recent Posts
+              </h3>
+              <div className="mt-4 grid grid-cols-2 gap-7">
+                {newPost &&
+                  newPost.slice(1, 7).map((post) => (
+                    <Link
+                      href={`/blogs/${post.slug}`}
+                      key={post.id}
+                      className="card p-5"
+                    >
+                      <h3 className="text-center font-bold text-lg">
+                        {post.title}
+                      </h3>
+                      <div className="flex flex-col justify-center items-center gap-3">
+                        <div>
+                          <span className="cat">
+                            {post.category.name}
+                          </span>
+                        </div>
+                        <div className="flex gap-5">
+                          {post.tags.map((tag) => (
+                            <span key={tag.id} className="tag">
+                              #{tag.name}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex gap-5">
-                        {post.tags.map((tag) => (
-                          <Link
-                            key={tag.id}
-                            href={`/tags/${tag.name}`}
-                          >
-                            #{tag.name}
-                          </Link>
-                        ))}
+                      <div className="mt-10 indent-8 text-wrap">
+                        <p>{truncate(post.desc)}</p>
                       </div>
-                    </div>
-                    <div className="mt-10 indent-8">
-                      <p>{post.desc}</p>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  ))}
+              </div>
             </div>
           </div>
           {/* Right Bar */}
-          <div className="w-full md:w-[25%]">
+          <div className="w-full md:w-[25%] ">
             <RightSideBar />
           </div>
         </div>

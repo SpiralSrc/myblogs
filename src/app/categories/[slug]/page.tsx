@@ -26,7 +26,7 @@ export default async function page({
     <div>
       {category && (
         <div>
-          <div className="w-full h-[25vh] relative">
+          <div className="w-full h-[25vh] lg:h-[35vh] xl:h-[38vh] relative">
             <Image
               src={category.imageUrl}
               alt={category.name}
@@ -36,24 +36,23 @@ export default async function page({
           </div>
           <div className="wrapper">
             <h1 className="mb-10">{category.name}</h1>
-            <div>
+            <div className="line mb-5"></div>
+            <div className="w-full mx-auto mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-3 justify-center items-center gap-10">
               {category.posts.length !== 0 ? (
                 category.posts.map((post) => (
                   <Link
                     href={`/blogs/${post.slug}`}
                     key={post.id}
-                    className="w-72 flex flex-col gap-5 p-3 rounded-md bg-section-gradient1 backdrop-blur-sm"
+                    className="w-96 h-40 flex flex-col gap-5 p-3 rounded-md card"
                   >
                     <h3 className="font-bold text-lg">
                       {post.title}
                     </h3>
+
                     <div className="flex justify-start items-center gap-4">
                       {post.tags.map((tag) => (
-                        <span
-                          key={tag.id}
-                          className="py-1 px-2 rounded-md text-sm bg-slate-500/50 backdrop-blur-sm"
-                        >
-                          {tag.name}
+                        <span key={tag.id} className="tag">
+                          #{tag.name}
                         </span>
                       ))}
                     </div>

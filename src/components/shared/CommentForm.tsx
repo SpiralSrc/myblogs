@@ -1,0 +1,43 @@
+"use client";
+
+import { useState } from "react";
+import Form from "../reusable_ui/Form";
+import SubmitButton from "../reusable_ui/SubmitButton";
+import { createComment } from "@/actions/action";
+import { CommentSchema, PostSchema } from "@/lib/validation";
+
+const CommentForm = ({ post }: any) => {
+  const [text, setText] = useState("");
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+
+    formData.set("text", text);
+
+    try {
+      await createComment(post.slug, formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <form
+      action={handleSubmit}
+      className="w-[90%] mx-auto flex flex-col mt-5"
+    >
+      <span className="text-sm italic mb-5">
+        *Please log in or register to post a comment
+      </span>
+      <textarea
+        name="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Write your comment..."
+        className="w-full h-32 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70 mb-4"
+      />
+      <SubmitButton>Submit</SubmitButton>
+    </form>
+  );
+};
+export default CommentForm;

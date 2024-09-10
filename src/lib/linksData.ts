@@ -1,3 +1,5 @@
+import { Github } from "lucide-react";
+
 export const navLinks = [
   {
     name: "Home",
@@ -5,7 +7,7 @@ export const navLinks = [
   },
   {
     name: "About",
-    path: "/",
+    path: "/about",
   },
   {
     name: "Categories",
@@ -16,6 +18,7 @@ export const navLinks = [
 export const socialsData = [
   {
     name: "Github",
-    path: "/",
+    path: "https://github.com/",
+    icon: Github,
   },
 ];

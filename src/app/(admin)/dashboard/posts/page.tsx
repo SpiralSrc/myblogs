@@ -48,10 +48,15 @@ export default async function PostsPage() {
                       <div className="">{post.category.name}</div>
                     </td>
                     <td className="flex w-1/4 justify-end items-center gap-3">
-                      <Edit
-                        size={15}
-                        className="text-teal-300/20 hover:text-teal-500 smooth-effect"
-                      />
+                      <Link
+                        href={`/dashboard/posts/${post.slug}/edit`}
+                      >
+                        <Edit
+                          size={15}
+                          className="text-teal-300/20 hover:text-teal-500 smooth-effect"
+                        />
+                      </Link>
+
                       <Link
                         href={`/dashboard/posts/${post.slug}/delete`}
                       >

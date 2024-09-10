@@ -35,11 +35,11 @@ body::-webkit-scrollbar {
   }
 
   h2 {
-    @apply text-3xl font-bold text-center capitalize mb-10;
+    @apply text-3xl font-bold text-center capitalize;
   }
 
   h3 {
-    @apply mb-3;
+    @apply mb-2;
   }
 
   table {
@@ -67,11 +67,19 @@ body::-webkit-scrollbar {
   }
 
   .card {
-    @apply w-96 flex flex-col rounded-md bg-pink-500/20 overflow-hidden;
+    @apply flex flex-col rounded-md bg-pink-500/5 backdrop-blur-md overflow-hidden hover:shadow-lg smooth-effect;
   }
 
   .cat {
-    @apply py-2 px-3 bg-pink-500/20 rounded-md text-sm;
+    @apply py-1 px-2 bg-pink-500/20 rounded-md text-sm;
+  }
+
+  .sidebar {
+    @apply flex flex-col rounded-md bg-slate-500/5 backdrop-blur-md overflow-hidden shadow-inner;
+  }
+
+  .line {
+    @apply w-[90%] h-1 border-b border-secondary/20 mx-auto;
   }
 }
 
@@ -83,5 +91,9 @@ body::-webkit-scrollbar {
   }
   .smooth-effect {
     transition: all 500ms ease-in-out;
+  }
+
+  .tag {
+    @apply text-sm text-secondary/90;
   }
 }

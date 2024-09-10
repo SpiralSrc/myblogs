@@ -9,6 +9,8 @@ import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
 import Image from "next/image";
 import RightSideBar from "@/components/shared/RightSideBar";
+import CommentForm from "@/components/shared/CommentForm";
+import { User } from "lucide-react";
 
 interface PostProps {
   params: {
@@ -23,7 +25,11 @@ const getSinglePost = cache(async (slug: string) => {
     include: {
       category: true,
       tags: true,
-      comments: true,
+      comments: {
+        include: {
+          user: true,
+        },
+      },
       likes: true,
     },
   });
@@ -84,7 +90,7 @@ export default async function SinglePostPage({
 
   return (
     <>
-      <div className="w-full h-[25vh] relative">
+      <div className="w-full h-[25vh] lg:h-[35vh] xl:h-[38vh] relative">
         <Image
           src={post.category.imageUrl}
           alt={post.category.name}
@@ -98,6 +104,7 @@ export default async function SinglePostPage({
             <h1 className="text-5xl font-bold text-center font-sacramento capitalize mt-10">
               {post?.title}
             </h1>
+            <div className="line"></div>
             <div className="flex flex-col justify-center items-center gap-5 mt-10">
               <div>
                 <Link
@@ -113,7 +120,7 @@ export default async function SinglePostPage({
                     <Link
                       href={`/tags/${tag.name}`}
                       key={tag.id}
-                      className="text-secondary/90"
+                      className="tag"
                     >
                       #{tag.name}
                     </Link>
@@ -121,13 +128,51 @@ export default async function SinglePostPage({
                 })}
               </div>
             </div>
-            <div className="p-2 mt-10">
+            <div className="p-2 mt-10 mb-20">
               <ReactMarkdown
                 components={{ code: CodeBlock }}
                 className="w-full mx-auto max-w-none prose prose-stone post-body"
               >
                 {post.content}
               </ReactMarkdown>
+            </div>
+            <div className="line mt-5"></div>
+            <div className="mt-10 w-full flex flex-col">
+              <h3 className="text-left font-bold text-xl mt-10">
+                Write a Comment
+              </h3>
+              <CommentForm post={post} />
+              {/* Fetched comment below */}
+              <div className="w-full  flex flex-col gap-2">
+                {post.comments &&
+                  post.comments.map((item) => (
+                    <div
+                      key={item.id}
+                      className="w-[95%] mx-auto mt-5 flex flex-col justify-center items-start"
+                    >
+                      <div className="flex gap-2">
+                        <div className="relative w-6 h-6 rounded-full overflow-hidden flex justify-center items-center">
+                          {item.user?.avatar ? (
+                            <Image
+                              src={item.user?.avatar}
+                              sizes="100%"
+                              alt="user avatar"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <User className="w-full h-full p-1 bg-slate-400/50" />
+                          )}
+                        </div>
+                        <h4 className="font-bold">
+                          {item.user?.firstName} {item.user?.lastName}
+                        </h4>
+                      </div>
+                      <div className="w-[95%] mx-auto mt-2">
+                        <p>{item.text}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
           <div className="w-full lg:w-[20%]">

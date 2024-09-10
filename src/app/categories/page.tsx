@@ -1,4 +1,4 @@
-import Hero from "@/components/home/Hero";
+import Hero from "@/components/mainpage/Hero";
 import { prisma } from "@/lib/prismadb";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +14,8 @@ export default async function page() {
       <Hero />
       <div className="wrapper">
         <h1>All Categories</h1>
-        <div className="w-full mt-10 flex flex-wrap justify-center items-center gap-10">
+        <div className="line mb-5"></div>
+        <div className="w-full mx-auto mt-10 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-3 justify-center items-center gap-10">
           {categories.length !== 0 ? (
             categories.map((category) => (
               <Link
@@ -22,7 +23,7 @@ export default async function page() {
                 key={category.id}
                 className="card"
               >
-                <div className="w-full h-52 relative">
+                <div className="w-full h-44 lg:h-52 relative">
                   <Image
                     src={category.imageUrl}
                     fill

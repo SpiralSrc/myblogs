@@ -5,7 +5,11 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prismadb";
-import { categorySchema, postSchema } from "@/lib/validation";
+import {
+  categorySchema,
+  commentSchema,
+  postSchema,
+} from "@/lib/validation";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -174,7 +178,7 @@ export async function createPost(formData: FormData) {
       .toLowerCase();
 
     const cat = await prisma.category.findFirst({
-      where: { id: parsedData.category },
+      where: { name: parsedData.category },
     });
     if (!cat) {
       throw new Error(`Category not found: ${parsedData.category}`);
@@ -194,6 +198,68 @@ export async function createPost(formData: FormData) {
     const tags = await Promise.all(tagsToConnectOrCreate);
 
     const newPost = await prisma.post.create({
+      data: {
+        title: parsedData.title,
+        slug: newSlug,
+        desc: parsedData.desc,
+        content: parsedData.content,
+        category: { connect: { id: cat.id } },
+        tags: {
+          connectOrCreate: parsedData.tags.map((tag) => ({
+            where: { name: tag },
+            create: { name: tag },
+          })),
+        },
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw new NextResponse("Failed to create post!", { status: 500 });
+  }
+  revalidatePath("/dashboard/posts/write-post");
+  redirect("/dashboard/posts");
+}
+
+// Update Post
+export async function updatePost(slug: string, formData: FormData) {
+  try {
+    const parsedData = postSchema.parse({
+      title: formData.get("title"),
+      slug: formData.get("title"),
+      desc: formData.get("desc"),
+      content: formData.get("content"),
+      category: formData.get("category"),
+      tags: formData.getAll("tags[]"),
+    });
+
+    const newSlug = parsedData.title
+      .replace(/\s+/g, "-")
+      .toLowerCase();
+
+    const cat = await prisma.category.findFirst({
+      where: { name: parsedData.category },
+    });
+    if (!cat) {
+      throw new Error(`Category not found: ${parsedData.category}`);
+    }
+
+    const tagsToConnectOrCreate = parsedData.tags.map(async (tag) => {
+      const existingTag = await prisma.tag.findUnique({
+        where: { name: tag },
+      });
+      if (existingTag) {
+        return { connect: { id: existingTag.id } };
+      } else {
+        return { create: { name: tag } };
+      }
+    });
+
+    const tags = await Promise.all(tagsToConnectOrCreate);
+
+    const newPost = await prisma.post.update({
+      where: {
+        slug,
+      },
       data: {
         title: parsedData.title,
         slug: newSlug,
@@ -250,3 +316,39 @@ export const getPost = async () => {
     throw new Error("Failed to create category!");
   }
 };
+
+//----------------------------- Comment ---------------------------------
+export async function createComment(
+  slug: string,
+  formData: FormData
+) {
+  // const { userId } = auth()
+
+  // if(!userId) {
+  //     return new NextResponse("Unauthorized", {status: 401})
+  // }
+
+  try {
+    const parsedData = commentSchema.parse({
+      text: formData.get("text"),
+    });
+
+    if (!parsedData.text) {
+      console.log("Invalid entry");
+      throw new NextResponse("Category name is required!", {
+        status: 400,
+      });
+    }
+
+    await prisma.comment.create({
+      data: {
+        text: parsedData.text,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw new NextResponse("Error adding a comment", { status: 500 });
+  }
+
+  // revalidatePath("/blogs/[slug]/page.tsx");
+}

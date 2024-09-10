@@ -23,7 +23,7 @@ export default function DeletePostPage({
               No
             </Link>
             <form action={deletePost}>
-              <input type="hidden" name="id" value={params.slug} />
+              <input type="hidden" name="slug" value={params.slug} />
               <SubmitButton>Yes</SubmitButton>
             </form>
           </div>

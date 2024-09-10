@@ -18,18 +18,19 @@ const BlogList = async ({ query }: { query: string }) => {
         {Array.isArray(post) &&
           filteredPost.map((item) => (
             <Link
-              href={`/categories/blogs/${item.slug}`}
+              href={`/blogs/${item.slug}`}
               key={item.id}
               className="w-full bg-stone-600 backdrop-blur-sm border-b border-secondary/40 p-4"
             >
               <h3 className="font-bold text-lg">{item.title}</h3>
+              <span className="cat">{item.category.name}</span>
               <div className="flex justify-start items-center gap-4">
                 {item.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="py-1 px-2 rounded-md text-sm bg-slate-500/50 backdrop-blur-sm"
+                    className="mt-2 py-1 px-2 rounded-md text-sm"
                   >
-                    {tag.name}
+                    #{tag.name}
                   </span>
                 ))}
               </div>

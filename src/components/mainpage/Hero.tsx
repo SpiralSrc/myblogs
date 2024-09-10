@@ -3,7 +3,7 @@ import HeroImage from "../../../public/pinkroses.webp";
 
 const Hero = () => {
   return (
-    <section className="w-screen h-[25vh]">
+    <section className="w-screen h-[25vh] lg:h-[35vh] xl:h-[38vh]">
       <div className="relative w-full h-full">
         <Image
           src={HeroImage}

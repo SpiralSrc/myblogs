@@ -19,6 +19,8 @@ const SearchBar = () => {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
+
+    params.delete("query");
   };
 
   return (

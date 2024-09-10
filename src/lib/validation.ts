@@ -2,6 +2,7 @@ import { z } from "zod";
 // import mongoose from "mongoose";
 
 export const postSchema = z.object({
+  // id: z.string(),
   title: z
     .string({ message: "Title is required" })
     .min(2, "Title has to be at least 4 characters"),

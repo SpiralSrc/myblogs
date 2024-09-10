@@ -171,7 +171,7 @@ const WritePostForm = () => {
                 name="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
+                className="min-h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
               ></textarea>
 
               {/* <p className="text-red-500 text-sm">
@@ -188,9 +188,12 @@ const WritePostForm = () => {
                 {title}
               </h1>
               <div className="flex flex-col justify-center items-center gap-5 mt-10">
-                {/* <div>
-                  <span className="cat">{category}</span>
-                </div> */}
+                {category && (
+                  <div>
+                    <span className="cat">{category}</span>
+                  </div>
+                )}
+
                 <div className="flex gap-5">
                   {tags.map((tag) => {
                     return (

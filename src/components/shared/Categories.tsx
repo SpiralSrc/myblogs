@@ -11,9 +11,7 @@ const Categories = async () => {
     <>
       {categories.map((category) => (
         <Link key={category.id} href={`/categories/${category.slug}`}>
-          <span className="py-1 px-2 rounded-md bg-stone-400 backdrop-blur-md overflow-hidden">
-            {category.name}
-          </span>
+          <span className="rounded-md cat">{category.name}</span>
         </Link>
       ))}
     </>
