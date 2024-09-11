@@ -10,6 +10,7 @@ import {
   commentSchema,
   postSchema,
 } from "@/lib/validation";
+import { auth } from "@clerk/nextjs/server";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -41,11 +42,12 @@ export async function deleteImage(publicId: string) {
 
 //create category
 export async function createCategory(formData: FormData) {
-  // const { userId } = auth()
+  const { userId } = auth();
 
-  // if(!userId) {
-  //     return new NextResponse("Unauthorized", {status: 401})
-  // }
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
 
   try {
     const parsedData = categorySchema.parse({
@@ -86,11 +88,12 @@ export async function updateCategory(
   slug: string,
   formData: FormData
 ) {
-  // const { userId } = auth()
+  const { userId } = auth();
 
-  // if(!userId) {
-  //     return new NextResponse("Unauthorized", {status: 401})
-  // }
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
 
   try {
     const parsedData = categorySchema.parse({
@@ -163,6 +166,13 @@ export const getCategories = async () => {
 
 //Prisma
 export async function createPost(formData: FormData) {
+  const { userId } = auth();
+
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
+
   try {
     const parsedData = postSchema.parse({
       title: formData.get("title"),
@@ -201,6 +211,7 @@ export async function createPost(formData: FormData) {
       data: {
         title: parsedData.title,
         slug: newSlug,
+        author: { connect: { id: userId } },
         desc: parsedData.desc,
         content: parsedData.content,
         category: { connect: { id: cat.id } },
@@ -222,6 +233,13 @@ export async function createPost(formData: FormData) {
 
 // Update Post
 export async function updatePost(slug: string, formData: FormData) {
+  const { userId } = auth();
+
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
+
   try {
     const parsedData = postSchema.parse({
       title: formData.get("title"),
@@ -284,6 +302,13 @@ export async function updatePost(slug: string, formData: FormData) {
 
 //delete Post
 export async function deletePost(formData: FormData) {
+  const { userId } = auth();
+
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
+
   const id = formData.get("id") as string;
 
   await prisma.post.delete({
@@ -318,37 +343,88 @@ export const getPost = async () => {
 };
 
 //----------------------------- Comment ---------------------------------
-export async function createComment(
-  slug: string,
-  formData: FormData
-) {
-  // const { userId } = auth()
+// export async function createComment(
+//   slug: string,
+//   formData: FormData
+// ) {
+//   const { userId } = auth();
 
-  // if(!userId) {
-  //     return new NextResponse("Unauthorized", {status: 401})
-  // }
+//   if (!userId) {
+//     console.log("Access denied");
+//     redirect("/");
+//   }
 
-  try {
-    const parsedData = commentSchema.parse({
-      text: formData.get("text"),
-    });
+//   try {
+//     const post = await prisma.post.findUnique({
+//       where: { slug },
+//       select: { id: true },
+//     });
 
-    if (!parsedData.text) {
-      console.log("Invalid entry");
-      throw new NextResponse("Category name is required!", {
-        status: 400,
-      });
-    }
+//     if (!post) {
+//       console.log("Post not found");
+//       throw new NextResponse("Post not found", { status: 404 });
+//     }
 
-    await prisma.comment.create({
-      data: {
-        text: parsedData.text,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    throw new NextResponse("Error adding a comment", { status: 500 });
-  }
+//     const parsedData = commentSchema.parse({
+//       text: formData.get("text"),
+//     });
 
-  // revalidatePath("/blogs/[slug]/page.tsx");
-}
+//     if (!parsedData.text) {
+//       console.log("Invalid entry");
+//       throw new NextResponse("Category name is required!", {
+//         status: 400,
+//       });
+//     }
+
+//     await prisma.comment.create({
+//       data: {
+//         text: parsedData.text,
+//         user: { connect: { id: userId } },
+//       },
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     throw new NextResponse("Error adding a comment", { status: 500 });
+//   }
+
+//   // revalidatePath("/blogs/[slug]/page.tsx");
+// }
+
+//----------------------------- Likes ---------------------------------
+// // export async function switchLike({slug: string}) {
+//   // const { userId } = auth()
+
+//   // if(!userId) {
+//   //     return new NextResponse("Unauthorized", {status: 401})
+//   // }
+
+//   // try {
+//   //   const existingLike = await prisma.like.findFirst({
+//   //     where: {
+//   //       slug,
+//   //       userId,
+//   //     }
+//   //   })
+
+//   //   if(existingLike) {
+//   //     await prisma.like.delete({
+//   //       where: {
+//   //         id: existingLike.id
+//   //       }
+//   //     })
+//   //   } else {
+//   //     await prisma.like.create({
+//   //       data: {
+//   //         slug,
+//   //         userId,
+//   //       }
+//   //     })
+//   //   }
+
+//   // } catch (error) {
+//   //   console.log(error);
+//   //   throw new NextResponse("There is an error in liking the post", {
+//   //     status: 501,
+//   //   });
+//   // }
+// }

@@ -1,7 +1,14 @@
 import { prisma } from "@/lib/prismadb";
+import { checkRole } from "@/lib/utils/roles";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function page() {
+  if (!checkRole("admin")) {
+    return notFound();
+  }
+
   const tags = await prisma.tag.findMany({
     orderBy: {
       name: "asc",

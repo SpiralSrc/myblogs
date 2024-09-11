@@ -9,34 +9,43 @@ import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
 import Image from "next/image";
 import RightSideBar from "@/components/shared/RightSideBar";
-import CommentForm from "@/components/shared/CommentForm";
+// import CommentForm from "@/components/shared/CommentForm";
 import { User } from "lucide-react";
 
 interface PostProps {
   params: {
+    id?: string;
     slug: string;
     name: string;
   };
 }
 
 const getSinglePost = cache(async (slug: string) => {
-  const tag = await prisma.post.findFirst({
+  const post = await prisma.post.findFirst({
     where: { slug },
     include: {
       category: true,
       tags: true,
       comments: {
         include: {
-          user: true,
+          user: {
+            // only select what info you need for the client side
+            select: {
+              firstName: true,
+              lastName: true,
+              avatar: true,
+              replyToComments: true,
+            },
+          },
         },
       },
       likes: true,
     },
   });
 
-  if (!tag) notFound();
+  if (!post) notFound();
 
-  return tag;
+  return post;
 });
 
 export async function generateMetadata({
@@ -141,7 +150,7 @@ export default async function SinglePostPage({
               <h3 className="text-left font-bold text-xl mt-10">
                 Write a Comment
               </h3>
-              <CommentForm post={post} />
+              {/* <CommentForm post={post} /> */}
               {/* Fetched comment below */}
               <div className="w-full  flex flex-col gap-2">
                 {post.comments &&

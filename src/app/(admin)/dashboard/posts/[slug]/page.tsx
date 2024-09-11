@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 
 interface PostProps {
   params: {
@@ -73,6 +74,12 @@ export default async function SinglePostPage({
 }: {
   params: { slug: string };
 }) {
+  const { sessionClaims } = auth();
+
+  if (sessionClaims?.metadata.role !== "admin") {
+    return null;
+  }
+
   const id = params.slug;
 
   const post = await getSinglePost(id);

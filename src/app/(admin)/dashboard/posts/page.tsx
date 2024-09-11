@@ -1,8 +1,14 @@
 import { prisma } from "@/lib/prismadb";
+import { checkRole } from "@/lib/utils/roles";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function PostsPage() {
+  if (!checkRole("admin")) {
+    return notFound();
+  }
+
   const posts = await prisma.post.findMany({
     orderBy: {
       title: "asc",

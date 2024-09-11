@@ -1,5 +1,6 @@
 import { deletePost } from "@/actions/action";
 import SubmitButton from "@/components/reusable_ui/SubmitButton";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
 export default function DeletePostPage({
@@ -7,6 +8,12 @@ export default function DeletePostPage({
 }: {
   params: { slug: string };
 }) {
+  const { sessionClaims } = auth();
+
+  if (sessionClaims?.metadata.role !== "admin") {
+    return null;
+  }
+
   return (
     <div className="wrapper h-screen">
       <div className="h-full flex justify-center items-center">

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prismadb";
+import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -44,6 +45,12 @@ export default async function SinglePostPage({
 }: {
   params: { name: string };
 }) {
+  const { sessionClaims } = auth();
+
+  if (sessionClaims?.metadata.role !== "admin") {
+    return null;
+  }
+
   const id = params.name;
 
   const tag = await getTags(id);

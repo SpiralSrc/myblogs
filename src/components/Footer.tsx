@@ -2,7 +2,7 @@
 
 import { navLinks, socialsData } from "@/lib/linksData";
 import Link from "next/link";
-import logo from "../app/icon.png";
+import logo from "../../public/logo2.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 

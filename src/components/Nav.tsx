@@ -6,6 +6,7 @@ import Link from "next/link";
 import Logo from "../app/icon.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 
 const Nav = () => {
   const path = usePathname();
@@ -51,6 +52,7 @@ const Nav = () => {
             ))}
           </ul>
         </div>
+        <UserButton />
 
         <Link
           href={"https://spiralsrc.dev/"}

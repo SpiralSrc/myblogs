@@ -3,6 +3,7 @@ import { Roboto, Sacramento } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const roboto = Roboto({
   subsets: ["cyrillic"],
@@ -30,12 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${roboto.variable} ${sacramento.variable}`}>
-        <Nav />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${roboto.variable} ${sacramento.variable}`}>
+          <Nav />
+          <main>{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
