@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "./CopyButton";
 import { PostSchema } from "@/lib/validation";
+import { useUser } from "@clerk/nextjs";
 
 const CodeBlock = ({ children, className, node, ...rest }: any) => {
   const match = /language-(\w+)/.exec(className || "");
@@ -39,14 +40,28 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
 };
 
 const EditPostForm = ({ post }: any) => {
+  const { isLoaded, user } = useUser();
+
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [category, setCategory] = useState(post.category.name);
-  const [title, setTitle] = useState(post.title);
-  const [desc, setDesc] = useState(post.desc);
-  const [content, setContent] = useState(post.content);
+  const [category, setCategory] = useState(post?.category.name || "");
+  const [title, setTitle] = useState(post?.title || "");
+  const [desc, setDesc] = useState(post?.desc || "");
+  const [content, setContent] = useState(post?.content || "");
 
   const [preview, setPreview] = useState(false);
+
+  //   useEffect for tags from database
+
+  useEffect(() => {
+    {
+      post ? setTags(post.tags.map((tag: any) => tag.name)) : null;
+    }
+  }, [post]);
+
+  if (!isLoaded) {
+    return "Loading...";
+  }
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -54,22 +69,21 @@ const EditPostForm = ({ post }: any) => {
     formData.set("title", title || post.title);
     formData.set("desc", desc || post.desc);
     formData.set("content", content || post.content);
-    formData.set("category", category || post.category.id);
+    formData.set("category", category || post.category);
     tags.forEach((tag) => {
       formData.append("tags[]", tag);
     });
 
     try {
-      await updatePost(post.slug, formData);
+      {
+        post
+          ? await updatePost(post.slug, formData)
+          : await createPost(formData);
+      }
     } catch (error) {
       console.error(error);
     }
   };
-
-  //   useEffect for tags from database
-  useEffect(() => {
-    setTags(post.tags.map((tag: any) => tag.name));
-  }, [post.tags]);
 
   //Adding/Deleting Tags
   const addTag = (
@@ -83,9 +97,20 @@ const EditPostForm = ({ post }: any) => {
     }
   };
 
+  // const deleteTag = (id: number) => {
+  //   setTags((prev) => prev.filter((_, i) => i !== id));
+  // };
+
   const deleteTag = (id: number) => {
-    setTags((prev) => prev.filter((_, i) => i !== id));
+    setTags((prev) => {
+      const newTags = prev.filter((_, i) => i !== id);
+      // Update the post object with the new tags
+      const updatedPost = { ...post, tags: newTags };
+      return newTags;
+    });
   };
+
+  console.log(tags);
 
   return (
     <>
@@ -111,14 +136,16 @@ const EditPostForm = ({ post }: any) => {
               <Input
                 type="text"
                 name="title"
-                defaultValue={post.title}
+                defaultValue={post?.title}
+                value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
                 required
               />
               <textarea
                 name="desc"
-                defaultValue={post.desc}
+                defaultValue={post?.desc}
+                value={desc}
                 onChange={(e) => setDesc(e.target.value)}
                 placeholder="Short description..."
                 className="w-full py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
@@ -157,12 +184,16 @@ const EditPostForm = ({ post }: any) => {
 
               <select
                 name="category"
-                defaultValue={post.category}
-                value={category || post.category}
+                defaultValue={post?.category}
+                value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="py-2 px-5 rounded-xl border border-red-400/70 bg-red-400/70 transition-all focus:outline-none hover:text-red-400/70 hover:bg-red-200"
               >
-                <option value="">{post.category.name}</option>
+                {post ? (
+                  <option value="">{post?.category.name}</option>
+                ) : (
+                  <option value="">Choose category...</option>
+                )}
 
                 <CategoryList />
               </select>
@@ -173,9 +204,10 @@ const EditPostForm = ({ post }: any) => {
               <textarea
                 required
                 name="content"
-                defaultValue={post.content}
+                defaultValue={post?.content}
+                value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
+                className="min-h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
               ></textarea>
 
               {/* <p className="text-red-500 text-sm">

@@ -15,6 +15,7 @@ export default async function page() {
     },
     include: {
       posts: true,
+      _count: true,
     },
   });
 

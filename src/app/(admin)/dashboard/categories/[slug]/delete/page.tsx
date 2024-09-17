@@ -1,17 +1,16 @@
 import { deleteCategory } from "@/actions/action";
 import SubmitButton from "@/components/reusable_ui/SubmitButton";
-import { auth } from "@clerk/nextjs/server";
+import { checkRole } from "@/lib/utils/roles";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default function DeleteCategoryPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const { sessionClaims } = auth();
-
-  if (sessionClaims?.metadata.role !== "admin") {
-    return null;
+  if (!checkRole("admin")) {
+    return notFound();
   }
 
   return (

@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
+import { checkRole } from "@/lib/utils/roles";
 
 interface PostProps {
   params: {
@@ -20,7 +20,11 @@ const getSinglePost = cache(async (slug: string) => {
   const tag = await prisma.post.findFirst({
     where: { slug },
     include: {
-      category: true,
+      category: {
+        select: {
+          name: true,
+        },
+      },
       tags: true,
       comments: true,
       likes: true,
@@ -74,10 +78,8 @@ export default async function SinglePostPage({
 }: {
   params: { slug: string };
 }) {
-  const { sessionClaims } = auth();
-
-  if (sessionClaims?.metadata.role !== "admin") {
-    return null;
+  if (!checkRole("admin")) {
+    return notFound();
   }
 
   const id = params.slug;

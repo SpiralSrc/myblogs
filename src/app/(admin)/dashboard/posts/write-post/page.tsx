@@ -1,19 +1,19 @@
+import EditPostForm from "@/components/shared/EditPostForm";
 import WritePostForm from "@/components/shared/WritePostForm";
-import { auth } from "@clerk/nextjs/server";
+import { checkRole } from "@/lib/utils/roles";
+import { notFound } from "next/navigation";
 
 import React from "react";
 
 export default async function WritePost() {
-  const { sessionClaims } = auth();
-
-  if (sessionClaims?.metadata.role !== "admin") {
-    return null;
+  if (!checkRole("admin")) {
+    return notFound();
   }
 
   return (
     <section>
       <div className="wrapper">
-        <WritePostForm />
+        <EditPostForm />
       </div>
     </section>
   );

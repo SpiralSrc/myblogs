@@ -52,17 +52,18 @@ const Nav = () => {
             ))}
           </ul>
         </div>
-        <UserButton />
-
-        <Link
-          href={"https://spiralsrc.dev/"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span className="py-2 px-3 rounded-full font-bold border border-transparent bg-red-950/20 backdrop-blur-sm hover:text-pink-400/80 hover:border-red-400/20 hover:shadow-lg smooth-effect">
-            Portfolio
-          </span>
-        </Link>
+        <div className="flex gap-2 justify-center items-center">
+          <Link
+            href={"https://spiralsrc.dev/"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="py-2 px-3 rounded-full font-bold border border-transparent bg-red-950/20 backdrop-blur-sm hover:text-pink-400/80 hover:border-red-400/20 hover:shadow-lg smooth-effect">
+              Portfolio
+            </span>
+          </Link>
+          <UserButton />
+        </div>
       </div>
     </nav>
   );

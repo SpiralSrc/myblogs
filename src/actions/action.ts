@@ -11,6 +11,7 @@ import {
   postSchema,
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
+import { disconnect } from "process";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -171,9 +172,17 @@ export async function createPost(formData: FormData) {
   if (!userId) {
     console.log("Access denied");
     redirect("/");
+    return;
   }
 
   try {
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
     const parsedData = postSchema.parse({
       title: formData.get("title"),
       slug: formData.get("title"),
@@ -183,44 +192,51 @@ export async function createPost(formData: FormData) {
       tags: formData.getAll("tags[]"),
     });
 
+    if (
+      !parsedData.title ||
+      !parsedData.desc ||
+      !parsedData.content ||
+      !parsedData.category ||
+      !parsedData.tags
+    ) {
+      throw new Error("Some required fields were not filled");
+    }
+
+    const category = await prisma.category.findFirst({
+      where: { name: parsedData.category },
+    });
+
+    if (!category) {
+      throw new Error(`Category not found: ${parsedData.category}`);
+    }
+
     const newSlug = parsedData.title
       .replace(/\s+/g, "-")
       .toLowerCase();
 
-    const cat = await prisma.category.findFirst({
-      where: { name: parsedData.category },
-    });
-    if (!cat) {
-      throw new Error(`Category not found: ${parsedData.category}`);
-    }
-
-    const tagsToConnectOrCreate = parsedData.tags.map(async (tag) => {
-      const existingTag = await prisma.tag.findUnique({
-        where: { name: tag },
-      });
-      if (existingTag) {
-        return { connect: { id: existingTag.id } };
-      } else {
-        return { create: { name: tag } };
-      }
-    });
-
-    const tags = await Promise.all(tagsToConnectOrCreate);
-
-    const newPost = await prisma.post.create({
+    await prisma.post.create({
       data: {
         title: parsedData.title,
         slug: newSlug,
-        author: { connect: { id: userId } },
+        user: {
+          connect: { clerkId: userId },
+        },
         desc: parsedData.desc,
         content: parsedData.content,
-        category: { connect: { id: cat.id } },
+        category: {
+          connect: { id: category.id },
+        },
         tags: {
           connectOrCreate: parsedData.tags.map((tag) => ({
             where: { name: tag },
             create: { name: tag },
           })),
         },
+      },
+      include: {
+        user: true,
+        category: true,
+        tags: true,
       },
     });
   } catch (error) {
@@ -261,20 +277,19 @@ export async function updatePost(slug: string, formData: FormData) {
       throw new Error(`Category not found: ${parsedData.category}`);
     }
 
-    const tagsToConnectOrCreate = parsedData.tags.map(async (tag) => {
-      const existingTag = await prisma.tag.findUnique({
-        where: { name: tag },
-      });
-      if (existingTag) {
-        return { connect: { id: existingTag.id } };
-      } else {
-        return { create: { name: tag } };
-      }
+    const existingTags = await prisma.post.findUnique({
+      where: { slug },
+      select: { tags: true },
     });
 
-    const tags = await Promise.all(tagsToConnectOrCreate);
+    const newTags = parsedData.tags.filter((tag) => {
+      const existingTag = existingTags?.tags.find(
+        (t) => t.name === tag
+      );
+      return existingTag ? existingTag.name : null;
+    });
 
-    const newPost = await prisma.post.update({
+    await prisma.post.update({
       where: {
         slug,
       },
@@ -285,6 +300,14 @@ export async function updatePost(slug: string, formData: FormData) {
         content: parsedData.content,
         category: { connect: { id: cat.id } },
         tags: {
+          // Disconnect tags that are no longer present
+          disconnect: existingTags?.tags
+            .filter(
+              (existingTag) =>
+                !parsedData.tags.includes(existingTag.name)
+            )
+            .map((existingTag) => ({ name: existingTag.name })),
+          // Connect or create new tags
           connectOrCreate: parsedData.tags.map((tag) => ({
             where: { name: tag },
             create: { name: tag },
@@ -309,11 +332,11 @@ export async function deletePost(formData: FormData) {
     redirect("/");
   }
 
-  const id = formData.get("id") as string;
+  const slug = formData.get("slug") as string;
 
   await prisma.post.delete({
     where: {
-      id: id,
+      slug,
     },
   });
 
@@ -341,6 +364,66 @@ export const getPost = async () => {
     throw new Error("Failed to create category!");
   }
 };
+
+//----------------------------- Tag ---------------------------------
+
+// Delete tag after disconnecting from the posts
+export async function deleteTagName(formData: FormData) {
+  const name = formData.get("name") as string;
+  try {
+    const tag = await prisma.tag.findUnique({
+      where: {
+        name: name,
+      },
+    });
+    if (!tag) {
+      throw new Error("Tag name not found");
+    }
+
+    // Get the posts that are associated with this tag
+    const posts = await prisma.post.findMany({
+      where: {
+        tags: {
+          some: {
+            name: tag.name,
+          },
+        },
+      },
+      include: {
+        tags: true,
+      },
+    });
+
+    // Disconnect the tag from each post
+    await Promise.all(
+      posts.map(async (post) => {
+        await prisma.post.update({
+          where: {
+            slug: post.slug,
+          },
+          data: {
+            tags: {
+              set: post.tags.filter((t: any) => t.name !== tag.name),
+            },
+          },
+        });
+      })
+    );
+
+    // Delete the tag
+    await prisma.tag.delete({
+      where: {
+        name: tag.name,
+      },
+    });
+  } catch (error) {
+    return new NextResponse(`Failed to delete tag`, {
+      status: 500,
+    });
+  }
+  revalidatePath("/dashboard/tags");
+  redirect("/dashboard/tags");
+}
 
 //----------------------------- Comment ---------------------------------
 // export async function createComment(

@@ -11,7 +11,7 @@ export const postSchema = z.object({
     .string()
     .min(3, "Content has to be at least 5 characters"),
   category: z.coerce.string(),
-  tags: z.array(z.string().min(1)),
+  tags: z.array(z.coerce.string().min(1)),
 });
 
 export const categorySchema = z.object({

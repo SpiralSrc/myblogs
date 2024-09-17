@@ -1,11 +1,11 @@
 import CategoryForm from "@/components/shared/CategoryForm";
+import { checkRole } from "@/lib/utils/roles";
 import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 
 export default function AddCategory() {
-  const { sessionClaims } = auth();
-
-  if (sessionClaims?.metadata.role !== "admin") {
-    return null;
+  if (!checkRole("admin")) {
+    return notFound();
   }
 
   return (

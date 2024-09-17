@@ -1,16 +1,15 @@
 import EditPostForm from "@/components/shared/EditPostForm";
 import { prisma } from "@/lib/prismadb";
-import { auth } from "@clerk/nextjs/server";
+import { checkRole } from "@/lib/utils/roles";
+import { notFound } from "next/navigation";
 
 export default async function page({
   params,
 }: {
   params: { slug: string };
 }) {
-  const { sessionClaims } = auth();
-
-  if (sessionClaims?.metadata.role !== "admin") {
-    return null;
+  if (!checkRole("admin")) {
+    return notFound();
   }
 
   const slug = params.slug;
