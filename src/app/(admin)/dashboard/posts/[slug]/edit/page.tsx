@@ -1,4 +1,4 @@
-import EditPostForm from "@/components/shared/EditPostForm";
+import PostForm from "@/components/shared/PostForm";
 import { prisma } from "@/lib/prismadb";
 import { checkRole } from "@/lib/utils/roles";
 import { notFound } from "next/navigation";
@@ -26,7 +26,7 @@ export default async function page({
 
   return (
     <div className="wrapper">
-      <EditPostForm post={post} />
+      <PostForm post={post} />
     </div>
   );
 }

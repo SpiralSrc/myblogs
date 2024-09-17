@@ -11,7 +11,6 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "./CopyButton";
-import { PostSchema } from "@/lib/validation";
 import { useUser } from "@clerk/nextjs";
 
 const CodeBlock = ({ children, className, node, ...rest }: any) => {
@@ -39,8 +38,8 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
   );
 };
 
-const EditPostForm = ({ post }: any) => {
-  const { isLoaded, user } = useUser();
+const PostForm = ({ post }: any) => {
+  const { isLoaded } = useUser();
 
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -110,13 +109,11 @@ const EditPostForm = ({ post }: any) => {
     });
   };
 
-  console.log(tags);
-
   return (
     <>
       <div className="relative">
         <span
-          className={`absolute top-10 right-5 flex gap-1 ${
+          className={`absolute top-10 right-5 flex gap-1 cursor-pointer ${
             !preview ? "text-secondary" : "text-secondary/50"
           }`}
           onClick={() => setPreview(!preview)}
@@ -124,7 +121,7 @@ const EditPostForm = ({ post }: any) => {
           <Eye /> Preview
         </span>
         {!preview ? (
-          <div>
+          <div className="flex w-full flex-col">
             <h1 className="text-4xl text-center font-bold mb-10">
               Edit
             </h1>
@@ -207,7 +204,7 @@ const EditPostForm = ({ post }: any) => {
                 defaultValue={post?.content}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="min-h-44 py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
+                className="w-full min-h-[60vh] flex py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
               ></textarea>
 
               {/* <p className="text-red-500 text-sm">
@@ -252,4 +249,4 @@ const EditPostForm = ({ post }: any) => {
     </>
   );
 };
-export default EditPostForm;
+export default PostForm;

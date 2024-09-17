@@ -10,7 +10,11 @@ const Tags = async () => {
   return (
     <>
       {tags.map((tag: any) => (
-        <Link key={tag.id} href={`/tags/${tag.name}`}>
+        <Link
+          key={tag.id}
+          href={`/tags/${tag.name}`}
+          className="hover:text-blue-300/90 smooth-effect"
+        >
           #{tag.name}
         </Link>
       ))}

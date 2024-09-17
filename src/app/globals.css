@@ -71,7 +71,7 @@ body::-webkit-scrollbar {
   }
 
   .cat {
-    @apply py-1 px-2 bg-pink-500/20 rounded-md text-sm;
+    @apply py-1 px-2 bg-pink-500/20 rounded-md text-sm smooth-effect border border-transparent hover:shadow-lg hover:border-pink-500/20 hover:bg-pink-300/20 hover:text-pink-500/90;
   }
 
   .sidebar {
@@ -94,6 +94,6 @@ body::-webkit-scrollbar {
   }
 
   .tag {
-    @apply text-sm text-secondary/90;
+    @apply text-sm text-secondary/90 hover:text-blue-300/90 smooth-effect;
   }
 }

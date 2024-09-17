@@ -33,7 +33,9 @@ export default async function Home({
       <div className="wrapper">
         <div className="w-full h-full flex flex-col md:flex-row gap-5">
           <div className="w-full md:w-[75%] flex flex-col gap-3">
-            <h2 className="text-left mb-3">New Post</h2>
+            <h3 className="text-left text-2xl font-bold mb-3">
+              New Post
+            </h3>
             {newPost && newPost[0] && (
               <Link
                 href={`/blogs/${newPost[0].slug}`}
@@ -41,7 +43,7 @@ export default async function Home({
               >
                 <h2>{newPost[0].title}</h2>
                 <div className="flex flex-col justify-center items-center gap-3">
-                  <div>
+                  <div className="mt-3">
                     <span className="cat">
                       {newPost[0].category.name}
                     </span>
@@ -54,7 +56,7 @@ export default async function Home({
                     ))}
                   </div>
                 </div>
-                <div className="mt-10 indent-8">
+                <div className="mt-10 indent-8 lg:w-[85%] mx-auto">
                   <p>{newPost[0].desc}</p>
                 </div>
               </Link>
