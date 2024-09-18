@@ -9,9 +9,11 @@ import {
   categorySchema,
   commentSchema,
   postSchema,
+  replySchema,
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
 import { disconnect } from "process";
+import { connect } from "http2";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -172,7 +174,6 @@ export async function createPost(formData: FormData) {
   if (!userId) {
     console.log("Access denied");
     redirect("/");
-    return;
   }
 
   try {
@@ -426,88 +427,190 @@ export async function deleteTagName(formData: FormData) {
 }
 
 //----------------------------- Comment ---------------------------------
-// export async function createComment(
-//   slug: string,
-//   formData: FormData
-// ) {
-//   const { userId } = auth();
+export async function createComment(
+  slug: string,
+  formData: FormData
+) {
+  const { userId } = auth();
 
-//   if (!userId) {
-//     console.log("Access denied");
-//     redirect("/");
-//   }
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
 
-//   try {
-//     const post = await prisma.post.findUnique({
-//       where: { slug },
-//       select: { id: true },
-//     });
+  try {
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
 
-//     if (!post) {
-//       console.log("Post not found");
-//       throw new NextResponse("Post not found", { status: 404 });
-//     }
+    const post = await prisma.post.findUnique({
+      where: { slug },
+      select: {
+        slug: true,
+      },
+    });
 
-//     const parsedData = commentSchema.parse({
-//       text: formData.get("text"),
-//     });
+    if (!post) {
+      console.log("Post not found");
+      throw new NextResponse("Post not found", { status: 404 });
+    }
 
-//     if (!parsedData.text) {
-//       console.log("Invalid entry");
-//       throw new NextResponse("Category name is required!", {
-//         status: 400,
-//       });
-//     }
+    const parsedData = commentSchema.parse({
+      text: formData.get("text"),
+    });
 
-//     await prisma.comment.create({
-//       data: {
-//         text: parsedData.text,
-//         user: { connect: { id: userId } },
-//       },
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     throw new NextResponse("Error adding a comment", { status: 500 });
-//   }
+    if (!parsedData.text) {
+      console.log("Invalid entry");
+      throw new NextResponse("Category name is required!", {
+        status: 400,
+      });
+    }
 
-//   // revalidatePath("/blogs/[slug]/page.tsx");
-// }
+    await prisma.comment.create({
+      data: {
+        text: parsedData.text,
+        user: { connect: { clerkId: userId } },
+        post: { connect: { slug: slug } },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw new NextResponse("Error adding a comment", { status: 500 });
+  }
+
+  revalidatePath(`/blogs/${slug}`);
+}
+
+export async function deleteComment(formData: FormData) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const id = formData.get("id") as string;
+
+    await prisma.comment.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//----------------------------- Reply ---------------------------------
+export async function createReply(
+  id: string,
+  slug: string,
+  formData: FormData
+) {
+  const { userId } = auth();
+
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
+    const post = await prisma.post.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    const comment = await prisma.comment.findUnique({
+      where: { id },
+      include: {
+        replies: true,
+      },
+    });
+
+    if (!comment) {
+      console.log("Post not found");
+      throw new NextResponse("Comment not found", { status: 404 });
+    }
+
+    const parsedData = replySchema.parse({
+      text: formData.get("text"),
+    });
+
+    if (!parsedData.text) {
+      console.log("Invalid entry");
+      throw new NextResponse("Invalid text!", {
+        status: 400,
+      });
+    }
+
+    await prisma.reply.create({
+      data: {
+        text: parsedData.text,
+        user: { connect: { clerkId: userId } },
+        comment: { connect: { id: id } },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw new NextResponse("Error in replying to the comment", {
+      status: 500,
+    });
+  }
+
+  revalidatePath(`/blogs/${slug}`);
+}
 
 //----------------------------- Likes ---------------------------------
-// // export async function switchLike({slug: string}) {
-//   // const { userId } = auth()
+export async function switchPostLike(postSlug: string) {
+  const { userId } = auth();
 
-//   // if(!userId) {
-//   //     return new NextResponse("Unauthorized", {status: 401})
-//   // }
+  if (!userId) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
 
-//   // try {
-//   //   const existingLike = await prisma.like.findFirst({
-//   //     where: {
-//   //       slug,
-//   //       userId,
-//   //     }
-//   //   })
+  try {
+    const existingLike = await prisma.like.findFirst({
+      where: {
+        postSlug,
+        user: {
+          clerkId: userId,
+        },
+      },
+    });
 
-//   //   if(existingLike) {
-//   //     await prisma.like.delete({
-//   //       where: {
-//   //         id: existingLike.id
-//   //       }
-//   //     })
-//   //   } else {
-//   //     await prisma.like.create({
-//   //       data: {
-//   //         slug,
-//   //         userId,
-//   //       }
-//   //     })
-//   //   }
-
-//   // } catch (error) {
-//   //   console.log(error);
-//   //   throw new NextResponse("There is an error in liking the post", {
-//   //     status: 501,
-//   //   });
-//   // }
-// }
+    if (existingLike) {
+      await prisma.like.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
+    } else {
+      await prisma.like.create({
+        data: {
+          post: { connect: { slug: postSlug } },
+          user: {
+            connect: {
+              clerkId: userId,
+            },
+          },
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    throw new NextResponse("There is an error in liking the post", {
+      status: 501,
+    });
+  }
+}

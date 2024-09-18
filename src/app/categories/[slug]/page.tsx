@@ -33,6 +33,7 @@ export default async function page({
               fill
               className="object-cover"
             />
+            <div className="img-overlay"></div>
           </div>
           <div className="wrapper">
             <h1 className="mb-10">{category.name}</h1>

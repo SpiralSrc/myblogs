@@ -26,7 +26,7 @@ export default async function Home({
     <>
       <Hero />
       {query && (
-        <div className="w-72 min-h-60 absolute top-16 right-[25%] z-30 flex rounded-md overflow-y-scroll">
+        <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
           <BlogList query={query} />
         </div>
       )}

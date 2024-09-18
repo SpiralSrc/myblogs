@@ -145,7 +145,7 @@ const PostForm = ({ post }: any) => {
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
                 placeholder="Short description..."
-                className="w-full py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
+                className="w-full py-2 pl-3 bg-zinc-100/95 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
               />
 
               <div className="w-full flex flex-row gap-2">
@@ -204,7 +204,7 @@ const PostForm = ({ post }: any) => {
                 defaultValue={post?.content}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full min-h-[60vh] flex py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
+                className="w-full min-h-[60vh] flex py-2 pl-3 pr-2 bg-zinc-100/95 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
               ></textarea>
 
               {/* <p className="text-red-500 text-sm">

@@ -13,6 +13,7 @@ const Hero = () => {
           sizes="100vw"
           className="object-cover"
         />
+        <div className="img-overlay"></div>
       </div>
     </section>
   );

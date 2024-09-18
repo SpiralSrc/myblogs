@@ -28,7 +28,7 @@ const BlogList = async ({ query }: { query: string }) => {
                 {item.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="mt-2 py-1 px-2 rounded-md text-sm"
+                    className="mt-2 py-1 px-2 rounded-md text-sm text-secondary/95"
                   >
                     #{tag.name}
                   </span>

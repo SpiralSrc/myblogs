@@ -28,7 +28,7 @@ const Input = ({
       value={value}
       required={required}
       placeholder={placeholder}
-      className="w-full py-2 pl-3 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
+      className="w-full py-2 pl-3 pr-2 text-slate-500 bg-zinc-100/95 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
     />
   );
 };

@@ -113,10 +113,10 @@ export async function POST(req: Request) {
               id: existingUser.id,
             },
             data: {
-              //   username: evt.data.username,
+              //   username: JSON.parse(body).data.username,
               firstName: evt.data.first_name,
               lastName: evt.data.last_name,
-              avatar: evt.data.image_url,
+              avatar: JSON.parse(body).data.image_url,
             },
           });
           console.log("User updated successfully");

@@ -33,6 +33,10 @@ export const commentSchema = z.object({
   text: z.string().min(2).max(250),
 });
 
+export const replySchema = z.object({
+  text: z.string().min(2).max(250),
+});
+
 export type PostSchema = z.infer<typeof postSchema>;
 
 export type CategorySchema = z.infer<typeof categorySchema>;
@@ -40,3 +44,5 @@ export type CategorySchema = z.infer<typeof categorySchema>;
 export type TagSchema = z.infer<typeof tagsSchema>;
 
 export type CommentSchema = z.infer<typeof commentSchema>;
+
+export type ReplySchema = z.infer<typeof replySchema>;

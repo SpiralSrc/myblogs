@@ -8,35 +8,36 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(uuid())
-  clerkId         String    @unique
-  firstName       String?
-  lastName        String?
-  email           String    @unique
-  avatar          String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  posts           Post[]
-  comments        Comment[] @relation("Comment")
-  replyToComments Comment[] @relation("RepliedToComments")
-  likes           Like[]
+  id        String    @id @default(uuid())
+  clerkId   String    @unique
+  firstName String?
+  lastName  String?
+  email     String    @unique
+  avatar    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  Reply     Reply[]
 }
 
 model Post {
-  id         String    @id @default(uuid())
-  title      String
-  slug       String    @unique
-  desc       String
-  content    String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  category   Category  @relation(fields: [categoryId], references: [id])
-  categoryId String
-  user       User      @relation(fields: [userId], references: [clerkId])
-  userId     String
-  tags       Tag[]
-  comments   Comment[]
-  likes      Like[]
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  desc        String
+  content     String
+  isPublished Boolean?  @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  user        User      @relation(fields: [userId], references: [clerkId])
+  userId      String
+  tags        Tag[]
+  comments    Comment[]
+  likes       Like[]
 
   @@map("posts")
 }
@@ -62,17 +63,15 @@ model Tag {
 }
 
 model Comment {
-  id          String   @id @default(uuid())
-  text        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation("Comment", fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  repliedBy   User?    @relation("RepliedToComments", fields: [repliedById], references: [id], onDelete: Cascade)
-  repliedById String?
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      String
-  likes       Like[]
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  post      Post     @relation(fields: [postSlug], references: [slug], onDelete: Cascade)
+  postSlug  String
+  replies   Reply[]
 }
 
 model Like {
@@ -81,8 +80,15 @@ model Like {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String
-  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId String?
+  post      Post     @relation(fields: [postSlug], references: [slug], onDelete: Cascade)
+  postSlug  String
+}
+
+model Reply {
+  id        String  @id @default(uuid())
+  text      String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
 }

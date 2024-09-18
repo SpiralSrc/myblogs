@@ -11,6 +11,11 @@ import Image from "next/image";
 import RightSideBar from "@/components/shared/RightSideBar";
 // import CommentForm from "@/components/shared/CommentForm";
 import { User } from "lucide-react";
+import CommentForm from "@/components/shared/CommentForm";
+import ReplyForm from "@/components/shared/ReplyForm";
+import { auth } from "@clerk/nextjs/server";
+import LikePostButton from "@/components/shared/LikePostButton";
+import DeleteComment from "@/components/shared/DeleteComment";
 
 interface PostProps {
   params: {
@@ -34,12 +39,38 @@ const getSinglePost = cache(async (slug: string) => {
               firstName: true,
               lastName: true,
               avatar: true,
-              replyToComments: true,
+              clerkId: true,
+            },
+          },
+          replies: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                  avatar: true,
+                },
+              },
             },
           },
         },
       },
-      likes: true,
+      likes: {
+        include: {
+          user: {
+            select: {
+              clerkId: true,
+            },
+          },
+        },
+      },
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          avatar: true,
+        },
+      },
     },
   });
 
@@ -93,6 +124,10 @@ export default async function SinglePostPage({
 }: {
   params: { slug: string };
 }) {
+  const { userId } = auth();
+
+  const user = userId;
+
   const id = params.slug;
 
   const post = await getSinglePost(id);
@@ -106,15 +141,59 @@ export default async function SinglePostPage({
           fill
           className="object-cover"
         />
+        <div className="img-overlay"></div>
       </div>
       <div className="wrapper">
         <div className="w-full h-full flex flex-col lg:flex-row md:gap-2 gap-10">
           <div className="w-full lg:w-[80%]">
-            <h1 className="text-5xl font-bold text-center font-sacramento capitalize mt-10">
-              {post?.title}
-            </h1>
+            <h1>{post?.title}</h1>
             <div className="line"></div>
-            <div className="flex flex-col justify-center items-center gap-5 mt-10">
+
+            {/* ----- Author Owner ------ */}
+
+            <div className="w-[60%] mx-auto flex justify-between items-center gap-2 mt-3">
+              {/* Author */}
+              <div className="flex gap-2">
+                <span className="text-sm text-secondary/90">by:</span>
+                <div className="relative w-5 h-5 md:w-6 md:h-6 rounded-full overflow-hidden flex justify-center items-center">
+                  <div className="flex gap-2">
+                    {post.user.avatar ? (
+                      <Image
+                        src={post.user.avatar}
+                        sizes="100%"
+                        fill
+                        alt="user avatar"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <User className="w-full h-full p-1 bg-slate-400/50" />
+                    )}
+                  </div>
+                </div>
+                <h4 className="font-medium text-sm md:text-base">
+                  {post.user.firstName} {post.user.lastName}
+                </h4>
+              </div>
+
+              {/* Like Button */}
+
+              <div className="flex justify-center items-center gap-2 my-2">
+                <LikePostButton
+                  slug={post.slug}
+                  user={user}
+                  likes={post.likes.map((like) => like.user.clerkId)}
+                />
+
+                <div className="flex gap-1 text-sm">
+                  <span className="text-sm">{post.likes.length}</span>
+                  <span className="text-sm">
+                    {post.likes.length > 1 ? "Likes" : "Like"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center items-center gap-3 mt-1">
               <div>
                 <Link
                   href={`/categories/${post.category.slug}`}
@@ -146,38 +225,117 @@ export default async function SinglePostPage({
               </ReactMarkdown>
             </div>
             <div className="line mt-5"></div>
-            <div className="mt-10 w-full flex flex-col">
-              <h3 className="text-left font-bold text-xl mt-10">
+            <div className="w-[98%] mx-auto mt-10 lg:w-full flex flex-col">
+              <h3 className="text-left font-bold text-lg lg:text-xl mt-10">
                 Write a Comment
               </h3>
-              {/* <CommentForm post={post} /> */}
+              <span className="text-sm italic mb-5">
+                *Please log in or register to post a comment
+              </span>
+              {user ? (
+                <CommentForm post={post} />
+              ) : (
+                <div className="w-full h-20 flex gap-2 justify-center items-center rounded-md bg-slate-500/5 backdrop-blur-md overflow-hidden shadow-inner">
+                  <Link
+                    href={"/"}
+                    className="hover:text-blue-300/90 smooth-effect font-bold"
+                  >
+                    Login
+                  </Link>
+                  <span className="text-sm">or</span>
+                  <Link
+                    href={"/"}
+                    className="hover:text-blue-300/90 smooth-effect font-bold"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
+
               {/* Fetched comment below */}
               <div className="w-full  flex flex-col gap-2">
                 {post.comments &&
                   post.comments.map((item) => (
                     <div
                       key={item.id}
-                      className="w-[95%] mx-auto mt-5 flex flex-col justify-center items-start"
+                      className="w-[95%] mx-auto mt-5 flex flex-col justify-center items-start border border-secondary/20 py-3 p-3 rounded-lg"
                     >
-                      <div className="flex gap-2">
-                        <div className="relative w-6 h-6 rounded-full overflow-hidden flex justify-center items-center">
-                          {item.user?.avatar ? (
-                            <Image
-                              src={item.user?.avatar}
-                              sizes="100%"
-                              alt="user avatar"
-                              className="object-cover"
-                            />
-                          ) : (
-                            <User className="w-full h-full p-1 bg-slate-400/50" />
-                          )}
+                      {/* user */}
+                      <div className="w-full flex justify-between items-center">
+                        <div className="flex gap-2">
+                          <div className="relative w-5 h-5 md:w-6 md:h-6 rounded-full overflow-hidden flex justify-center items-center">
+                            {item.user.avatar ? (
+                              <Image
+                                src={item.user.avatar}
+                                sizes="100%"
+                                fill
+                                alt="user avatar"
+                                className="object-cover"
+                              />
+                            ) : (
+                              <User className="w-full h-full p-1 bg-slate-400/50" />
+                            )}
+                          </div>
+                          <h4 className="font-medium text-sm md:text-base">
+                            {item.user?.firstName}{" "}
+                            {item.user?.lastName}
+                          </h4>
                         </div>
-                        <h4 className="font-bold">
-                          {item.user?.firstName} {item.user?.lastName}
-                        </h4>
+                        {item.user.clerkId === user ? (
+                          <div className="flex">
+                            <DeleteComment id={item.id} />
+                          </div>
+                        ) : null}
                       </div>
-                      <div className="w-[95%] mx-auto mt-2">
-                        <p>{item.text}</p>
+
+                      {/* ----- Comment Text ----- */}
+                      <div className="w-[95%] mx-auto mt-2 ">
+                        <p className="mb-1">{item.text}</p>
+                        {item.replies.length > 0 ? (
+                          <div className="h-1 border-b border-secondary/20 mx-auto mb-3"></div>
+                        ) : null}
+                      </div>
+
+                      {/* Reply Button */}
+                      {user && (
+                        <ReplyForm comment={item} slug={post.slug} />
+                      )}
+
+                      {/* ----- Fetched Replies ----- */}
+                      <div className="w-[90%] mx-auto flex flex-col gap-2">
+                        {item.replies.map((reply) => (
+                          <div
+                            key={reply.id}
+                            className="bg-slate-500/5 py-2 pl-2 rounded-lg"
+                          >
+                            {/* user */}
+                            <div className="flex gap-2">
+                              <div className="relative w-5 h-5 md:w-6 md:h-6 rounded-full overflow-hidden flex justify-center items-center">
+                                {reply.user.avatar ? (
+                                  <Image
+                                    src={reply.user.avatar}
+                                    sizes="100%"
+                                    fill
+                                    alt="user avatar"
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <User className="w-full h-full p-1 bg-slate-400/50" />
+                                )}
+                              </div>
+                              <h4 className="font-medium text-sm md:text-base">
+                                {reply.user.firstName}{" "}
+                                {reply.user.lastName}
+                              </h4>
+                            </div>
+                            {/* Comment Text */}
+                            <div className="w-[95%] mx-auto mt-2 ">
+                              <p className="mb-1">{reply.text}</p>
+
+                              {/* <div className="h-1 border-b border-secondary/20 mx-auto mb-2"></div> */}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   ))}
