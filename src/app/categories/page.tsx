@@ -33,7 +33,7 @@ export default async function page() {
                   />
                   <div className="img-overlay"></div>
                 </div>
-                <div className="mt-5">
+                <div className="mt-5 mb-3">
                   <h3 className="font-bold text-lg text-center">
                     {category.name}
                   </h3>

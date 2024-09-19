@@ -31,7 +31,7 @@ body::-webkit-scrollbar {
   }
 
   h1 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-center font-sacramento capitalize mb-10;
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold flex place-self-center p-4 font-sacramento capitalize mb-6 bg-clip-text text-transparent bg-gradient-to-br from-pink-700 via-pink-200 to-orange-900 via-30%;
   }
 
   h2 {
@@ -70,8 +70,16 @@ body::-webkit-scrollbar {
     @apply flex flex-col rounded-md bg-pink-500/5 backdrop-blur-md overflow-hidden hover:shadow-lg smooth-effect;
   }
 
+  .card2 {
+    @apply flex flex-col rounded-md bg-black/40 backdrop-blur-md overflow-hidden hover:shadow-xl smooth-effect;
+  }
+
   .cat {
-    @apply py-1 px-2 bg-pink-500/20 rounded-md text-sm smooth-effect border border-transparent hover:shadow-lg hover:border-pink-500/20 hover:bg-pink-300/20 hover:text-pink-500/90;
+    @apply py-1 px-2 bg-pink-500/15 rounded-md text-sm smooth-effect border border-transparent hover:shadow-lg hover:border-pink-500/20 hover:bg-pink-300/20 hover:text-pink-500/90;
+  }
+
+  .cat2 {
+    @apply py-1 px-2 bg-pink-500/15 rounded-md text-sm smooth-effect border border-transparent;
   }
 
   .sidebar {
@@ -99,5 +107,9 @@ body::-webkit-scrollbar {
 
   .img-overlay {
     @apply absolute w-full h-full top-0 left-0 bg-pink-300/15 backdrop-blur-[1px];
+  }
+
+  .gr {
+    @apply bg-gradient-to-br from-pink-700/20 via-pink-200/30 to-pink-900/20 via-30%;
   }
 }

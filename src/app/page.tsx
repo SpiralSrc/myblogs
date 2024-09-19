@@ -44,22 +44,18 @@ export default async function Home({
                 <h2>{newPost[0].title}</h2>
                 <div className="flex flex-col justify-center items-center gap-3">
                   <div className="mt-3">
-                    <Link
-                      href={`/categories/${newPost[0].category.slug}`}
-                      className="cat"
-                    >
+                    <span className="cat2">
                       {newPost[0].category.name}
-                    </Link>
+                    </span>
                   </div>
                   <div className="flex gap-5">
                     {newPost[0].tags.map((tag) => (
-                      <Link
-                        href={`/tags/${tag.name}`}
+                      <span
                         key={tag.id}
-                        className="tag"
+                        className="text-sm text-secondary/90"
                       >
                         #{tag.name}
-                      </Link>
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -85,22 +81,15 @@ export default async function Home({
                       </h3>
                       <div className="flex flex-col justify-center items-center gap-3">
                         <div>
-                          <Link
-                            href={`/categories/${post.category.slug}`}
-                            className="cat"
-                          >
+                          <span className="cat">
                             {post.category.name}
-                          </Link>
+                          </span>
                         </div>
                         <div className="flex gap-5">
                           {post.tags.map((tag) => (
-                            <Link
-                              href={`/tags/${tag.name}`}
-                              key={tag.id}
-                              className="tag"
-                            >
+                            <span key={tag.id} className="tag">
                               #{tag.name}
-                            </Link>
+                            </span>
                           ))}
                         </div>
                       </div>

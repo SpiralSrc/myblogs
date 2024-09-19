@@ -163,7 +163,7 @@ export default async function SinglePostPage({
       {/* ----- Main body page ----- */}
       <div className="wrapper">
         <div className="w-full h-full flex flex-col lg:flex-row md:gap-2 gap-10">
-          <div className="w-full lg:w-[80%]">
+          <div className="w-full lg:w-[80%] mx-auto flex flex-col">
             <h1>{post?.title}</h1>
             <div className="line"></div>
 

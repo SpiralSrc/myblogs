@@ -41,16 +41,19 @@ export default async function page({
             <div className="w-full mx-auto mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-3 justify-center items-center gap-10">
               {category.posts.length !== 0 ? (
                 category.posts.map((post) => (
-                  <Link
-                    href={`/blogs/${post.slug}`}
+                  <div
                     key={post.id}
-                    className="w-96 h-40 flex flex-col gap-5 p-3 rounded-md card"
+                    className="flex flex-col rounded-lg p-3 border border-secondary/20 gr"
                   >
-                    <h3 className="font-bold text-lg">
-                      {post.title}
-                    </h3>
-
-                    <div className="flex justify-start items-center gap-4">
+                    <Link
+                      href={`/blogs/${post.slug}`}
+                      className="card2 p-5"
+                    >
+                      <h3 className="font-bold text-center text-lg">
+                        {post.title}
+                      </h3>
+                    </Link>
+                    <div className="flex justify-center items-center gap-4 mt-3">
                       {post.tags.map((tag) => (
                         <Link
                           href={`/tags/${tag.name}`}
@@ -61,7 +64,7 @@ export default async function page({
                         </Link>
                       ))}
                     </div>
-                  </Link>
+                  </div>
                 ))
               ) : (
                 <div className="w-full mt-10 flex justify-center">

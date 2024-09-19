@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.4.1",
+    "@clerk/themes": "^2.1.30",
     "@conform-to/react": "^1.1.5",
     "@conform-to/zod": "^1.1.5",
     "@prisma/client": "^5.19.1",

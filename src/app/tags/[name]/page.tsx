@@ -61,16 +61,20 @@ export default async function SinglePostPage({
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-20">
           {tag.posts.length > 0 ? (
             tag.posts.map((post) => (
-              <Link
+              <div
                 key={post.id}
-                href={`/blogs/${post.slug}`}
-                className="card p-5"
+                className="flex flex-col rounded-lg p-3 border border-secondary/20 gr"
               >
-                <h3 className="text-center font-bold text-lg">
-                  {post.title}
-                </h3>
-                <div className="flex flex-col justify-center items-center gap-3">
-                  <div>
+                <Link
+                  href={`/blogs/${post.slug}`}
+                  className="card2 p-5"
+                >
+                  <h3 className="text-center font-bold text-lg">
+                    {post.title}
+                  </h3>
+                </Link>
+                <div className="w-full flex flex-col justify-center items-center gap-2 mt-3">
+                  <div className="flex flex-col justify-center items-center gap-3">
                     <Link
                       href={`/categories/${post.category.slug}`}
                       className="cat"
@@ -90,7 +94,7 @@ export default async function SinglePostPage({
                     ))}
                   </div>
                 </div>
-              </Link>
+              </div>
             ))
           ) : (
             <div className="w-full mt-10 flex justify-center">

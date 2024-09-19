@@ -7,6 +7,8 @@ import Logo from "../app/icon.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth, UserButton } from "@clerk/nextjs";
+import { checkRole } from "@/lib/utils/roles";
+import UserButtonMenu from "./users/UserButtonMenu";
 
 const Nav = () => {
   const path = usePathname();
@@ -18,7 +20,7 @@ const Nav = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center px-5 xl:px-2">
         <Link
           href={"/"}
-          className="flex flex-row gap-2 justify-center items-center"
+          className=" flex flex-row gap-2 justify-center items-center"
         >
           <div className="relative w-6 h-6 md:w-7 md:h-7">
             <Image
@@ -54,20 +56,32 @@ const Nav = () => {
                 <li>{nav.name}</li>
               </Link>
             ))}
+            {userId && (
+              <Link
+                href={"/favorites"}
+                className={`hover:text-pink-400/60 smooth-effect ${
+                  path === "/favorites"
+                    ? "text-pink-400/60"
+                    : "text-white/80"
+                }`}
+              >
+                Favorites
+              </Link>
+            )}
           </ul>
         </div>
         <div className="flex gap-2 justify-center items-center">
-          <Link
+          <a
             href={"https://spiralsrc.dev/"}
             target="_blank"
             rel="noopener noreferrer"
+            className="py-1 px-2 sm:py-2 sm:px-3 rounded-full font-bold border border-transparent text-[12px] sm:text-sm lg:text-base bg-red-950/20 backdrop-blur-sm hover:text-pink-400/80 hover:border-red-400/20 hover:shadow-lg smooth-effect"
           >
-            <span className="py-1 px-2 sm:py-2 sm:px-3 rounded-full font-bold border border-transparent text-[12px] sm:text-sm lg:text-base bg-red-950/20 backdrop-blur-sm hover:text-pink-400/80 hover:border-red-400/20 hover:shadow-lg smooth-effect">
-              Portfolio
-            </span>
-          </Link>
+            Portfolio
+          </a>
           {userId ? (
-            <UserButton />
+            // <UserButton />
+            <UserButtonMenu />
           ) : (
             <Link
               href={"/sign-in"}
