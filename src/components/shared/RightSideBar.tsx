@@ -4,7 +4,7 @@ import Categories from "./Categories";
 
 const RightSideBar = () => {
   return (
-    <div className="sidebar lg:h-[95%] lg:mt-16 justify-start flex flex-col px-5 gap-10 lg:gap-20 py-10 lg:py-20">
+    <div className="sidebar w-[98%] mx-auto lg:h-[95%] lg:mt-16 justify-start flex flex-col px-5 gap-10 lg:gap-20 py-10 lg:py-20">
       <div className="flex flex-col gap-3">
         <h2 className="font-bold text-xl">Tags</h2>
         <div className="line mb-5"></div>

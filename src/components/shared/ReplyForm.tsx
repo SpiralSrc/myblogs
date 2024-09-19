@@ -33,7 +33,7 @@ const ReplyForm = ({ slug, comment }: ReplyProps) => {
   };
 
   return (
-    <div className="w-[95%] flex flex-col mx-auto">
+    <div className="w-[95%] flex flex-col mx-auto mb-4">
       <div className="flex place-self-end mb-2">
         {reply ? (
           <span

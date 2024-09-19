@@ -1,19 +1,19 @@
-import { prisma } from "@/lib/prismadb";
+// import { prisma } from "@/lib/prismadb";
 
-export default async function BlogsPage() {
-  const posts = await prisma.post.findMany({
-    orderBy: {
-      title: "asc",
-    },
-    include: {
-      category: true,
-      tags: true,
-    },
-  });
+// export default async function BlogsPage() {
+//   const posts = await prisma.post.findMany({
+//     orderBy: {
+//       title: "asc",
+//     },
+//     include: {
+//       category: true,
+//       tags: true,
+//     },
+//   });
 
-  return (
-    <div className="wrapper">
-      <h1>Blogs</h1>
-    </div>
-  );
-}
+//   return (
+//     <div className="wrapper">
+//       <h1>Blogs</h1>
+//     </div>
+//   );
+// }

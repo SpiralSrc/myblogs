@@ -33,7 +33,7 @@ export default async function Home({
       <div className="wrapper">
         <div className="w-full h-full flex flex-col md:flex-row gap-5">
           <div className="w-full md:w-[75%] flex flex-col gap-3">
-            <h3 className="text-left text-2xl font-bold mb-3">
+            <h3 className="text-left text-xl md:text-2xl font-bold mb-3">
               New Post
             </h3>
             {newPost && newPost[0] && (
@@ -44,15 +44,22 @@ export default async function Home({
                 <h2>{newPost[0].title}</h2>
                 <div className="flex flex-col justify-center items-center gap-3">
                   <div className="mt-3">
-                    <span className="cat">
+                    <Link
+                      href={`/categories/${newPost[0].category.slug}`}
+                      className="cat"
+                    >
                       {newPost[0].category.name}
-                    </span>
+                    </Link>
                   </div>
                   <div className="flex gap-5">
                     {newPost[0].tags.map((tag) => (
-                      <span key={tag.id} className="tag">
+                      <Link
+                        href={`/tags/${tag.name}`}
+                        key={tag.id}
+                        className="tag"
+                      >
                         #{tag.name}
-                      </span>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -62,7 +69,7 @@ export default async function Home({
               </Link>
             )}
             <div>
-              <h3 className="text-left font-bold text-xl mt-10">
+              <h3 className="text-left font-bold text-lg md:text-xl mt-10">
                 Recent Posts
               </h3>
               <div className="mt-4 grid grid-cols-2 gap-7">
@@ -78,15 +85,22 @@ export default async function Home({
                       </h3>
                       <div className="flex flex-col justify-center items-center gap-3">
                         <div>
-                          <span className="cat">
+                          <Link
+                            href={`/categories/${post.category.slug}`}
+                            className="cat"
+                          >
                             {post.category.name}
-                          </span>
+                          </Link>
                         </div>
                         <div className="flex gap-5">
                           {post.tags.map((tag) => (
-                            <span key={tag.id} className="tag">
+                            <Link
+                              href={`/tags/${tag.name}`}
+                              key={tag.id}
+                              className="tag"
+                            >
                               #{tag.name}
-                            </span>
+                            </Link>
                           ))}
                         </div>
                       </div>

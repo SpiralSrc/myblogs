@@ -16,6 +16,8 @@ import ReplyForm from "@/components/shared/ReplyForm";
 import { auth } from "@clerk/nextjs/server";
 import LikePostButton from "@/components/shared/LikePostButton";
 import DeleteComment from "@/components/shared/DeleteComment";
+import DeleteReply from "@/components/shared/DeleteReply";
+import BlogList from "@/components/BlogList";
 
 interface PostProps {
   params: {
@@ -49,6 +51,7 @@ const getSinglePost = cache(async (slug: string) => {
                   firstName: true,
                   lastName: true,
                   avatar: true,
+                  clerkId: true,
                 },
               },
             },
@@ -86,7 +89,7 @@ export async function generateMetadata({
 
   return {
     title: post.title + " - Tags",
-    description: `Posts related to ${post.title}`,
+    description: `Post is about ${post.title} which is related to ${post.category.name}.`,
   };
 }
 
@@ -121,8 +124,10 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
 
 export default async function SinglePostPage({
   params,
+  searchParams,
 }: {
   params: { slug: string };
+  searchParams?: { query?: string };
 }) {
   const { userId } = auth();
 
@@ -132,9 +137,13 @@ export default async function SinglePostPage({
 
   const post = await getSinglePost(id);
 
+  const query = searchParams?.query || "";
+
   return (
     <>
-      <div className="w-full h-[25vh] lg:h-[35vh] xl:h-[38vh] relative">
+      {/* ----- Top Image ----- */}
+
+      <div className="w-full h-[25vh] lg:h-[35vh] xl:h-[40vh] relative">
         <Image
           src={post.category.imageUrl}
           alt={post.category.name}
@@ -143,6 +152,15 @@ export default async function SinglePostPage({
         />
         <div className="img-overlay"></div>
       </div>
+
+      {/* ----- Search Query Results ----- */}
+      {query && (
+        <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
+          <BlogList query={query} />
+        </div>
+      )}
+
+      {/* ----- Main body page ----- */}
       <div className="wrapper">
         <div className="w-full h-full flex flex-col lg:flex-row md:gap-2 gap-10">
           <div className="w-full lg:w-[80%]">
@@ -175,7 +193,7 @@ export default async function SinglePostPage({
                 </h4>
               </div>
 
-              {/* Like Button */}
+              {/* ----- Like Button ----- */}
 
               <div className="flex justify-center items-center gap-2 my-2">
                 <LikePostButton
@@ -192,6 +210,8 @@ export default async function SinglePostPage({
                 </div>
               </div>
             </div>
+
+            {/* ----- Category and Tags ----- */}
 
             <div className="flex flex-col justify-center items-center gap-3 mt-1">
               <div>
@@ -216,6 +236,9 @@ export default async function SinglePostPage({
                 })}
               </div>
             </div>
+
+            {/* ----- Blog Content ----- */}
+
             <div className="p-2 mt-10 mb-20">
               <ReactMarkdown
                 components={{ code: CodeBlock }}
@@ -224,35 +247,47 @@ export default async function SinglePostPage({
                 {post.content}
               </ReactMarkdown>
             </div>
+
+            {/* ----- Line Break ----- */}
+
             <div className="line mt-5"></div>
+
+            {/* ----- Comments ----- */}
+
             <div className="w-[98%] mx-auto mt-10 lg:w-full flex flex-col">
               <h3 className="text-left font-bold text-lg lg:text-xl mt-10">
                 Write a Comment
               </h3>
-              <span className="text-sm italic mb-5">
-                *Please log in or register to post a comment
-              </span>
+
+              {!user ? (
+                <span className="text-sm italic mb-5">
+                  *Please log in or sign up to post a comment
+                </span>
+              ) : null}
+
+              {/* Comment Form */}
+
               {user ? (
                 <CommentForm post={post} />
               ) : (
                 <div className="w-full h-20 flex gap-2 justify-center items-center rounded-md bg-slate-500/5 backdrop-blur-md overflow-hidden shadow-inner">
                   <Link
-                    href={"/"}
+                    href={"/sign-in"}
                     className="hover:text-blue-300/90 smooth-effect font-bold"
                   >
                     Login
                   </Link>
                   <span className="text-sm">or</span>
                   <Link
-                    href={"/"}
+                    href={"/sign-up"}
                     className="hover:text-blue-300/90 smooth-effect font-bold"
                   >
-                    Register
+                    Sign Up
                   </Link>
                 </div>
               )}
 
-              {/* Fetched comment below */}
+              {/* Fetched comments below */}
               <div className="w-full  flex flex-col gap-2">
                 {post.comments &&
                   post.comments.map((item) => (
@@ -296,40 +331,48 @@ export default async function SinglePostPage({
                         ) : null}
                       </div>
 
-                      {/* Reply Button */}
+                      {/* ----- Reply Button ----- */}
                       {user && (
                         <ReplyForm comment={item} slug={post.slug} />
                       )}
 
                       {/* ----- Fetched Replies ----- */}
-                      <div className="w-[90%] mx-auto flex flex-col gap-2">
+                      <div className="w-[90%] mx-auto flex flex-col gap-2 mb-2">
                         {item.replies.map((reply) => (
                           <div
                             key={reply.id}
-                            className="bg-slate-500/5 py-2 pl-2 rounded-lg"
+                            className="bg-slate-500/5 py-2 p-2 rounded-lg"
                           >
                             {/* user */}
-                            <div className="flex gap-2">
-                              <div className="relative w-5 h-5 md:w-6 md:h-6 rounded-full overflow-hidden flex justify-center items-center">
-                                {reply.user.avatar ? (
-                                  <Image
-                                    src={reply.user.avatar}
-                                    sizes="100%"
-                                    fill
-                                    alt="user avatar"
-                                    className="object-cover"
-                                  />
-                                ) : (
-                                  <User className="w-full h-full p-1 bg-slate-400/50" />
-                                )}
+                            <div className="w-full flex justify-between items-center">
+                              <div className="flex gap-2">
+                                <div className="relative w-5 h-5 md:w-6 md:h-6 rounded-full overflow-hidden flex justify-center items-center">
+                                  {reply.user.avatar ? (
+                                    <Image
+                                      src={reply.user.avatar}
+                                      sizes="100%"
+                                      fill
+                                      alt="user avatar"
+                                      className="object-cover"
+                                    />
+                                  ) : (
+                                    <User className="w-full h-full p-1 bg-slate-400/50" />
+                                  )}
+                                </div>
+                                <h4 className="font-medium text-sm md:text-base">
+                                  {reply.user.firstName}{" "}
+                                  {reply.user.lastName}
+                                </h4>
                               </div>
-                              <h4 className="font-medium text-sm md:text-base">
-                                {reply.user.firstName}{" "}
-                                {reply.user.lastName}
-                              </h4>
+                              {reply.user.clerkId === user ? (
+                                <div className="flex">
+                                  <DeleteReply id={reply.id} />
+                                </div>
+                              ) : null}
                             </div>
-                            {/* Comment Text */}
-                            <div className="w-[95%] mx-auto mt-2 ">
+
+                            {/* Reply Text */}
+                            <div className="w-[95%] mx-auto mt-2">
                               <p className="mb-1">{reply.text}</p>
 
                               {/* <div className="h-1 border-b border-secondary/20 mx-auto mb-2"></div> */}

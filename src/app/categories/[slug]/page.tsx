@@ -26,7 +26,7 @@ export default async function page({
     <div>
       {category && (
         <div>
-          <div className="w-full h-[25vh] lg:h-[35vh] xl:h-[38vh] relative">
+          <div className="w-full h-[25vh] lg:h-[35vh] xl:h-[40vh] relative">
             <Image
               src={category.imageUrl}
               alt={category.name}
@@ -52,9 +52,13 @@ export default async function page({
 
                     <div className="flex justify-start items-center gap-4">
                       {post.tags.map((tag) => (
-                        <span key={tag.id} className="tag">
+                        <Link
+                          href={`/tags/${tag.name}`}
+                          key={tag.id}
+                          className="tag"
+                        >
                           #{tag.name}
-                        </span>
+                        </Link>
                       ))}
                     </div>
                   </Link>

@@ -1,12 +1,12 @@
 "use client";
 
-import { deleteComment } from "@/actions/action";
+import { deleteReply } from "@/actions/action";
 import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 import SubmitButton from "../reusable_ui/SubmitButton";
 import { useRouter } from "next/navigation";
 
-const DeleteComment = ({ id }: any) => {
+const DeleteReply = ({ id }: any) => {
   const [modal, setModal] = useState(false);
 
   const router = useRouter();
@@ -16,7 +16,7 @@ const DeleteComment = ({ id }: any) => {
       {!modal && (
         <Trash2
           onClick={() => setModal(true)}
-          size={19}
+          size={17}
           className="text-red-300/20 hover:text-red-500 smooth-effect"
         />
       )}
@@ -47,7 +47,7 @@ const DeleteComment = ({ id }: any) => {
               </button>
               <form
                 action={async (formData: FormData) => {
-                  await deleteComment(formData);
+                  await deleteReply(formData);
                   setModal(false);
                   router.refresh();
                 }}
@@ -62,4 +62,4 @@ const DeleteComment = ({ id }: any) => {
     </div>
   );
 };
-export default DeleteComment;
+export default DeleteReply;

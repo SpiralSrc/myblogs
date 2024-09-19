@@ -571,6 +571,27 @@ export async function createReply(
   revalidatePath(`/blogs/${slug}`);
 }
 
+// Delete Reply
+export async function deleteReply(formData: FormData) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const id = formData.get("id") as string;
+
+    await prisma.reply.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 //----------------------------- Likes ---------------------------------
 export async function switchPostLike(postSlug: string) {
   const { userId } = auth();

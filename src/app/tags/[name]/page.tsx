@@ -1,3 +1,4 @@
+import Hero from "@/components/mainpage/Hero";
 import { prisma } from "@/lib/prismadb";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -18,6 +19,7 @@ const getTags = cache(async (name: string) => {
       posts: {
         include: {
           category: true,
+          tags: true,
         },
       },
     },
@@ -49,42 +51,56 @@ export default async function SinglePostPage({
   const tag = await getTags(id);
 
   return (
-    <div className="wrapper">
-      <h1 className="text-5xl font-bold text-center font-sacramento capitalize">
-        {tag?.name}
-      </h1>
-      <div className="w-full h-full flex flex-col mt-20">
-        <table className="w-3/4 mx-auto">
-          <thead>
-            <tr className="font-bold">
-              <td className="flex-1">
-                Post Title ({tag?.posts.length})
-              </td>
-              <td className="flex-1">Category</td>
-            </tr>
-          </thead>
-          {tag ? (
+    <>
+      <Hero />
+      <div className="wrapper py-10 lg:py-20">
+        <h1 className="text-5xl font-bold text-center font-sacramento capitalize">
+          {tag?.name}
+        </h1>
+        <div className="line mb-5"></div>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-20">
+          {tag.posts.length > 0 ? (
             tag.posts.map((post) => (
-              <tbody key={post.id}>
-                <tr className="border-pink-400/5">
-                  <td className="flex-1">
-                    <Link href={`/blogs/${post.slug}`}>
-                      {post.title}
+              <Link
+                key={post.id}
+                href={`/blogs/${post.slug}`}
+                className="card p-5"
+              >
+                <h3 className="text-center font-bold text-lg">
+                  {post.title}
+                </h3>
+                <div className="flex flex-col justify-center items-center gap-3">
+                  <div>
+                    <Link
+                      href={`/categories/${post.category.slug}`}
+                      className="cat"
+                    >
+                      {post.category.name}
                     </Link>
-                  </td>
-                  <td className="flex-1 pl-3 text-left">
-                    <div className="">{post.category.name}</div>
-                  </td>
-                </tr>
-              </tbody>
+                  </div>
+                  <div className="flex gap-5">
+                    {post.tags.map((tag) => (
+                      <Link
+                        href={`/tags/${tag.name}`}
+                        key={tag.id}
+                        className="tag"
+                      >
+                        #{tag.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </Link>
             ))
           ) : (
-            <div>
-              <p>No post being published yet.</p>
+            <div className="w-full mt-10 flex justify-center">
+              <p className="text-center font-medium">
+                There are no posts in this tag.
+              </p>
             </div>
           )}
-        </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
