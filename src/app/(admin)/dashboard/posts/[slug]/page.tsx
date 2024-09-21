@@ -8,6 +8,7 @@ import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
 import { checkRole } from "@/lib/utils/roles";
+import { Trash2 } from "lucide-react";
 
 interface PostProps {
   params: {
@@ -87,8 +88,18 @@ export default async function SinglePostPage({
   const post = await getSinglePost(id);
 
   return (
-    <div className="wrapper">
+    <div className="wrapper relative">
+      <Link
+        href={`/dashboard/posts/${post.slug}/delete`}
+        className="absolute top-10 right-10"
+      >
+        <Trash2
+          size={18}
+          className="text-red-300/20 hover:text-red-500 smooth-effect"
+        />
+      </Link>
       <h1 className="mt-10">{post?.title}</h1>
+      <div className="line"></div>
       <div className="flex flex-col justify-center items-center gap-5 mt-10">
         <div>
           <span className="cat">{post.category.name}</span>

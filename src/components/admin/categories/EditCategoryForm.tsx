@@ -1,9 +1,9 @@
 "use client";
 
 import { updateCategory } from "@/actions/action";
-import Form from "../reusable_ui/Form";
-import Input from "../reusable_ui/Input";
-import SubmitButton from "../reusable_ui/SubmitButton";
+import Form from "../../reusable_ui/Form";
+import Input from "../../reusable_ui/Input";
+import SubmitButton from "../../reusable_ui/SubmitButton";
 import { useState } from "react";
 import { CldImage } from "next-cloudinary";
 import { Trash2 } from "lucide-react";
@@ -26,10 +26,9 @@ const EditCategoryForm = ({ category }: any) => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center">
-      <h1 className="text-4xl text-center font-bold mb-10">
-        Add a category
-      </h1>
+    <div className="wrapper">
+      <h1>Add a category</h1>
+      <div className="line mb-10"></div>
       <Form action={handleSubmit}>
         {imageUrl ? (
           <div className="relative cursor-pointer w-64 h-64 overflow-hidden rounded-xl flex justify-center items-center border border-teal-500/20">

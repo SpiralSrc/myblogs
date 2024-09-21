@@ -14,8 +14,8 @@ export default function DeletePostPage({
   }
 
   return (
-    <div className="wrapper h-screen">
-      <div className="h-full flex justify-center items-center">
+    <div className="wrapper">
+      <div className="flex justify-center items-center mt-32">
         <div className="flex flex-col justify-center items-center gap-10 bg-pink-100 rounded-xl shadow-lg text-slate-600 p-5">
           <p className="font-semibold">
             Are you sure you want to delete this post? This action

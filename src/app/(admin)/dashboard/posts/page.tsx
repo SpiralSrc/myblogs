@@ -1,13 +1,21 @@
+import AdminBlogList from "@/components/admin/AdminBlogList";
+import SearchBar from "@/components/SearchBar";
 import { prisma } from "@/lib/prismadb";
 import { checkRole } from "@/lib/utils/roles";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function PostsPage() {
+export default async function PostsPage({
+  searchParams,
+}: {
+  searchParams?: { query?: string };
+}) {
   if (!checkRole("admin")) {
     return notFound();
   }
+
+  const query = searchParams?.query || "";
 
   const posts = await prisma.post.findMany({
     orderBy: {
@@ -20,16 +28,29 @@ export default async function PostsPage() {
 
   return (
     <div className="wrapper">
-      <h1 className="text-5xl font-bold text-center font-sacramento mt-10">
-        Posts
-      </h1>
+      <h1>Posts</h1>
+      <div className="line mb-10"></div>
       <div className="w-full flex flex-col">
-        <Link
-          href={"/dashboard/posts/write-post"}
-          className="self-end btn bg-red-400/70 rounded-xl hover:bg-red-200"
-        >
-          Write a post
-        </Link>
+        <div className="flex self-end justify-end relative gap-10">
+          {/* Search Query */}
+          {query && (
+            <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
+              <AdminBlogList query={query} />
+            </div>
+          )}
+          <div className="w-96">
+            <SearchBar />
+          </div>
+
+          <Link
+            href={"/dashboard/posts/write-post"}
+            className=" btn bg-red-400/70 rounded-xl hover:bg-red-200"
+          >
+            Write a post
+          </Link>
+        </div>
+
+        {/* ----- Post Table ----- */}
         <div className="w-full h-full flex flex-col mt-20">
           {posts?.length !== 0 ? (
             <table className="w-3/4 mx-auto">
@@ -37,7 +58,8 @@ export default async function PostsPage() {
                 <tr className="font-bold">
                   <td className="flex-1">Title</td>
                   <td className="flex-1">Category</td>
-                  <td className="flex w-1/4 justify-end items-center">
+                  <td className="flex-1">Status</td>
+                  <td className="w-28 text-end justify-end items-center">
                     Options
                   </td>
                 </tr>
@@ -53,7 +75,12 @@ export default async function PostsPage() {
                     <td className="flex-1 pl-3 text-left">
                       <div className="">{post.category.name}</div>
                     </td>
-                    <td className="flex w-1/4 justify-end items-center gap-3">
+                    <td className="flex-1">
+                      {post.isPublished === true
+                        ? "Published"
+                        : "Draft"}
+                    </td>
+                    <td className="w-28 flex justify-end items-center gap-3">
                       <Link
                         href={`/dashboard/posts/${post.slug}/edit`}
                       >

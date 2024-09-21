@@ -2,7 +2,6 @@ import { z } from "zod";
 // import mongoose from "mongoose";
 
 export const postSchema = z.object({
-  // id: z.string(),
   title: z
     .string({ message: "Title is required" })
     .min(2, "Title has to be at least 4 characters"),
@@ -12,6 +11,7 @@ export const postSchema = z.object({
     .min(3, "Content has to be at least 5 characters"),
   category: z.coerce.string(),
   tags: z.array(z.coerce.string().min(1)),
+  isPublished: z.boolean(),
 });
 
 export const categorySchema = z.object({
@@ -19,14 +19,12 @@ export const categorySchema = z.object({
     .string()
     .min(3, "Category name has to be at least 3 characters"),
   imageUrl: z.coerce.string().min(1),
-  // posts: z.array(z.any()).optional(),
 });
 
 export const tagsSchema = z.object({
   name: z
     .string()
     .min(3, "Category name has to be at least 3 characters"),
-  posts: z.array(z.any()).optional(),
 });
 
 export const commentSchema = z.object({

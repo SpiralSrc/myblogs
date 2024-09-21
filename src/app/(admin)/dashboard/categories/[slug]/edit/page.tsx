@@ -1,4 +1,4 @@
-import EditCategoryForm from "@/components/shared/EditCategoryForm";
+import EditCategoryForm from "@/components/admin/categories/EditCategoryForm";
 import { prisma } from "@/lib/prismadb";
 import { checkRole } from "@/lib/utils/roles";
 import { notFound } from "next/navigation";

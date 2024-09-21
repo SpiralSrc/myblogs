@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prismadb";
 import { truncate } from "@/lib/utils/truncate";
 import Link from "next/link";
 
-export default async function Home({
+export default async function ClientHome({
   searchParams,
 }: {
   searchParams?: { query?: string };
@@ -13,6 +13,9 @@ export default async function Home({
   const query = searchParams?.query || "";
 
   const newPost = await prisma.post.findMany({
+    where: {
+      isPublished: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -31,8 +34,8 @@ export default async function Home({
         </div>
       )}
       <div className="wrapper">
-        <div className="w-full h-full flex flex-col md:flex-row gap-5">
-          <div className="w-full md:w-[75%] flex flex-col gap-3">
+        <div className="w-full h-full flex flex-col lg:flex-row gap-5">
+          <div className="w-[95%] lg:w-[75%] mx-auto flex flex-col gap-3">
             <h3 className="text-left text-xl md:text-2xl font-bold mb-3">
               New Post
             </h3>
@@ -68,7 +71,7 @@ export default async function Home({
               <h3 className="text-left font-bold text-lg md:text-xl mt-10">
                 Recent Posts
               </h3>
-              <div className="mt-4 grid grid-cols-2 gap-7">
+              <div className="w-[94%] xxs:w-[85%] md:w-full mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 gap-7">
                 {newPost &&
                   newPost.slice(1, 7).map((post) => (
                     <Link
@@ -102,7 +105,7 @@ export default async function Home({
             </div>
           </div>
           {/* Right Bar */}
-          <div className="w-full md:w-[25%] ">
+          <div className="w-full lg:w-[25%]">
             <RightSideBar />
           </div>
         </div>

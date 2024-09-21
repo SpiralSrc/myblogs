@@ -10,6 +10,7 @@ import {
   commentSchema,
   postSchema,
   replySchema,
+  tagsSchema,
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
 import { disconnect } from "process";
@@ -191,6 +192,7 @@ export async function createPost(formData: FormData) {
       content: formData.get("content"),
       category: formData.get("category"),
       tags: formData.getAll("tags[]"),
+      isPublished: formData.get("isPublished") === "true",
     });
 
     if (
@@ -222,6 +224,7 @@ export async function createPost(formData: FormData) {
         user: {
           connect: { clerkId: userId },
         },
+        isPublished: parsedData.isPublished,
         desc: parsedData.desc,
         content: parsedData.content,
         category: {
@@ -265,6 +268,7 @@ export async function updatePost(slug: string, formData: FormData) {
       content: formData.get("content"),
       category: formData.get("category"),
       tags: formData.getAll("tags[]"),
+      isPublished: formData.get("isPublished") === "true",
     });
 
     const newSlug = parsedData.title
@@ -297,6 +301,7 @@ export async function updatePost(slug: string, formData: FormData) {
       data: {
         title: parsedData.title,
         slug: newSlug,
+        isPublished: parsedData.isPublished,
         desc: parsedData.desc,
         content: parsedData.content,
         category: { connect: { id: cat.id } },
@@ -353,8 +358,16 @@ export const getPost = async () => {
         title: "asc",
       },
       include: {
-        category: true,
-        tags: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        tags: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
@@ -423,6 +436,45 @@ export async function deleteTagName(formData: FormData) {
     });
   }
   revalidatePath("/dashboard/tags");
+  redirect("/dashboard/tags");
+}
+
+export async function updateTag(name: string, formData: FormData) {
+  const { userId } = auth();
+
+  if (!userId) {
+    console.log("Access denied");
+    redirect("/");
+  }
+
+  try {
+    const parsedData = tagsSchema.parse({
+      name: formData.get("name"),
+    });
+
+    if (!parsedData.name) {
+      console.log("Invalid entry");
+      throw new NextResponse("Tag name is required!", {
+        status: 400,
+      });
+    }
+
+    await prisma.tag.update({
+      where: {
+        name,
+      },
+      data: {
+        name: parsedData.name,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw new NextResponse("Error updating tag name", {
+      status: 500,
+    });
+  }
+
+  revalidatePath(`/dashboard/tags/${name}`);
   redirect("/dashboard/tags");
 }
 

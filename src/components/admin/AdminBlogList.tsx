@@ -1,7 +1,7 @@
 import { getPost } from "@/actions/action";
 import Link from "next/link";
 
-const BlogList = async ({ query }: { query: string }) => {
+const AdminBlogList = async ({ query }: { query: string }) => {
   const post = await getPost();
   const filteredPost = Array.isArray(post)
     ? post.filter((item) => {
@@ -18,7 +18,7 @@ const BlogList = async ({ query }: { query: string }) => {
         {Array.isArray(post) &&
           filteredPost.map((item) => (
             <Link
-              href={`/blogs/${item.slug}`}
+              href={`/dashboard/posts/${item.slug}`}
               key={item.id}
               className="w-full bg-stone-600 backdrop-blur-sm border-b border-secondary/40 p-4"
             >
@@ -27,7 +27,7 @@ const BlogList = async ({ query }: { query: string }) => {
               <div className="flex justify-start items-center gap-4">
                 {item.tags.map((tag) => (
                   <span
-                    key={tag.name}
+                    key={tag.id}
                     className="mt-2 py-1 px-2 rounded-md text-sm text-secondary/95"
                   >
                     #{tag.name}
@@ -40,4 +40,4 @@ const BlogList = async ({ query }: { query: string }) => {
     </div>
   );
 };
-export default BlogList;
+export default AdminBlogList;

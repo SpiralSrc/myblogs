@@ -1,16 +1,16 @@
 "use client";
 
-import Form from "../reusable_ui/Form";
-import Input from "../reusable_ui/Input";
+import Form from "@/components/reusable_ui/Form";
+import Input from "@/components/reusable_ui/Input";
 import { createPost, updatePost } from "@/actions/action";
 import { useEffect, useState } from "react";
-import SubmitButton from "../reusable_ui/SubmitButton";
-import CategoryList from "./CategoryList";
-import { Eye, X } from "lucide-react";
+import SubmitButton from "@/components/reusable_ui/SubmitButton";
+import CategoryList from "@/components/shared/CategoryList";
+import { Check, Eye, X } from "lucide-react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
-import CopyButton from "./CopyButton";
+import CopyButton from "@/components/shared/CopyButton";
 import { useUser } from "@clerk/nextjs";
 
 const CodeBlock = ({ children, className, node, ...rest }: any) => {
@@ -43,10 +43,11 @@ const PostForm = ({ post }: any) => {
 
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [category, setCategory] = useState(post?.category.name || "");
-  const [title, setTitle] = useState(post?.title || "");
-  const [desc, setDesc] = useState(post?.desc || "");
-  const [content, setContent] = useState(post?.content || "");
+  const [category, setCategory] = useState(post?.category.name);
+  const [title, setTitle] = useState(post?.title);
+  const [desc, setDesc] = useState(post?.desc);
+  const [content, setContent] = useState(post?.content);
+  const [isPublished, setIsPublished] = useState(post?.isPublished);
 
   const [preview, setPreview] = useState(false);
 
@@ -72,12 +73,13 @@ const PostForm = ({ post }: any) => {
     tags.forEach((tag) => {
       formData.append("tags[]", tag);
     });
+    formData.set("isPublished", isPublished);
+
+    console.log("Form Data:", Object.fromEntries(formData.entries()));
 
     try {
       {
-        post
-          ? await updatePost(post.slug, formData)
-          : await createPost(formData);
+        await updatePost(post.slug, formData);
       }
     } catch (error) {
       console.error(error);
@@ -109,32 +111,70 @@ const PostForm = ({ post }: any) => {
     });
   };
 
+  console.log(isPublished);
+
   return (
     <>
       <div className="relative">
-        <span
-          className={`absolute top-10 right-5 flex gap-1 cursor-pointer ${
-            !preview ? "text-secondary" : "text-secondary/50"
-          }`}
-          onClick={() => setPreview(!preview)}
-        >
-          <Eye /> Preview
-        </span>
+        {/* ----- Preview Button ----- */}
+        <div className="absolute top-10 right-5 flex gap-1 cursor-pointer">
+          {!preview ? (
+            <span
+              className={
+                "cursor-pointer py-1 rounded-lg pr-2 flex gap-2 justify-center items-center smooth-effect text-secondary/90 hover:text-pink-400/70"
+              }
+              onClick={() => setPreview(true)}
+            >
+              <Eye /> Preview
+            </span>
+          ) : (
+            <span
+              onClick={() => setPreview(false)}
+              className="cursor-pointer py-1 rounded-lg pr-2 bg-pink-400/5 flex gap-2 justify-center items-center text-pink-400/70"
+            >
+              <X className="p-1" />
+              Close Preview
+            </span>
+          )}
+        </div>
+
         {!preview ? (
           <div className="flex w-full flex-col">
             <h1 className="text-4xl text-center font-bold mb-10">
-              Edit
+              Write/Edit a Post
             </h1>
+            <div className="line mb-10"></div>
             <Form
               action={handleSubmit}
 
               // className="w-3/4 mx-auto my-5 border border-red-400/70 rounded-xl flex flex-col gap-4 px-5 pt-16 pb-10"
             >
+              {/* ----- ispublished switch ----- */}
+              <Input
+                type="hidden"
+                name="isPublished"
+                value={isPublished}
+                placeholder="Publish?"
+              />
+              <div className="flex flex-row gap-3 justify-end items-center">
+                <span>Publish Post?</span>
+                <div
+                  className="text-pink-500/80 rounded-md border border-red-400/70"
+                  onClick={() => setIsPublished((prev: any) => !prev)}
+                >
+                  <Check
+                    className={`text-pink-400/70 p-1 font-bold && ${
+                      isPublished
+                        ? "opacity-100 bg-red-300/20"
+                        : "opacity-0"
+                    }`}
+                  />
+                </div>
+              </div>
               <Input
                 type="text"
                 name="title"
                 defaultValue={post?.title}
-                value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
                 required
@@ -142,7 +182,6 @@ const PostForm = ({ post }: any) => {
               <textarea
                 name="desc"
                 defaultValue={post?.desc}
-                value={desc}
                 onChange={(e) => setDesc(e.target.value)}
                 placeholder="Short description..."
                 className="w-full py-2 pl-3 bg-zinc-100/95 pr-2 text-slate-500 rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
@@ -182,7 +221,6 @@ const PostForm = ({ post }: any) => {
               <select
                 name="category"
                 defaultValue={post?.category}
-                value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="py-2 px-5 rounded-xl border border-red-400/70 bg-red-400/70 transition-all focus:outline-none hover:text-red-400/70 hover:bg-red-200"
               >
@@ -202,7 +240,6 @@ const PostForm = ({ post }: any) => {
                 required
                 name="content"
                 defaultValue={post?.content}
-                value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="w-full min-h-[60vh] flex py-2 pl-3 pr-2 bg-zinc-100/95 text-slate-500 rounded-xl focus:outline-none focus:ring-transparent focus:border focus:border-red-400/70"
               ></textarea>
@@ -216,33 +253,37 @@ const PostForm = ({ post }: any) => {
           </div>
         ) : (
           <div className="wrapper">
-            <div>
-              <h1 className="text-5xl font-bold text-center font-sacramento capitalize mt-10">
-                {title}
-              </h1>
-              <div className="flex flex-col justify-center items-center gap-5 mt-10">
-                {category && (
-                  <div>
-                    <span className="cat">{category}</span>
-                  </div>
-                )}
-
-                <div className="flex gap-5">
-                  {tags &&
-                    tags.map((tag) => (
-                      <span key={tag} className="text-secondary/90">
-                        #{tag}
-                      </span>
-                    ))}
+            <h1 className="text-5xl font-bold text-center font-sacramento capitalize mt-10">
+              {title}
+            </h1>
+            <div className="line"></div>
+            <div className="flex flex-col justify-center items-center gap-5 mt-10">
+              {category && (
+                <div>
+                  <span className="cat">{category}</span>
                 </div>
+              )}
+
+              <div className="flex gap-5">
+                {tags &&
+                  tags.map((tag) => (
+                    <span key={tag} className="text-secondary/90">
+                      #{tag}
+                    </span>
+                  ))}
               </div>
             </div>
-            <ReactMarkdown
-              components={{ code: CodeBlock }}
-              className="w-[98%] mx-auto max-w-none prose prose-stone post-body"
-            >
-              {content}
-            </ReactMarkdown>
+
+            {/* ------ Content ------ */}
+
+            <div className="p-2 mt-10">
+              <ReactMarkdown
+                components={{ code: CodeBlock }}
+                className="w-[98%] mx-auto max-w-none prose prose-stone post-body"
+              >
+                {content}
+              </ReactMarkdown>
+            </div>
           </div>
         )}
       </div>

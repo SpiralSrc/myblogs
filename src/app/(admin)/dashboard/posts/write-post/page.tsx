@@ -1,4 +1,4 @@
-import PostForm from "@/components/shared/PostForm";
+import WritePostForm from "@/components/admin/posts/WritePostForm";
 import { checkRole } from "@/lib/utils/roles";
 import { notFound } from "next/navigation";
 
@@ -12,7 +12,7 @@ export default async function WritePost() {
   return (
     <section>
       <div className="wrapper">
-        <PostForm />
+        <WritePostForm />
       </div>
     </section>
   );

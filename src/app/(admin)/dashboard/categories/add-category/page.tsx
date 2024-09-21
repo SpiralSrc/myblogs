@@ -1,4 +1,4 @@
-import CategoryForm from "@/components/shared/CategoryForm";
+import CategoryForm from "@/components/admin/categories/CategoryForm";
 import { checkRole } from "@/lib/utils/roles";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
@@ -10,7 +10,7 @@ export default function AddCategory() {
 
   return (
     <section>
-      <div className="wrapper min-h-screen flex justify-center">
+      <div>
         <CategoryForm />
       </div>
     </section>

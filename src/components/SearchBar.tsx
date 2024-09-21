@@ -5,15 +5,11 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { useState } from "react";
 
 const SearchBar = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [searchText, setSearchText] = useState(
-    searchParams.get("query")?.toString().trim()
-  );
 
   const handleSearch = (searchText: string) => {
     const params = new URLSearchParams(searchParams);
@@ -25,14 +21,12 @@ const SearchBar = () => {
     replace(`${pathname}?${params.toString()}`);
 
     params.delete("query");
-    setSearchText("");
   };
 
   return (
     <input
       type="text"
       placeholder="Search for post..."
-      value={searchText}
       onChange={(e) => handleSearch(e.target.value)}
       className="w-full py-2 pl-3 pr-2 bg-transparent backdrop-blur-md border border-slate-500/20 text-sm rounded-xl focus:outline-none focus:ring-1 focus:ring-inset focus:ring-red-400/70"
     />

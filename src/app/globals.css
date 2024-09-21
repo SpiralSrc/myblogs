@@ -57,7 +57,7 @@ body::-webkit-scrollbar {
 
 @layer components {
   .wrapper {
-    @apply max-w-7xl min-h-[75vh] mx-auto flex flex-col py-10 px-2 md:py-20 md:px-5 xl:px-2;
+    @apply max-w-7xl min-h-[60vh] mx-auto flex flex-col py-10 px-2 md:py-20 md:px-5 xl:px-2;
   }
 
   .post-body {

@@ -39,9 +39,7 @@ export default function RootLayout({
     >
       <html lang="en">
         <body className={`${roboto.variable} ${sacramento.variable}`}>
-          <Nav />
           <main>{children}</main>
-          <Footer />
         </body>
       </html>
     </ClerkProvider>

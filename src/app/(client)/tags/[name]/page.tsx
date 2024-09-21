@@ -53,11 +53,9 @@ export default async function SinglePostPage({
   return (
     <>
       <Hero />
-      <div className="wrapper py-10 lg:py-20">
-        <h1 className="text-5xl font-bold text-center font-sacramento capitalize">
-          {tag?.name}
-        </h1>
-        <div className="line mb-5"></div>
+      <div className="wrapper">
+        <h1>{tag?.name}</h1>
+        <div className="line mb-10"></div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-20">
           {tag.posts.length > 0 ? (
             tag.posts.map((post) => (

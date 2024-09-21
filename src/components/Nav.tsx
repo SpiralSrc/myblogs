@@ -6,8 +6,7 @@ import Link from "next/link";
 import Logo from "../app/icon.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useAuth, UserButton } from "@clerk/nextjs";
-import { checkRole } from "@/lib/utils/roles";
+import { useAuth } from "@clerk/nextjs";
 import UserButtonMenu from "./users/UserButtonMenu";
 
 const Nav = () => {

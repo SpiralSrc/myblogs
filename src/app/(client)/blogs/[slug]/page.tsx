@@ -129,7 +129,7 @@ export default async function SinglePostPage({
   params: { slug: string };
   searchParams?: { query?: string };
 }) {
-  const { userId } = auth();
+  const { userId, sessionClaims } = auth();
 
   const user = userId;
 
@@ -316,7 +316,8 @@ export default async function SinglePostPage({
                             {item.user?.lastName}
                           </h4>
                         </div>
-                        {item.user.clerkId === user ? (
+                        {item.user.clerkId === user ||
+                        sessionClaims?.metadata.role === "admin" ? (
                           <div className="flex">
                             <DeleteComment id={item.id} />
                           </div>
@@ -364,7 +365,9 @@ export default async function SinglePostPage({
                                   {reply.user.lastName}
                                 </h4>
                               </div>
-                              {reply.user.clerkId === user ? (
+                              {reply.user.clerkId === user ||
+                              sessionClaims?.metadata.role ===
+                                "admin" ? (
                                 <div className="flex">
                                   <DeleteReply id={reply.id} />
                                 </div>

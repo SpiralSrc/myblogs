@@ -1,4 +1,4 @@
-import PostForm from "@/components/shared/PostForm";
+import PostForm from "@/components/admin/posts/PostForm";
 import { prisma } from "@/lib/prismadb";
 import { checkRole } from "@/lib/utils/roles";
 import { notFound } from "next/navigation";

@@ -1,11 +1,14 @@
+import BlogList from "@/components/BlogList";
 import { prisma } from "@/lib/prismadb";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function page({
   params,
+  searchParams,
 }: {
   params: { slug: string };
+  searchParams?: { query?: string };
 }) {
   const slug = params.slug;
 
@@ -22,10 +25,13 @@ export default async function page({
     },
   });
 
+  const query = searchParams?.query || "";
+
   return (
-    <div>
+    <>
       {category && (
         <div>
+          {/* Top Image */}
           <div className="w-full h-[25vh] lg:h-[35vh] xl:h-[40vh] relative">
             <Image
               src={category.imageUrl}
@@ -35,6 +41,15 @@ export default async function page({
             />
             <div className="img-overlay"></div>
           </div>
+
+          {/* Query Result */}
+          {query && (
+            <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
+              <BlogList query={query} />
+            </div>
+          )}
+
+          {/* Body Content */}
           <div className="wrapper">
             <h1 className="mb-10">{category.name}</h1>
             <div className="line mb-5"></div>
@@ -77,6 +92,6 @@ export default async function page({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

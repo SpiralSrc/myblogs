@@ -1,17 +1,30 @@
+import BlogList from "@/components/BlogList";
 import Hero from "@/components/mainpage/Hero";
 import { prisma } from "@/lib/prismadb";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function page() {
+export default async function page({
+  searchParams,
+}: {
+  searchParams?: { query?: string };
+}) {
   const categories = await prisma.category.findMany({
     orderBy: {
       name: "asc",
     },
   });
+
+  const query = searchParams?.query || "";
+
   return (
     <>
       <Hero />
+      {query && (
+        <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
+          <BlogList query={query} />
+        </div>
+      )}
       <div className="wrapper">
         <h1>All Categories</h1>
         <div className="line mb-5"></div>

@@ -14,7 +14,8 @@ export default async function page() {
 
   return (
     <div className="wrapper">
-      <h1 className="mt-10">Categories</h1>
+      <h1>Categories</h1>
+      <div className="line mb-10"></div>
       <div className="w-full flex flex-col">
         <Link
           href={"/dashboard/categories/add-category"}
