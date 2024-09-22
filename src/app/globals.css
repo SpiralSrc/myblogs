@@ -43,7 +43,7 @@ body::-webkit-scrollbar {
   }
 
   table {
-    @apply w-full h-full border border-pink-400/30 rounded-xl border-collapse flex flex-col;
+    @apply w-full h-full border border-pink-400/30 rounded-xl border-collapse flex flex-col text-sm md:text-base;
   }
 
   tr {
@@ -67,11 +67,11 @@ body::-webkit-scrollbar {
   }
 
   .card {
-    @apply flex flex-col rounded-md bg-pink-500/5 backdrop-blur-md overflow-hidden hover:shadow-lg smooth-effect;
+    @apply flex flex-col rounded-lg bg-pink-500/5 backdrop-blur-md overflow-hidden hover:shadow-lg smooth-effect;
   }
 
   .card2 {
-    @apply flex flex-col rounded-md bg-black/40 backdrop-blur-md overflow-hidden hover:shadow-xl smooth-effect;
+    @apply flex flex-col rounded-lg bg-black/40 backdrop-blur-md overflow-hidden hover:shadow-xl smooth-effect;
   }
 
   .cat {

@@ -703,7 +703,7 @@ export async function incrementPageView(slug: string) {
     }
 
     const now = new Date();
-    const shortPeriod = 10 * 60 * 1000;
+    const shortPeriod = 10 * 60 * 1000; // 10-minute cooldown
 
     if (
       !post.last_viewed_at ||
