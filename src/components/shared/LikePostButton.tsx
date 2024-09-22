@@ -49,7 +49,6 @@ const LikePostButton = ({
     } catch (error) {
       console.error(error);
     }
-    router.refresh();
   };
 
   return (

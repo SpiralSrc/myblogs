@@ -23,21 +23,23 @@ model User {
 }
 
 model Post {
-  id          String    @id @default(uuid())
-  title       String
-  slug        String    @unique
-  desc        String
-  content     String
-  isPublished Boolean?  @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  category    Category  @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  user        User      @relation(fields: [userId], references: [clerkId])
-  userId      String
-  tags        Tag[]
-  comments    Comment[]
-  likes       Like[]
+  id             String    @id @default(uuid())
+  title          String
+  slug           String    @unique
+  desc           String
+  content        String
+  isPublished    Boolean?  @default(false)
+  view_count     Int       @default(1)
+  last_viewed_at DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  category       Category  @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  user           User      @relation(fields: [userId], references: [clerkId])
+  userId         String
+  tags           Tag[]
+  comments       Comment[]
+  likes          Like[]
 
   @@map("posts")
 }

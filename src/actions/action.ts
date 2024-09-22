@@ -680,10 +680,47 @@ export async function switchPostLike(postSlug: string) {
         },
       });
     }
+    revalidatePath(`blogs/${postSlug}`);
   } catch (error) {
     console.log(error);
     throw new NextResponse("There is an error in liking the post", {
       status: 501,
     });
+  }
+}
+
+//----------------------------- Page View ---------------------------------
+
+export async function incrementPageView(slug: string) {
+  try {
+    const post = await prisma.post.findUnique({
+      where: { slug },
+      select: { view_count: true, last_viewed_at: true },
+    });
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    const now = new Date();
+    const shortPeriod = 10 * 60 * 1000;
+
+    if (
+      !post.last_viewed_at ||
+      now.getTime() - new Date(post.last_viewed_at).getTime() >
+        shortPeriod
+    ) {
+      await prisma.post.update({
+        where: { slug },
+        data: {
+          view_count: {
+            increment: 1,
+          },
+          last_viewed_at: now,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Failed to increment page view count:", error);
   }
 }

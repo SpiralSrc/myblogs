@@ -10,7 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import RightSideBar from "@/components/shared/RightSideBar";
 // import CommentForm from "@/components/shared/CommentForm";
-import { User } from "lucide-react";
+import { Circle, Eye, User } from "lucide-react";
 import CommentForm from "@/components/shared/CommentForm";
 import ReplyForm from "@/components/shared/ReplyForm";
 import { auth } from "@clerk/nextjs/server";
@@ -18,6 +18,8 @@ import LikePostButton from "@/components/shared/LikePostButton";
 import DeleteComment from "@/components/shared/DeleteComment";
 import DeleteReply from "@/components/shared/DeleteReply";
 import BlogList from "@/components/BlogList";
+import ReportViews from "@/components/shared/ReportViews";
+import { incrementPageView } from "@/actions/action";
 
 interface PostProps {
   params: {
@@ -28,6 +30,9 @@ interface PostProps {
 }
 
 const getSinglePost = cache(async (slug: string) => {
+  // Increment the page view count
+  await incrementPageView(slug);
+
   const post = await prisma.post.findFirst({
     where: { slug },
     include: {
@@ -193,20 +198,40 @@ export default async function SinglePostPage({
                 </h4>
               </div>
 
-              {/* ----- Like Button ----- */}
+              {/* ----- Like Button & Page View ----- */}
 
-              <div className="flex justify-center items-center gap-2 my-2">
-                <LikePostButton
-                  slug={post.slug}
-                  user={user}
-                  likes={post.likes.map((like) => like.user.clerkId)}
+              <div className="flex justify-center items-center gap-5">
+                {/* Page View */}
+                <div className="flex justify-center items-center gap-2 text-sm">
+                  {/* <ReportViews slug={post.slug} /> */}
+                  {post.view_count}{" "}
+                  <Eye size={18} className="text-secondary/90" />
+                </div>
+
+                <Circle
+                  size={9}
+                  className="text-secondary/90 fill-secondary/90"
                 />
 
-                <div className="flex gap-1 text-sm">
-                  <span className="text-sm">{post.likes.length}</span>
-                  <span className="text-sm">
-                    {post.likes.length > 1 ? "Likes" : "Like"}
-                  </span>
+                {/* Like */}
+
+                <div className="flex justify-center items-center gap-2 my-2">
+                  <LikePostButton
+                    slug={post.slug}
+                    user={user}
+                    likes={post.likes.map(
+                      (like) => like.user.clerkId
+                    )}
+                  />
+
+                  <div className="flex gap-1 text-sm">
+                    <span className="text-sm">
+                      {post.likes.length}
+                    </span>
+                    <span className="text-sm">
+                      {post.likes.length > 1 ? "Likes" : "Like"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

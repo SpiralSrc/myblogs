@@ -73,7 +73,7 @@ export default async function FavoritesPage({
       <div className="wrapper">
         <h1>Liked Posts</h1>
         <div className="line"></div>
-        <div className="w-full mx-auto mt-10 flex justify-center items-center flex-wrap px-3 gap-10">
+        <div className="w-full mx-auto mt-10 flex justify-start items-center flex-wrap px-3 gap-10">
           {userLikedPosts.length > 0 ? (
             userLikedPosts.map((post) => (
               <div key={post.id}>
