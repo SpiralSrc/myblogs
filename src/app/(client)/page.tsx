@@ -1,5 +1,5 @@
 import BlogList from "@/components/BlogList";
-import Hero from "@/components/mainpage/Hero";
+import Hero from "@/components/shared/Hero";
 import RightSideBar from "@/components/shared/RightSideBar";
 import { prisma } from "@/lib/prismadb";
 import { truncate } from "@/lib/utils/truncate";

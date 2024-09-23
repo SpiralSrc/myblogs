@@ -1,6 +1,6 @@
 import BlogList from "@/components/BlogList";
 import AboutBlog from "@/components/client/about/AboutBlog";
-import Hero from "@/components/mainpage/Hero";
+import Hero from "@/components/shared/Hero";
 import { prisma } from "@/lib/prismadb";
 import Image from "next/image";
 

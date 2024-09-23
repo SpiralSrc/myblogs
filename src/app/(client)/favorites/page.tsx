@@ -1,5 +1,5 @@
 import BlogList from "@/components/BlogList";
-import Hero from "@/components/mainpage/Hero";
+import Hero from "@/components/shared/Hero";
 import { prisma } from "@/lib/prismadb";
 import { truncateDesc, truncateTitle2 } from "@/lib/utils/truncate";
 import { auth } from "@clerk/nextjs/server";
