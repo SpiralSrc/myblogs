@@ -692,6 +692,7 @@ export async function switchPostLike(postSlug: string) {
 //----------------------------- Page View ---------------------------------
 
 export async function incrementPageView(slug: string) {
+  const { userId } = auth();
   try {
     const post = await prisma.post.findUnique({
       where: { slug },
@@ -703,20 +704,33 @@ export async function incrementPageView(slug: string) {
     }
 
     const now = new Date();
-    const shortPeriod = 10 * 60 * 1000; // 10-minute cooldown
+    const shortPeriod = 3 * 60 * 1000; // 3-minute cooldown
 
-    if (
-      !post.last_viewed_at ||
-      now.getTime() - new Date(post.last_viewed_at).getTime() >
-        shortPeriod
-    ) {
+    if (userId) {
+      //for logged in users because there might be instance the page reloads under any circumstances
+      if (
+        !post.last_viewed_at ||
+        now.getTime() - new Date(post.last_viewed_at).getTime() >
+          shortPeriod
+      ) {
+        await prisma.post.update({
+          where: { slug },
+          data: {
+            view_count: {
+              increment: 1,
+            },
+            last_viewed_at: now,
+          },
+        });
+      }
+    } else {
+      // Increment view count for non-logged-in users without cooldown
       await prisma.post.update({
         where: { slug },
         data: {
           view_count: {
             increment: 1,
           },
-          last_viewed_at: now,
         },
       });
     }

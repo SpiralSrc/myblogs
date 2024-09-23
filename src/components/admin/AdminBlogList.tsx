@@ -27,7 +27,7 @@ const AdminBlogList = async ({ query }: { query: string }) => {
               <div className="flex justify-start items-center gap-4">
                 {item.tags.map((tag) => (
                   <span
-                    key={tag.id}
+                    key={tag.name}
                     className="mt-2 py-1 px-2 rounded-md text-sm text-secondary/95"
                   >
                     #{tag.name}

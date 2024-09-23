@@ -2,6 +2,7 @@ import AdminBlogList from "@/components/admin/AdminBlogList";
 import SearchBar from "@/components/SearchBar";
 import { prisma } from "@/lib/prismadb";
 import { checkRole } from "@/lib/utils/roles";
+import { truncateTitle2 } from "@/lib/utils/truncate";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -31,7 +32,7 @@ export default async function PostsPage({
       <h1>Posts</h1>
       <div className="line mb-10"></div>
       <div className="w-full flex flex-col">
-        <div className="flex self-end justify-end relative gap-10">
+        <div className="flex flex-col-reverse xs:flex-row self-end justify-end relative gap-10">
           {/* Search Query */}
           {query && (
             <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
@@ -41,13 +42,14 @@ export default async function PostsPage({
           <div className="w-96">
             <SearchBar />
           </div>
-
-          <Link
-            href={"/dashboard/posts/write-post"}
-            className=" btn bg-red-400/70 rounded-xl hover:bg-red-200"
-          >
-            Write a post
-          </Link>
+          <div className="flex place-self-end">
+            <Link
+              href={"/dashboard/posts/write-post"}
+              className=" btn bg-red-400/70 rounded-xl hover:bg-red-200 text-sm xs:text-base"
+            >
+              Write a post
+            </Link>
+          </div>
         </div>
 
         {/* ----- Post Table ----- */}
@@ -69,7 +71,7 @@ export default async function PostsPage({
                   <tr className="border-pink-400/5">
                     <td className="flex-1">
                       <Link href={`/dashboard/posts/${post.slug}`}>
-                        {post.title}
+                        {truncateTitle2(post.title)}
                       </Link>
                     </td>
                     <td className="flex-1 pl-3 text-left">

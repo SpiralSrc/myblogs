@@ -5,9 +5,12 @@ import Link from "next/link";
 import logo from "../../public/logo2.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 const Footer = () => {
   const currentPath = usePathname();
+
+  const { userId } = useAuth();
 
   const currentYear = new Date().getFullYear();
 
@@ -37,7 +40,7 @@ const Footer = () => {
               <Link
                 href={nav.path}
                 key={id}
-                className={`${
+                className={`hover:text-pink-400/60 smooth-effect ${
                   nav.path === currentPath
                     ? "text-secondary"
                     : "text-secondary/60"
@@ -46,6 +49,18 @@ const Footer = () => {
                 {nav.name}
               </Link>
             ))}
+            {userId && (
+              <Link
+                href={"/favorites"}
+                className={`hover:text-pink-400/60 smooth-effect ${
+                  currentPath === "/favorites"
+                    ? "text-pink-400/60"
+                    : "text-secondary/60"
+                }`}
+              >
+                Favorites
+              </Link>
+            )}
           </div>
         </div>
         <div className="w-[90%] mx-auto border-t border-secondary/20">

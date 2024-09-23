@@ -5,20 +5,25 @@ import {
   Hash,
   BookHeart,
   UserRound,
+  Home,
+  Sparkles,
 } from "lucide-react";
 
 export const navLinks = [
   {
     name: "Home",
     path: "/",
+    icon: Home,
   },
   {
     name: "About",
     path: "/about",
+    icon: Sparkles,
   },
   {
     name: "Categories",
     path: "/categories",
+    icon: Boxes,
   },
 ];
 
@@ -31,11 +36,11 @@ export const socialsData = [
 ];
 
 export const dashboardNavs = [
-  {
-    name: "Dashboard",
-    path: "/dashboard",
-    icon: LayoutDashboard,
-  },
+  // {
+  //   name: "Dashboard",
+  //   path: "/dashboard",
+  //   icon: LayoutDashboard,
+  // },
   {
     name: "Categories",
     path: "/dashboard/categories",

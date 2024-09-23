@@ -1,5 +1,6 @@
 import BlogList from "@/components/BlogList";
 import { prisma } from "@/lib/prismadb";
+import { truncateDesc, truncateTitle2 } from "@/lib/utils/truncate";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -62,11 +63,17 @@ export default async function page({
                   >
                     <Link
                       href={`/blogs/${post.slug}`}
-                      className="card2 p-5"
+                      className="card2 p-5 min-h-36"
                     >
-                      <h3 className="font-bold text-center text-lg">
-                        {post.title}
+                      <h3 className="text-center font-bold text-lg">
+                        {truncateTitle2(post.title)}
                       </h3>
+                      <div className="line mb-3"></div>
+                      <div className="w-[94%] mx-auto flex px-5 justify-center items-center">
+                        <p className=" flex text-justify text-pretty indent-7 text-sm">
+                          {truncateDesc(post.desc)}
+                        </p>
+                      </div>
                     </Link>
                     <div className="flex justify-center items-center gap-4 mt-3">
                       {post.tags.map((tag) => (

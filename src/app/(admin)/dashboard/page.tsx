@@ -56,14 +56,14 @@ export default async function page() {
       {/* Top cards */}
       <div className="w-full flex flex-wrap gap-10 justify-center items-center">
         {/* ----- Posts ----- */}
-        <div className="card py-5 px-20">
+        <div className="gr py-5 px-20 flex flex-col rounded-lg">
           <h3 className="text-xl font-bold">Total Posts</h3>
           <div className="line mb-3"></div>
           <span className="text-center text-2xl">{posts.length}</span>
         </div>
 
         {/* ----- Categories ----- */}
-        <div className="bg-black/20 py-5 px-20 flex flex-col rounded-lg">
+        <div className="bg-black/20 py-5 px-12 flex flex-col rounded-lg">
           <h3 className="text-xl font-bold">Total Categories</h3>
           <div className="line mb-3"></div>
           <span className="text-center text-2xl">
@@ -71,7 +71,7 @@ export default async function page() {
           </span>
         </div>
 
-        <div className="card2 py-5 px-20 flex flex-col rounded-lg">
+        <div className="bg-pink-900/30 py-5 px-20 flex flex-col rounded-lg">
           <h3 className="text-xl font-bold">Total Tags</h3>
           <div className="line mb-3"></div>
           <span className="text-center text-2xl">{tags.length}</span>
@@ -79,7 +79,7 @@ export default async function page() {
       </div>
 
       {/* Data */}
-      <div className="w-full flex flex-wrap gap-5 justify-center items-center mt-10">
+      <div className="w-full flex flex-wrap gap-5 md:gap-3 xl:gap-5 justify-center items-center mt-10">
         {/* Most Viewed Posts */}
         <div className="bg-black/30 backdrop-blur-sm w-[98%] md:flex-1 rounded-lg p-3">
           <h2 className="mb-3">Most Viewed Posts</h2>

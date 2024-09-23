@@ -2,8 +2,8 @@
 
 import Form from "@/components/reusable_ui/Form";
 import Input from "@/components/reusable_ui/Input";
-import { createPost, updatePost } from "@/actions/action";
-import { useEffect, useState } from "react";
+import { createPost } from "@/actions/action";
+import { useState } from "react";
 import SubmitButton from "@/components/reusable_ui/SubmitButton";
 import CategoryList from "@/components/shared/CategoryList";
 import { Check, Eye, X } from "lucide-react";
@@ -103,13 +103,13 @@ const WritePostForm = () => {
 
   return (
     <>
-      <div className="relative">
+      <div className="w-full flex flex-col gap-2">
         {/* ----- Preview Button ----- */}
-        <div className="absolute top-10 right-5 flex gap-1 cursor-pointer">
+        <div className="flex place-self-end gap-1 cursor-pointer">
           {!preview ? (
             <span
               className={
-                "cursor-pointer py-1 rounded-lg pr-2 flex gap-2 justify-center items-center smooth-effect text-secondary/90 hover:text-pink-400/70"
+                "cursor-pointer py-1 rounded-lg pr-2 flex gap-2 justify-center items-center border border-transparent smooth-effect pl-1 text-secondary/90 hover:text-pink-400/70 hover:border-pink-400/20 hover:bg-red-300/20"
               }
               onClick={() => setPreview(true)}
             >
@@ -118,7 +118,7 @@ const WritePostForm = () => {
           ) : (
             <span
               onClick={() => setPreview(false)}
-              className="cursor-pointer py-1 rounded-lg pr-2 bg-pink-400/5 flex gap-2 justify-center items-center text-pink-400/70"
+              className="close-btn cursor-pointer py-1 rounded-lg pr-2 bg-pink-400/5 flex gap-2 justify-center items-center text-pink-400/70"
             >
               <X className="p-1" />
               Close Preview
@@ -128,10 +128,6 @@ const WritePostForm = () => {
 
         {!preview ? (
           <div className="flex w-full flex-col">
-            <h1 className="text-4xl text-center font-bold mb-10">
-              Write/Edit a Post
-            </h1>
-            <div className="line mb-10"></div>
             <Form
               action={handleSubmit}
 

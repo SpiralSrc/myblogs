@@ -7,8 +7,13 @@ import SubmitButton from "../../reusable_ui/SubmitButton";
 import { useState } from "react";
 import { CldImage } from "next-cloudinary";
 import { Trash2 } from "lucide-react";
+import { Category } from "@prisma/client";
 
-const EditCategoryForm = ({ category }: any) => {
+interface CategoryProps {
+  category: Category;
+}
+
+const EditCategoryForm = ({ category }: CategoryProps) => {
   const [imageUrl, setImageUrl] = useState(category.imageUrl);
   const [name, setName] = useState(category.name);
 
@@ -26,9 +31,7 @@ const EditCategoryForm = ({ category }: any) => {
   };
 
   return (
-    <div className="wrapper">
-      <h1>Add a category</h1>
-      <div className="line mb-10"></div>
+    <div className="w-full">
       <Form action={handleSubmit}>
         {imageUrl ? (
           <div className="relative cursor-pointer w-64 h-64 overflow-hidden rounded-xl flex justify-center items-center border border-teal-500/20">
@@ -64,7 +67,7 @@ const EditCategoryForm = ({ category }: any) => {
           placeholder="Category name..."
         />
 
-        <SubmitButton>Add Category</SubmitButton>
+        <SubmitButton>Update</SubmitButton>
       </Form>
     </div>
   );

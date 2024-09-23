@@ -8,7 +8,7 @@ import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
 import { checkRole } from "@/lib/utils/roles";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 
 interface PostProps {
   params: {
@@ -89,15 +89,24 @@ export default async function SinglePostPage({
 
   return (
     <div className="wrapper relative">
-      <Link
-        href={`/dashboard/posts/${post.slug}/delete`}
-        className="absolute top-10 right-10"
-      >
-        <Trash2
-          size={18}
-          className="text-red-300/20 hover:text-red-500 smooth-effect"
-        />
-      </Link>
+      <div className="absolute top-10 right-10 flex justify-center items-center gap-2">
+        <Link href={`/dashboard/posts/${post.slug}/edit`}>
+          <Edit
+            size={18}
+            className="text-teal-300/20 hover:text-teal-500 smooth-effect"
+          />
+        </Link>
+        <Link
+          href={`/dashboard/posts/${post.slug}/delete`}
+          className=""
+        >
+          <Trash2
+            size={18}
+            className="text-red-300/20 hover:text-red-500 smooth-effect"
+          />
+        </Link>
+      </div>
+
       <h1 className="mt-10">{post?.title}</h1>
       <div className="line"></div>
       <div className="flex flex-col justify-center items-center gap-5 mt-10">
@@ -125,6 +134,15 @@ export default async function SinglePostPage({
         >
           {post.content}
         </ReactMarkdown>
+      </div>
+      <div className="line mt-10"></div>
+      <div className="w-full flex justify-between items-center mt-5">
+        <Link href={"/dashboard"} className="btn">
+          Back to Dashboard...
+        </Link>
+        <Link href={"/dashboard/posts"} className="btn">
+          Back to Posts...
+        </Link>
       </div>
     </div>
   );

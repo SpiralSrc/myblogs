@@ -5,8 +5,13 @@ import Form from "../../reusable_ui/Form";
 import Input from "../../reusable_ui/Input";
 import SubmitButton from "../../reusable_ui/SubmitButton";
 import { useState } from "react";
+import { Tag } from "@prisma/client";
 
-const EditTagForm = ({ tag }: any) => {
+interface TagProps {
+  tag: Tag;
+}
+
+const EditTagForm = ({ tag }: TagProps) => {
   const [name, setName] = useState(tag.name);
 
   const handleSubmit = async () => {
@@ -22,9 +27,7 @@ const EditTagForm = ({ tag }: any) => {
   };
 
   return (
-    <div className="wrapper">
-      <h1>Edit Tag Name</h1>
-      <div className="line mb-10"></div>
+    <div className="w-full">
       <Form action={handleSubmit}>
         <Input
           type="text"

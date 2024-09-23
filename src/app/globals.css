@@ -31,7 +31,7 @@ body::-webkit-scrollbar {
   }
 
   h1 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold flex place-self-center p-4 font-sacramento capitalize mb-6 bg-clip-text text-transparent bg-gradient-to-br from-pink-700 via-pink-200 to-orange-900 via-30%;
+    @apply text-4xl lg:text-5xl font-bold flex place-self-center p-4 font-sacramento capitalize mb-6 bg-clip-text text-transparent bg-gradient-to-br from-pink-700 via-pink-200 to-orange-900 via-30%;
   }
 
   h2 {
@@ -67,11 +67,15 @@ body::-webkit-scrollbar {
   }
 
   .card {
-    @apply flex flex-col rounded-lg bg-pink-500/5 backdrop-blur-md overflow-hidden hover:shadow-lg smooth-effect;
+    @apply flex flex-col rounded-lg  bg-pink-900/10 backdrop-blur-md overflow-hidden hover:bg-transparent hover:shadow-lg;
   }
 
   .card2 {
     @apply flex flex-col rounded-lg bg-black/40 backdrop-blur-md overflow-hidden hover:shadow-xl smooth-effect;
+  }
+
+  .card3 {
+    @apply flex flex-col rounded-lg gr backdrop-blur-md overflow-hidden hover:shadow-xl smooth-effect;
   }
 
   .cat {
@@ -95,8 +99,13 @@ body::-webkit-scrollbar {
   .btn {
     transition: all 500ms ease-in-out;
 
-    @apply hover:text-red-400/70 py-2 px-3;
+    @apply hover:text-red-400/70 py-1 px-2 xs:py-2 xs:px-3;
   }
+
+  .close-btn {
+    @apply smooth-effect  border border-transparent hover:text-pink-400/70 hover:border-pink-400/20 hover:bg-red-300/20;
+  }
+
   .smooth-effect {
     transition: all 500ms ease-in-out;
   }
@@ -111,5 +120,40 @@ body::-webkit-scrollbar {
 
   .gr {
     @apply bg-gradient-to-br from-pink-700/20 via-pink-200/30 to-pink-900/20 via-30%;
+  }
+
+  .gr-overlay {
+    @apply gr;
+  }
+
+  /* Animation */
+  .slideFromLeft {
+    animation: slideFromLeft 800ms ease;
+  }
+
+  @keyframes slideFromLeft {
+    from {
+      transform: translateX(-100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .zoom-in {
+    animation: zoom-in 700ms ease-in;
+  }
+
+  @keyframes zoom-in {
+    from {
+      width: 110%;
+      opacity: 0;
+    }
+    to {
+      width: 100%;
+      opacity: 1;
+    }
   }
 }

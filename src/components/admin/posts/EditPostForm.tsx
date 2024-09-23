@@ -2,7 +2,7 @@
 
 import Form from "@/components/reusable_ui/Form";
 import Input from "@/components/reusable_ui/Input";
-import { createPost, updatePost } from "@/actions/action";
+import { updatePost } from "@/actions/action";
 import { useEffect, useState } from "react";
 import SubmitButton from "@/components/reusable_ui/SubmitButton";
 import CategoryList from "@/components/shared/CategoryList";
@@ -12,6 +12,16 @@ import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "@/components/shared/CopyButton";
 import { useUser } from "@clerk/nextjs";
+import { Post as PostData, Category, Tag } from "@prisma/client";
+
+interface PostWithRelations extends PostData {
+  category: Category;
+  tags: Tag[];
+}
+
+interface PostProps {
+  post: PostWithRelations;
+}
 
 const CodeBlock = ({ children, className, node, ...rest }: any) => {
   const match = /language-(\w+)/.exec(className || "");
@@ -38,7 +48,7 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
   );
 };
 
-const PostForm = ({ post }: any) => {
+const EditPostForm = ({ post }: PostProps) => {
   const { isLoaded } = useUser();
 
   const [tagInput, setTagInput] = useState("");
@@ -69,11 +79,11 @@ const PostForm = ({ post }: any) => {
     formData.set("title", title || post.title);
     formData.set("desc", desc || post.desc);
     formData.set("content", content || post.content);
-    formData.set("category", category || post.category);
+    formData.set("category", category || post.category.name);
     tags.forEach((tag) => {
       formData.append("tags[]", tag);
     });
-    formData.set("isPublished", isPublished);
+    formData.set("isPublished", isPublished ? "true" : "false");
 
     console.log("Form Data:", Object.fromEntries(formData.entries()));
 
@@ -121,7 +131,7 @@ const PostForm = ({ post }: any) => {
           {!preview ? (
             <span
               className={
-                "cursor-pointer py-1 rounded-lg pr-2 flex gap-2 justify-center items-center smooth-effect text-secondary/90 hover:text-pink-400/70"
+                "cursor-pointer py-1 rounded-lg pr-2 flex gap-2 justify-center items-center border border-transparent smooth-effect pl-1 text-secondary/90 hover:text-pink-400/70 hover:border-pink-400/20 hover:bg-red-300/20"
               }
               onClick={() => setPreview(true)}
             >
@@ -130,7 +140,7 @@ const PostForm = ({ post }: any) => {
           ) : (
             <span
               onClick={() => setPreview(false)}
-              className="cursor-pointer py-1 rounded-lg pr-2 bg-pink-400/5 flex gap-2 justify-center items-center text-pink-400/70"
+              className="close-btn cursor-pointer py-1 rounded-lg pr-2 bg-pink-400/5 flex gap-2 justify-center items-center text-pink-400/70"
             >
               <X className="p-1" />
               Close Preview
@@ -153,7 +163,7 @@ const PostForm = ({ post }: any) => {
               <Input
                 type="hidden"
                 name="isPublished"
-                value={isPublished}
+                value={isPublished ? "true" : "false"}
                 placeholder="Publish?"
               />
               <div className="flex flex-row gap-3 justify-end items-center">
@@ -220,7 +230,7 @@ const PostForm = ({ post }: any) => {
 
               <select
                 name="category"
-                defaultValue={post?.category}
+                defaultValue={post?.category.name}
                 onChange={(e) => setCategory(e.target.value)}
                 className="py-2 px-5 rounded-xl border border-red-400/70 bg-red-400/70 transition-all focus:outline-none hover:text-red-400/70 hover:bg-red-200"
               >
@@ -290,4 +300,4 @@ const PostForm = ({ post }: any) => {
     </>
   );
 };
-export default PostForm;
+export default EditPostForm;

@@ -1,49 +1,34 @@
+import BlogList from "@/components/BlogList";
+import AboutBlog from "@/components/client/about/AboutBlog";
 import Hero from "@/components/mainpage/Hero";
 import { prisma } from "@/lib/prismadb";
 import Image from "next/image";
 
-export default async function AboutPage() {
+export default async function AboutPage({
+  searchParams,
+}: {
+  searchParams?: { query?: string };
+}) {
+  const query = searchParams?.query || "";
+
   return (
     <>
       <Hero />
+      {query && (
+        <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
+          <BlogList query={query} />
+        </div>
+      )}
       <div className="wrapper">
-        <div className="w-full flex flex-col">
-          <h1>SpiralSrc Blogs</h1>
-          <div className="line mb-5"></div>
+        <div className="w-full flex">
+          {/* Left */}
+          <div className="w-full flex flex-col justify-center items-center">
+            <h1>SpiralSrc Blogs</h1>
+            <div className="line mb-10"></div>
 
-          {/* ----- About Content ------ */}
-          <div className="w-full flex gap-5">
-            {/* About the website */}
-            <div>
-              <h3 className="font-medium">About Me</h3>
+            {/* ----- About Content ------ */}
 
-              <div className="">
-                {/* Image */}
-                {/* <div className="relative w-10 h-10 rounded-full overflow-hidden ">
-                 
-                    <Image
-                      src={}
-                      alt="avatar"
-                      sizes="100%"
-                      className="object-cover"
-                    />
-                 
-                </div> */}
-                <p className="text-pretty text-justify indent-7">
-                  Lorem ipsum dolor sit amet consectetur adipisicing
-                  elit. At accusantium, atque in maiores minus
-                  molestias et, repudiandae quos eveniet explicabo,
-                  sit perferendis vero reprehenderit! Laudantium, ab
-                  consequuntur corporis, voluptatibus atque magni
-                  omnis nobis suscipit ratione officiis nam at
-                  deleniti rem? Nemo esse a nisi impedit culpa libero?
-                  Ab, magni tempore.
-                </p>
-              </div>
-            </div>
-
-            {/* Biography */}
-            <div></div>
+            <AboutBlog />
           </div>
         </div>
       </div>

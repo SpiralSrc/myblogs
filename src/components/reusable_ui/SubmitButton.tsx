@@ -15,7 +15,7 @@ const SubmitButton = ({ children, onClick }: SubmitButtonProps) => {
     <button
       onClick={onClick}
       disabled={pending}
-      className="flex place-self-end py-2 px-5 rounded-xl border border-red-400/70 bg-red-400/70 smooth-effect hover:text-red-400/70 hover:bg-red-200"
+      className="flex place-self-end py-1 px-3 text-sm md:text-base md:py-[5px] md:px-5 rounded-xl border border-pink-400/50 bg-pink-400/30 smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20"
     >
       {pending ? (
         <div className="flex flex-row justify-center items-center gap-3">

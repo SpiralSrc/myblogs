@@ -1,5 +1,11 @@
+import BlogList from "@/components/BlogList";
 import Hero from "@/components/mainpage/Hero";
 import { prisma } from "@/lib/prismadb";
+import {
+  truncateDesc,
+  truncateTitle,
+  truncateTitle2,
+} from "@/lib/utils/truncate";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -43,35 +49,50 @@ export async function generateMetadata({
 
 export default async function SinglePostPage({
   params,
+  searchParams,
 }: {
   params: { name: string };
+  searchParams: { query: string };
 }) {
   const id = params.name;
 
   const tag = await getTags(id);
 
+  const query = searchParams?.query || "";
+
   return (
     <>
       <Hero />
+      {query && (
+        <div className="w-96 absolute top-16 right-[40%] z-30 flex rounded-md overflow-y-scroll">
+          <BlogList query={query} />
+        </div>
+      )}
       <div className="wrapper">
         <h1>{tag?.name}</h1>
         <div className="line mb-10"></div>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-20">
+        <div className="w-full mx-auto mt-10 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-3 justify-center items-center gap-10">
           {tag.posts.length > 0 ? (
             tag.posts.map((post) => (
               <div
                 key={post.id}
-                className="flex flex-col rounded-lg p-3 border border-secondary/20 gr"
+                className="flex flex-col rounded-lg p-3 gr"
               >
                 <Link
                   href={`/blogs/${post.slug}`}
-                  className="card2 p-5"
+                  className="card2 py-2 min-h-36"
                 >
                   <h3 className="text-center font-bold text-lg">
-                    {post.title}
+                    {truncateTitle2(post.title)}
                   </h3>
+                  <div className="line mb-3"></div>
+                  <div className="w-[94%] mx-auto flex px-5 justify-center items-center">
+                    <p className=" flex text-justify text-pretty indent-7 text-sm">
+                      {truncateDesc(post.desc)}
+                    </p>
+                  </div>
                 </Link>
-                <div className="w-full flex flex-col justify-center items-center gap-2 mt-3">
+                <div className="w-full flex flex-col justify-center items-center gap-2 mt-2">
                   <div className="flex flex-col justify-center items-center gap-3">
                     <Link
                       href={`/categories/${post.category.slug}`}

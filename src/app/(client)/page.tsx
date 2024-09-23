@@ -42,8 +42,9 @@ export default async function ClientHome({
             {newPost && newPost[0] && (
               <Link
                 href={`/blogs/${newPost[0].slug}`}
-                className="w-full card py-5 px-2"
+                className="w-full card py-5 px-2 group relative"
               >
+                <div className="w-full h-full gr-overlay absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-hover:zoom-in"></div>
                 <h2>{newPost[0].title}</h2>
                 <div className="flex flex-col justify-center items-center gap-3">
                   <div className="mt-3">
@@ -63,7 +64,7 @@ export default async function ClientHome({
                   </div>
                 </div>
                 <div className="mt-10 indent-8 lg:w-[85%] mx-auto">
-                  <p>{newPost[0].desc}</p>
+                  <p>{truncate(newPost[0].desc)}</p>
                 </div>
               </Link>
             )}
@@ -77,8 +78,9 @@ export default async function ClientHome({
                     <Link
                       href={`/blogs/${post.slug}`}
                       key={post.id}
-                      className="card p-5"
+                      className="card p-5 group relative"
                     >
+                      <div className="w-full h-full gr-overlay absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-hover:zoom-in"></div>
                       <h3 className="text-center font-bold text-lg">
                         {post.title}
                       </h3>

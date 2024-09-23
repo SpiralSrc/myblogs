@@ -1,6 +1,7 @@
 import BlogList from "@/components/BlogList";
 import Hero from "@/components/mainpage/Hero";
 import { prisma } from "@/lib/prismadb";
+import { truncateDesc, truncateTitle2 } from "@/lib/utils/truncate";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
@@ -9,28 +10,6 @@ export default async function FavoritesPage({
 }: {
   searchParams?: { query?: string };
 }) {
-  const likedPosts = await prisma.post.findMany({
-    orderBy: {
-      title: "asc",
-    },
-    include: {
-      likes: {
-        include: {
-          post: {
-            include: {
-              tags: true,
-            },
-          },
-          user: {
-            include: {
-              likes: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
   const { userId } = auth();
 
   if (!userId) {
@@ -58,9 +37,7 @@ export default async function FavoritesPage({
 
   const query = searchParams?.query || "";
 
-  const userLikedPosts = likedPosts.filter((post) =>
-    post.likes.some((like) => like.user.clerkId === userId)
-  );
+  const userLikedPosts = currentUser.likes.map((like) => like.post);
 
   return (
     <>
@@ -73,31 +50,35 @@ export default async function FavoritesPage({
       <div className="wrapper">
         <h1>Liked Posts</h1>
         <div className="line"></div>
-        <div className="w-full mx-auto mt-10 flex justify-start items-center flex-wrap px-3 gap-10">
+        <div className="w-full mx-auto mt-10 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-3 justify-center items-center gap-10">
           {userLikedPosts.length > 0 ? (
             userLikedPosts.map((post) => (
               <div key={post.id}>
-                <div className="flex flex-col rounded-lg p-3 border border-secondary/20 gr">
+                <div className="flex flex-col rounded-lg p-3 gr">
                   <Link
                     href={`/blogs/${post.slug}`}
-                    className="card2 w-64 h-30 xxs:w-80 xxs:h-28 px-5 py-6 flex"
+                    className="card2 py-3 min-h-36"
                   >
                     <h3 className="font-bold text-center text-lg">
-                      {post.title}
+                      {truncateTitle2(post.title)}
                     </h3>
+                    <div className="line mb-3"></div>
+                    <div className="w-[94%] mx-auto flex px-5 justify-center items-center">
+                      <p className=" flex text-justify text-pretty indent-7 text-sm">
+                        {truncateDesc(post.desc)}
+                      </p>
+                    </div>
                   </Link>
-                  <div className="flex justify-center items-center gap-4 mt-3">
-                    {post.likes.map((like) =>
-                      like.post.tags.map((tag) => (
-                        <Link
-                          href={`/tags/${tag.name}`}
-                          key={tag.id}
-                          className="tag"
-                        >
-                          #{tag.name}
-                        </Link>
-                      ))
-                    )}
+                  <div className="flex flex-wrap justify-center items-center gap-2 xs:gap-4 mt-3">
+                    {post.tags.map((tag) => (
+                      <Link
+                        href={`/tags/${tag.name}`}
+                        key={tag.id}
+                        className="tag"
+                      >
+                        #{tag.name}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>

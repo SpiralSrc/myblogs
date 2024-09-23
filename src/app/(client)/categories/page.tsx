@@ -34,8 +34,9 @@ export default async function page({
               <Link
                 href={`/categories/${category.slug}`}
                 key={category.id}
-                className="card"
+                className="card group relative"
               >
+                <div className="w-full h-full gr-overlay absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-hover:zoom-in"></div>
                 <div className="w-full h-44 lg:h-52 relative">
                   <Image
                     src={category.imageUrl}

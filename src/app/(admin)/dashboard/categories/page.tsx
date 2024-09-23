@@ -1,4 +1,5 @@
 import { getCategories } from "@/actions/action";
+import { prisma } from "@/lib/prismadb";
 import { checkRole } from "@/lib/utils/roles";
 import { auth } from "@clerk/nextjs/server";
 import { Edit, Trash2 } from "lucide-react";
@@ -10,7 +11,14 @@ export default async function page() {
     return notFound();
   }
 
-  const categories = await getCategories();
+  const categories = await prisma.category.findMany({
+    orderBy: {
+      name: "asc",
+    },
+    include: {
+      posts: true,
+    },
+  });
 
   return (
     <div className="wrapper">
@@ -19,7 +27,7 @@ export default async function page() {
       <div className="w-full flex flex-col">
         <Link
           href={"/dashboard/categories/add-category"}
-          className="self-end btn bg-red-400/70 rounded-xl hover:bg-red-200"
+          className="self-end btn bg-red-400/70 rounded-xl hover:bg-red-200 text-sm xs:text-base"
         >
           Add Category
         </Link>
@@ -28,7 +36,8 @@ export default async function page() {
             <table className="w-3/4 mx-auto">
               <thead>
                 <tr>
-                  <td>Category Name</td>
+                  <td className="flex-1">Category Name</td>
+                  <td className="flex-1">Posts</td>
                   <td className="flex w-1/4 justify-end items-center">
                     Options
                   </td>
@@ -37,7 +46,8 @@ export default async function page() {
               {categories?.map((category) => (
                 <tbody key={category.id}>
                   <tr className="border-pink-400/5">
-                    <td>{category.name}</td>
+                    <td className="flex-1">{category.name}</td>
+                    <td className="flex-1">{categories.length}</td>
                     <td className="flex w-1/4 justify-end items-center gap-3">
                       <Link
                         href={`/dashboard/categories/${category.slug}/edit`}

@@ -2,21 +2,25 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/app/icon.png";
+import logo from "../../../public/logo2.png";
 import { dashboardNavs, socialsData } from "@/lib/linksData";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import UserButtonMenu from "../users/UserButtonMenu";
+import { useState } from "react";
+import { Heart, Home, LayoutDashboard, Menu } from "lucide-react";
+import DashboardNavModal from "./DashboardNavModal";
 
 const DashBoardNav = () => {
+  const [navModal, setNavModal] = useState(false);
   const path = usePathname();
 
   const { userId } = useAuth();
 
   return (
-    <nav className="w-full h-full flex flex-col py-20 bg-pink-950/20 backdrop-blur-md shadow-xl">
-      <div className="w-[98%] h-full mx-auto flex flex-col justify-between items-center px-5 xl:px-2">
-        <div className="w-full h-full flex flex-col gap-10">
+    <nav className="w-screen lg:w-72 xl:w-80 fixed lg:static top-0 left-0 z-30 py-3 bg-pink-950/20 lg:h-full flex lg:flex-col lg:py-20 lg:gr lg:backdrop-blur-md shadow-xl">
+      <div className="w-full lg:h-full mx-auto flex lg:flex-col justify-between items-center px-5 xl:px-2">
+        <div className="w-full h-full flex lg:flex-col gap-10">
           {/* ----- Logo ----- */}
           <Link
             href={"/dashboard"}
@@ -24,21 +28,21 @@ const DashBoardNav = () => {
           >
             <div className="relative w-6 h-6 md:w-7 md:h-7">
               <Image
-                src={Logo}
+                src={logo}
                 alt="logo"
                 fill
                 sizes="(max-width: 36px) 100vw, (max-width: 36px) 50vw, 33vw"
                 className="object-cover"
               />
             </div>
-            <span className="hidden sm:block font-sacramento font-bold text-md md:text-lg bg-clip-text text-transparent bg-gradient-to-br from-pink-700 via-pink-200 to-orange-900 via-30%">
+            <span className="hidden lg:block font-sacramento font-bold text-md md:text-lg bg-clip-text text-transparent bg-gradient-to-br from-pink-700 via-pink-200 to-orange-900 via-30%">
               SpiralSrc Admin
             </span>
           </Link>
 
           {/* ----- User and Potfolio link ----- */}
 
-          <div className="flex flex-col gap-2 justify-center items-center">
+          <div className="hidden lg:flex flex-col gap-2 justify-center items-center">
             {userId && (
               // <UserButton />
               <UserButtonMenu />
@@ -52,34 +56,63 @@ const DashBoardNav = () => {
               Portfolio
             </a>
           </div>
-          <div className="line"></div>
+          <div className="hidden lg:flex">
+            <div className="line "></div>
+          </div>
 
-          <div className="h-full flex flex-col justify-around items-center gap-20">
-            {/* ----- Navs ----- */}
-            <ul className="flex flex-col justify-center items-center gap-10">
-              {dashboardNavs.map((nav) => (
-                <Link
-                  key={nav.name}
-                  href={nav.path}
-                  className={`hover:text-pink-400/60 smooth-effect ${
-                    nav.path === path
-                      ? "text-pink-400/60"
-                      : "text-white/80"
-                  }`}
-                >
-                  <li>{nav.name}</li>
-                </Link>
-              ))}
-              <Link href={"/"}>Client Page</Link>
+          {/* ----- Navs ----- */}
+          <div className="hidden lg:h-full lg:flex flex-col justify-around items-center gap-20">
+            <ul className="w-[85%] flex flex-col justify-center items-center gap-5">
+              <Link
+                href={"/dashboard"}
+                className={`w-full flex justify-start pl-3 gap-2 items-center py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
+                  path === "/dashboard"
+                    ? "text-pink-400/60 bg-pink-300/20"
+                    : "text-primary/30"
+                }`}
+              >
+                <LayoutDashboard size={23} />
+                <span>DASHBOARD</span>
+              </Link>
+              <div className="w-[88%] flex place-self-end flex-col gap-1 justify-start items-center">
+                {dashboardNavs.map((nav) => (
+                  <Link
+                    key={nav.name}
+                    href={nav.path}
+                    className={`w-full flex justify-start pl-2 gap-2 items-center py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
+                      nav.path === path
+                        ? "text-pink-400/60 bg-pink-300/20"
+                        : "text-primary/30"
+                    }`}
+                  >
+                    <li className="flex justify-center items-center gap-2">
+                      <nav.icon size={20} /> {nav.name}
+                    </li>
+                  </Link>
+                ))}
+              </div>
+
+              <Link
+                href={"/"}
+                className={`w-full flex justify-start pl-2 gap-2 items-center py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
+                  path === "/"
+                    ? "text-pink-400/60"
+                    : "text-primary/30"
+                }`}
+              >
+                <Home size={23} />
+                Client Page
+              </Link>
               {userId && (
                 <Link
                   href={"/favorites"}
-                  className={`hover:text-pink-400/60 smooth-effect ${
+                  className={`w-full flex justify-start pl-2 gap-2 items-center py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
                     path === "/favorites"
                       ? "text-pink-400/60"
-                      : "text-white/80"
+                      : "text-primary/30"
                   }`}
                 >
+                  <Heart size={23} />
                   Favorites
                 </Link>
               )}
@@ -107,6 +140,23 @@ const DashBoardNav = () => {
 
           {/* ----- Socials Icons ----- */}
         </div>
+
+        {!navModal && (
+          <div className="flex">
+            <Menu
+              size={28}
+              onClick={() => setNavModal(true)}
+              className="flex lg:hidden rounded-full p-1 smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 justify-center items-center cursor-pointer"
+            />
+          </div>
+        )}
+
+        {navModal && (
+          <DashboardNavModal
+            setNavModal={setNavModal}
+            userId={userId}
+          />
+        )}
       </div>
     </nav>
   );

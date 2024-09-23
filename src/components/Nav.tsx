@@ -3,20 +3,25 @@
 import { navLinks } from "@/lib/linksData";
 import SearchBar from "./SearchBar";
 import Link from "next/link";
-import Logo from "../app/icon.png";
+import Logo from "../../public/logo2.png";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import UserButtonMenu from "./users/UserButtonMenu";
+import { Menu } from "lucide-react";
+import { useState } from "react";
+import NavModal from "./NavModal";
 
 const Nav = () => {
+  const [navModal, setNavModal] = useState(false);
   const path = usePathname();
 
   const { userId } = useAuth();
 
   return (
-    <nav className="w-screen fixed top-0 left-0 z-30 py-3 bg-pink-950/20 backdrop-blur-md shadow-sm">
+    <nav className="w-screen fixed top-0 left-0 z-30 py-3 bg-pink-950/20 md:backdrop-blur-md shadow-sm">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-5 xl:px-2">
+        {/* Logo */}
         <Link
           href={"/"}
           className=" flex flex-row gap-2 justify-center items-center"
@@ -30,18 +35,18 @@ const Nav = () => {
               className="object-cover"
             />
           </div>
-          <span className="hidden sm:block font-sacramento font-bold text-md md:text-lg bg-clip-text text-transparent bg-gradient-to-br from-pink-700 via-pink-200 to-orange-900 via-30%">
+          <span className="hidden sm:block font-sacramento font-bold text-lg md:text-xl bg-clip-text text-transparent bg-gradient-to-br from-pink-700 via-pink-200 to-orange-900 via-30%">
             SpiralSrc
           </span>
         </Link>
-        <div className="flex justify-between items-center gap-20">
-          {/* {path === "/" ? ( */}
+
+        {/* Search Bar */}
+        <div className="flex justify-between items-center gap-10">
           <div className="w-72 hidden lg:flex">
             <SearchBar />
           </div>
-          {/* ) : null} */}
 
-          <ul className="hidden md:flex justify-center items-center gap-10">
+          <ul className="hidden md:flex justify-center items-center gap-5">
             {navLinks.map((nav) => (
               <Link
                 key={nav.name}
@@ -69,7 +74,9 @@ const Nav = () => {
             )}
           </ul>
         </div>
-        <div className="flex gap-2 justify-center items-center">
+
+        {/* Potfolio & User buton */}
+        <div className="hidden md:flex gap-2 justify-center items-center">
           <a
             href={"https://spiralsrc.dev/"}
             target="_blank"
@@ -90,6 +97,21 @@ const Nav = () => {
             </Link>
           )}
         </div>
+
+        {/* Menu Button */}
+        {!navModal && (
+          <div className="flex md:hidden">
+            <Menu
+              size={28}
+              onClick={() => setNavModal(true)}
+              className="flex md:hidden rounded-full p-1 smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 justify-center items-center cursor-pointer"
+            />
+          </div>
+        )}
+
+        {navModal && (
+          <NavModal setNavModal={setNavModal} userId={userId} />
+        )}
       </div>
     </nav>
   );

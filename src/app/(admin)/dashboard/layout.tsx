@@ -8,10 +8,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="w-screen h-screen flex">
-      <div className="w-[15%] h-full">
-        <DashBoardNav />
-      </div>
-      <main className="w-65% h-full overflow-y-scroll">
+      <DashBoardNav />
+
+      <main className="overflow-y-scroll flex flex-col">
         <div className="h-[30vh] xl:h-[35vh]">
           <TopImage />
         </div>
