@@ -19,7 +19,11 @@ const Nav = () => {
   const { userId } = useAuth();
 
   return (
-    <nav className="w-screen fixed top-0 left-0 z-30 py-3 bg-pink-950/20 md:backdrop-blur-md shadow-sm">
+    <nav
+      className={`w-screen fixed top-0 left-0 z-30 py-3 bg-pink-950/20 shadow-sm ${
+        !navModal ? "backdrop-blur-md" : null
+      }`}
+    >
       <div className="max-w-7xl mx-auto flex justify-between items-center px-5 xl:px-2">
         {/* Logo */}
         <Link

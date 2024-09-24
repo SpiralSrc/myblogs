@@ -5,6 +5,7 @@ import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 import SubmitButton from "../reusable_ui/SubmitButton";
 import { useRouter } from "next/navigation";
+import DeleteSubmitButton from "../reusable_ui/DeleteSubmitButton";
 
 const DeleteReply = ({ id }: any) => {
   const [modal, setModal] = useState(false);
@@ -31,19 +32,19 @@ const DeleteReply = ({ id }: any) => {
             className="absolute top-4 right-6 cursor-pointer select-none z-[2] p-2 rounded-full transition-all duration-700 ease-in-out hover:shadow-lg hover:backdrop-blur-md hover:bg-orange-400/20"
           />
           <div
-            className="flex flex-col justify-center items-center gap-10 bg-pink-100 rounded-xl shadow-lg text-slate-600 p-5"
+            className="flex flex-col justify-center items-center gap-10 bg-pink-100/90 rounded-xl shadow-lg text-slate-600 p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <p className="font-semibold">
               Are you sure you want to delete this comment? This
               action cannot be undone.
             </p>
-            <div className="flex flex-row gap-10 justify-center items-end self-end">
+            <div className="flex flex-row gap-5 justify-center items-end self-end">
               <button
                 onClick={() => setModal(false)}
-                className="py-2 px-3 smooth-effect border border-transparent hover:border-slate-400 hover:bg-slate-400/50 hover:shadow-md rounded-md"
+                className="py-1 px-3 smooth-effect border border-transparent hover:border-slate-400 hover:bg-slate-400/50 hover:shadow-md rounded-md"
               >
-                No
+                Cancel
               </button>
               <form
                 action={async (formData: FormData) => {
@@ -53,7 +54,7 @@ const DeleteReply = ({ id }: any) => {
                 }}
               >
                 <input type="hidden" name="id" value={id} />
-                <SubmitButton>Yes</SubmitButton>
+                <DeleteSubmitButton>Delete</DeleteSubmitButton>
               </form>
             </div>
           </div>

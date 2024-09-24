@@ -32,6 +32,7 @@ export default async function PostsPage({
       <h1>Posts</h1>
       <div className="line mb-10"></div>
       <div className="w-full flex flex-col">
+        {/* Search Bar & Write Post Button */}
         <div className="flex flex-col-reverse xs:flex-row self-end justify-end relative gap-10">
           {/* Search Query */}
           {query && (
@@ -39,13 +40,13 @@ export default async function PostsPage({
               <AdminBlogList query={query} />
             </div>
           )}
-          <div className="w-96">
+          <div className="w-72 xs:w-96">
             <SearchBar />
           </div>
           <div className="flex place-self-end">
             <Link
               href={"/dashboard/posts/write-post"}
-              className=" btn bg-red-400/70 rounded-xl hover:bg-red-200 text-sm xs:text-base"
+              className="flex place-self-end py-1 px-3 text-sm md:text-base md:py-[5px] md:px-5 rounded-xl border border-pink-400/50 bg-pink-400/30 smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20"
             >
               Write a post
             </Link>
@@ -55,13 +56,13 @@ export default async function PostsPage({
         {/* ----- Post Table ----- */}
         <div className="w-full h-full flex flex-col mt-20">
           {posts?.length !== 0 ? (
-            <table className="w-3/4 mx-auto">
+            <table className="w-[96%] sm:w-3/4 mx-auto">
               <thead>
                 <tr className="font-bold">
                   <td className="flex-1">Title</td>
                   <td className="flex-1">Category</td>
                   <td className="flex-1">Status</td>
-                  <td className="w-28 text-end justify-end items-center">
+                  <td className="w-20 sm:w-28 text-end justify-end items-center">
                     Options
                   </td>
                 </tr>
@@ -82,7 +83,7 @@ export default async function PostsPage({
                         ? "Published"
                         : "Draft"}
                     </td>
-                    <td className="w-28 flex justify-end items-center gap-3">
+                    <td className="w-20 sm:w-28 flex justify-end items-center gap-3">
                       <Link
                         href={`/dashboard/posts/${post.slug}/edit`}
                       >

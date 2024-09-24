@@ -18,7 +18,11 @@ const DashBoardNav = () => {
   const { userId } = useAuth();
 
   return (
-    <nav className="w-screen lg:w-72 xl:w-80 fixed lg:static top-0 left-0 z-30 py-3 bg-pink-950/20 lg:h-full flex lg:flex-col lg:py-20 lg:gr lg:backdrop-blur-md shadow-xl">
+    <nav
+      className={`w-screen lg:w-72 xl:w-80 fixed lg:static top-0 left-0 z-30 py-3 bg-pink-950/20 lg:h-full flex lg:flex-col lg:py-20 lg:gr  shadow-xl ${
+        !navModal ? "backdrop-blur-md" : null
+      }`}
+    >
       <div className="w-full lg:h-full mx-auto flex lg:flex-col justify-between items-center px-5 xl:px-2">
         <div className="w-full h-full flex lg:flex-col gap-10">
           {/* ----- Logo ----- */}
@@ -130,7 +134,7 @@ const DashBoardNav = () => {
                   {
                     <social.icon
                       size={12}
-                      className="text-secondary/40 "
+                      className="text-secondary/40 hover:text-pink-400/60 smooth-effect"
                     />
                   }
                 </a>

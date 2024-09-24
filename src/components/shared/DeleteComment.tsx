@@ -5,6 +5,7 @@ import { Trash2, X } from "lucide-react";
 import { useState } from "react";
 import SubmitButton from "../reusable_ui/SubmitButton";
 import { useRouter } from "next/navigation";
+import DeleteSubmitButton from "../reusable_ui/DeleteSubmitButton";
 
 const DeleteComment = ({ id }: any) => {
   const [modal, setModal] = useState(false);
@@ -43,7 +44,7 @@ const DeleteComment = ({ id }: any) => {
                 onClick={() => setModal(false)}
                 className="py-2 px-3 smooth-effect border border-transparent hover:border-slate-400 hover:bg-slate-400/50 hover:shadow-md rounded-md"
               >
-                No
+                Cancel
               </button>
               <form
                 action={async (formData: FormData) => {
@@ -53,7 +54,7 @@ const DeleteComment = ({ id }: any) => {
                 }}
               >
                 <input type="hidden" name="id" value={id} />
-                <SubmitButton>Yes</SubmitButton>
+                <DeleteSubmitButton>Delete</DeleteSubmitButton>
               </form>
             </div>
           </div>

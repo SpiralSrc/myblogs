@@ -1,6 +1,6 @@
 const AboutBlog = () => {
   return (
-    <div className="w-[95%] mx-auto flex flex-col gap-10 text-base">
+    <div className="w-[95%] mx-auto flex flex-col gap-10 text-[15px] xs:text-base">
       <p className="text-justify text-pretty indent-10">
         Welcome to my personal blog! I&apos;m a passionate software
         developer with a love for exploring a wide range of topics
@@ -18,7 +18,7 @@ const AboutBlog = () => {
             While I do enjoy diving deep into the world of software
             development, you&apos;ll also find posts about:
           </p>
-          <ul className="list-disc pl-20">
+          <ul className="list-disc pl-20 mt-3">
             <li>
               <strong>Technology Trends:</strong> My take on the
               latest advancements and how they impact our lives.

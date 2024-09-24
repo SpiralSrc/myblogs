@@ -137,7 +137,7 @@ const DashboardNavModal = ({ setNavModal, userId }: any) => {
                     {
                       <social.icon
                         size={12}
-                        className="text-secondary/40 "
+                        className="text-secondary/40 hover:text-pink-400/60 smooth-effect"
                       />
                     }
                   </a>

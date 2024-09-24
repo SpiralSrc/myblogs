@@ -1,7 +1,5 @@
-import { getCategories } from "@/actions/action";
 import { prisma } from "@/lib/prismadb";
 import { checkRole } from "@/lib/utils/roles";
-import { auth } from "@clerk/nextjs/server";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -27,13 +25,13 @@ export default async function page() {
       <div className="w-full flex flex-col">
         <Link
           href={"/dashboard/categories/add-category"}
-          className="self-end btn bg-red-400/70 rounded-xl hover:bg-red-200 text-sm xs:text-base"
+          className="flex place-self-end py-1 px-3 text-sm md:text-base md:py-[5px] md:px-5 rounded-xl border border-pink-400/50 bg-pink-400/30 smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20"
         >
           Add Category
         </Link>
         <div className="w-full h-full flex flex-col mt-20">
           {categories?.length !== 0 ? (
-            <table className="w-3/4 mx-auto">
+            <table className="w-[95%] sm:w-3/4 mx-auto">
               <thead>
                 <tr>
                   <td className="flex-1">Category Name</td>
@@ -47,7 +45,9 @@ export default async function page() {
                 <tbody key={category.id}>
                   <tr className="border-pink-400/5">
                     <td className="flex-1">{category.name}</td>
-                    <td className="flex-1">{categories.length}</td>
+                    <td className="flex-1">
+                      {category.posts.length}
+                    </td>
                     <td className="flex w-1/4 justify-end items-center gap-3">
                       <Link
                         href={`/dashboard/categories/${category.slug}/edit`}

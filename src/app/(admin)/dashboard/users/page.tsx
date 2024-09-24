@@ -14,15 +14,15 @@ export default async function UsersPage() {
       <div className="line mb-10"></div>
       <div className="w-full h-full flex flex-col">
         {users?.length !== 0 ? (
-          <table className="w-3/4 mx-auto">
+          <table className="w-[95%] sm:w-3/4 mx-auto">
             <thead>
               <tr>
                 <td className="flex-1">First Name</td>
                 <td className="flex-1">Last Name</td>
                 <td className="flex-1">Email</td>
-                <td className="flex w-1/4 justify-end items-center">
+                {/* <td className="flex w-1/4 justify-end items-center">
                   Options
-                </td>
+                </td> */}
               </tr>
             </thead>
             {users?.map((user) => (
@@ -30,9 +30,9 @@ export default async function UsersPage() {
                 <tr className="border-pink-400/5">
                   <td className="flex-1">{user.firstName}</td>
                   <td className="flex-1">{user.lastName}</td>
-                  <td className="flex-1">{user.email}</td>
-                  <td className="flex w-1/4 justify-end items-center gap-3">
-                    {/* <Link
+                  <td className="flex-1 truncate">{user.email}</td>
+                  {/* <td className="flex w-1/4 justify-end items-center gap-3">
+                    <Link
                         href={`/dashboard/categories/${category.slug}/edit`}
                       >
                         <Edit
@@ -48,8 +48,8 @@ export default async function UsersPage() {
                           size={15}
                           className="text-red-300/20 hover:text-red-500 smooth-effect"
                         />
-                      </Link> */}
-                  </td>
+                      </Link>
+                  </td> */}
                 </tr>
               </tbody>
             ))}

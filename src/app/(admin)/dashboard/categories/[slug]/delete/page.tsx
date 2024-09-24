@@ -1,5 +1,5 @@
 import { deleteCategory } from "@/actions/action";
-import SubmitButton from "@/components/reusable_ui/SubmitButton";
+import DeleteSubmitButton from "@/components/reusable_ui/DeleteSubmitButton";
 import { checkRole } from "@/lib/utils/roles";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -21,16 +21,16 @@ export default function DeleteCategoryPage({
             Are you sure you want to delete this category? This action
             cannot be undone.
           </p>
-          <div className="flex flex-row gap-10 justify-center items-end self-end">
+          <div className="flex flex-row gap-5 justify-center items-end self-end">
             <Link
               href={"/dashboard/categories"}
-              className="py-2 px-3 smooth-effect border border-transparent hover:border-slate-400 hover:bg-slate-400/50 hover:shadow-md rounded-md"
+              className="py-1 px-3 smooth-effect border border-transparent hover:border-slate-400 hover:bg-slate-400/50 hover:shadow-md rounded-md"
             >
-              No
+              Cancel
             </Link>
             <form action={deleteCategory}>
               <input type="hidden" name="slug" value={params.slug} />
-              <SubmitButton>Yes</SubmitButton>
+              <DeleteSubmitButton>Delete</DeleteSubmitButton>
             </form>
           </div>
         </div>

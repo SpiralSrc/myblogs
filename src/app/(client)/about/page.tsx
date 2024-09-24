@@ -1,8 +1,6 @@
 import BlogList from "@/components/BlogList";
 import AboutBlog from "@/components/client/about/AboutBlog";
 import Hero from "@/components/shared/Hero";
-import { prisma } from "@/lib/prismadb";
-import Image from "next/image";
 
 export default async function AboutPage({
   searchParams,
@@ -19,7 +17,7 @@ export default async function AboutPage({
           <BlogList query={query} />
         </div>
       )}
-      <div className="wrapper">
+      <div className="wrapper mb-20">
         <div className="w-full flex">
           {/* Left */}
           <div className="w-full flex flex-col justify-center items-center">
@@ -29,6 +27,7 @@ export default async function AboutPage({
             {/* ----- About Content ------ */}
 
             <AboutBlog />
+            <div className="line my-10"></div>
           </div>
         </div>
       </div>

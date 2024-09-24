@@ -57,23 +57,29 @@ export default async function page() {
       <div className="w-full flex flex-wrap gap-10 justify-center items-center">
         {/* ----- Posts ----- */}
         <div className="gr py-5 px-20 flex flex-col rounded-lg">
-          <h3 className="text-xl font-bold">Total Posts</h3>
-          <div className="line mb-3"></div>
+          <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold">
+            Total Posts
+          </h3>
+          <div className="line mb-4"></div>
           <span className="text-center text-2xl">{posts.length}</span>
         </div>
 
         {/* ----- Categories ----- */}
         <div className="bg-black/20 py-5 px-12 flex flex-col rounded-lg">
-          <h3 className="text-xl font-bold">Total Categories</h3>
-          <div className="line mb-3"></div>
+          <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold">
+            Total Categories
+          </h3>
+          <div className="line mb-4"></div>
           <span className="text-center text-2xl">
             {categories.length}
           </span>
         </div>
 
         <div className="bg-pink-900/30 py-5 px-20 flex flex-col rounded-lg">
-          <h3 className="text-xl font-bold">Total Tags</h3>
-          <div className="line mb-3"></div>
+          <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold">
+            Total Tags
+          </h3>
+          <div className="line mb-4"></div>
           <span className="text-center text-2xl">{tags.length}</span>
         </div>
       </div>
