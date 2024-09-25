@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SubmitButton from "../reusable_ui/SubmitButton";
+import SubmitButton from "@/components/reusable_ui/SubmitButton";
 import { createComment } from "@/actions/action";
 import { useRouter } from "next/navigation";
 

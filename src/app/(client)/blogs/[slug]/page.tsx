@@ -11,14 +11,13 @@ import Image from "next/image";
 import RightSideBar from "@/components/shared/RightSideBar";
 // import CommentForm from "@/components/shared/CommentForm";
 import { Circle, Eye, User } from "lucide-react";
-import CommentForm from "@/components/shared/CommentForm";
-import ReplyForm from "@/components/shared/ReplyForm";
+import CommentForm from "@/components/client/posts/CommentForm";
+import ReplyForm from "@/components/client/posts/ReplyForm";
 import { auth } from "@clerk/nextjs/server";
-import LikePostButton from "@/components/shared/LikePostButton";
-import DeleteComment from "@/components/shared/DeleteComment";
-import DeleteReply from "@/components/shared/DeleteReply";
+import LikePostButton from "@/components/client/posts/LikePostButton";
+import DeleteComment from "@/components/client/posts/DeleteComment";
+import DeleteReply from "@/components/client/posts/DeleteReply";
 import BlogList from "@/components/BlogList";
-import ReportViews from "@/components/shared/ReportViews";
 import { incrementPageView } from "@/actions/action";
 
 interface PostProps {
@@ -93,8 +92,21 @@ export async function generateMetadata({
   const post = await getSinglePost(slug);
 
   return {
-    title: post.title + " - Tags",
+    title: post.title,
     description: `Post is about ${post.title} which is related to ${post.category.name}.`,
+    openGraph: {
+      title: post.title,
+      description: post.desc,
+      url: `blogs/${post.slug}`,
+      siteName: "SpiralSrc Blogs",
+      images: [
+        {
+          url: post.category.imageUrl,
+          width: 1260,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

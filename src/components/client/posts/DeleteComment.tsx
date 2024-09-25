@@ -3,9 +3,8 @@
 import { deleteComment } from "@/actions/action";
 import { Trash2, X } from "lucide-react";
 import { useState } from "react";
-import SubmitButton from "../reusable_ui/SubmitButton";
 import { useRouter } from "next/navigation";
-import DeleteSubmitButton from "../reusable_ui/DeleteSubmitButton";
+import DeleteSubmitButton from "@/components/reusable_ui/DeleteSubmitButton";
 
 const DeleteComment = ({ id }: any) => {
   const [modal, setModal] = useState(false);

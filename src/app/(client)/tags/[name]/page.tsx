@@ -1,11 +1,7 @@
 import BlogList from "@/components/BlogList";
 import Hero from "@/components/shared/Hero";
 import { prisma } from "@/lib/prismadb";
-import {
-  truncateDesc,
-  truncateTitle,
-  truncateTitle2,
-} from "@/lib/utils/truncate";
+import { truncateDesc, truncateTitle2 } from "@/lib/utils/truncate";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -42,7 +38,7 @@ export async function generateMetadata({
   const tag = await getTags(name);
 
   return {
-    title: tag.name + " - Tags",
+    title: tag.name + " - Tag",
     description: `Posts related to ${tag.name}`,
   };
 }

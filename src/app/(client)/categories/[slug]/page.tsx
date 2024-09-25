@@ -1,18 +1,21 @@
 import BlogList from "@/components/BlogList";
 import { prisma } from "@/lib/prismadb";
 import { truncateDesc, truncateTitle2 } from "@/lib/utils/truncate";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { cache } from "react";
 
-export default async function page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams?: { query?: string };
-}) {
-  const slug = params.slug;
+interface CategoryProps {
+  params: {
+    id?: string;
+    slug: string;
+    name: string;
+  };
+}
 
+const fetchCategory = cache(async (slug: string) => {
   const category = await prisma.category.findFirst({
     where: {
       slug,
@@ -26,7 +29,46 @@ export default async function page({
     },
   });
 
+  if (!category) notFound();
+
+  return category;
+});
+
+export async function generateMetadata({
+  params: { slug },
+}: CategoryProps): Promise<Metadata> {
+  const category = await fetchCategory(slug);
+
+  return {
+    title: category.name + " - Category",
+    description: `Posts about ${category.name}.`,
+    openGraph: {
+      title: category.name + " - Category",
+      description: `Posts about ${category.name}.`,
+      url: `categories/${category.slug}`,
+      siteName: "SpiralSrc Blogs",
+      images: [
+        {
+          url: category.imageUrl,
+          width: 1260,
+          height: 630,
+        },
+      ],
+    },
+  };
+}
+
+export default async function page({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams?: { query?: string };
+}) {
   const query = searchParams?.query || "";
+
+  const slug = params.slug;
+  const category = await fetchCategory(slug);
 
   return (
     <>

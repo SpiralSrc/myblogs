@@ -22,8 +22,12 @@ const baseUrl = process.env.MY_URL as string;
 
 export const metadata: Metadata = {
   metadataBase: new URL(`${baseUrl}`),
-  title: "SpiralSrc Blogs",
-  description: "SpiralSrc blogs",
+  title: {
+    default: "SpiralSrc Blogs",
+    template: "%s | SpiralSrc Blogs",
+  },
+  description:
+    "Welcome to my personal blog! This blog is my little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
 };
 
 export default function RootLayout({

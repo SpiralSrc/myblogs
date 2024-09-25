@@ -1,6 +1,11 @@
 import BlogList from "@/components/BlogList";
 import AboutBlog from "@/components/client/about/AboutBlog";
 import Hero from "@/components/shared/Hero";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+};
 
 export default async function AboutPage({
   searchParams,

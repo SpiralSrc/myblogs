@@ -3,7 +3,12 @@ import Hero from "@/components/shared/Hero";
 import { prisma } from "@/lib/prismadb";
 import { truncateDesc, truncateTitle2 } from "@/lib/utils/truncate";
 import { auth } from "@clerk/nextjs/server";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Favorites",
+};
 
 export default async function FavoritesPage({
   searchParams,
