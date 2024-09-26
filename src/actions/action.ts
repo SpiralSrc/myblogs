@@ -298,7 +298,13 @@ export async function updatePost(slug: string, formData: FormData) {
 
     const existingTags = await prisma.post.findUnique({
       where: { slug },
-      select: { tags: true },
+      select: {
+        tags: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     const newTags = parsedData.tags.filter((tag) => {
