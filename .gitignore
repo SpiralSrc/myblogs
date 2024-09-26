@@ -17,7 +17,11 @@
 /build
 
 # Database
+<<<<<<< HEAD
 *.db
+=======
+.db
+>>>>>>> f87e9b64ed5092fb7081b939764b4096bf77cee8
 
 # misc
 .DS_Store
