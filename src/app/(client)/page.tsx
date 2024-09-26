@@ -33,7 +33,8 @@ export default async function ClientHome({
   });
 
   if (!newPost) {
-    return new Response("Error loading the post");
+    console.log("Error loading posts");
+    return null;
   }
 
   return (
