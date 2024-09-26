@@ -67,37 +67,6 @@ export async function POST(req: Request) {
         throw new Error("Email address not found");
       }
 
-      // const existingUser = await prisma.user.findUnique({
-      //   where: {
-      //     email: emailAddress,
-      //   },
-      // });
-
-      // if (existingUser) {
-      //   await prisma.user.update({
-      //     where: {
-      //       id: existingUser.id,
-      //     },
-      //     data: {
-      //       firstName: evt.data.first_name,
-      //       lastName: evt.data.last_name,
-      //       avatar: evt.data.image_url,
-      //     },
-      //   });
-      // } else {
-      //   await prisma.user.create({
-      //     data: {
-      //       // id: evt.data.id, // Use string ID
-      //       clerkId: evt.data.id, //clerk id
-      //       email: emailAddress,
-      //       //   username: evt.data.username,
-      //       firstName: evt.data.first_name,
-      //       lastName: evt.data.last_name,
-      //       avatar: evt.data.image_url,
-      //     },
-      //   });
-      // }
-
       //Use a transaction to ensure atomicity
       await prisma.$transaction(async (tx) => {
         const existingUser = await tx.user.findUnique({
@@ -143,6 +112,43 @@ export async function POST(req: Request) {
     } catch (error) {
       console.log(error);
       return new Response("Failed to process user!", { status: 500 });
+    }
+  }
+
+  // User Delete
+  if (eventType === "user.deleted") {
+    try {
+      const clerkId = evt.data.id;
+
+      if (!clerkId) {
+        throw new Error("clerkId not found!");
+      }
+
+      await prisma.$transaction(async (tx) => {
+        const existingUser = await tx.user.findUnique({
+          where: {
+            clerkId,
+          },
+        });
+
+        if (existingUser) {
+          await tx.user.delete({
+            where: {
+              clerkId,
+            },
+          });
+          console.log("User deleted successfully");
+        } else {
+          console.log("User not found for deletion");
+        }
+      });
+
+      return new Response("User has been deleted successfully!", {
+        status: 200,
+      });
+    } catch (error) {
+      console.log(error);
+      return new Response("Failed to delete user!", { status: 500 });
     }
   }
 

@@ -42,7 +42,9 @@ export default async function FavoritesPage({
 
   const query = searchParams?.query || "";
 
-  const userLikedPosts = currentUser.likes.map((like) => like.post);
+  const userLikedPosts = currentUser.likes
+    .map((like) => like.post)
+    .filter((post) => post.isPublished === true);
 
   return (
     <>

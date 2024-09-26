@@ -22,6 +22,9 @@ const fetchCategory = cache(async (slug: string) => {
     },
     include: {
       posts: {
+        where: {
+          isPublished: true,
+        },
         include: {
           tags: true,
         },

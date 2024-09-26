@@ -27,7 +27,9 @@ const getTags = cache(async (name: string) => {
     },
   });
 
-  if (!tag) notFound();
+  if (!tag) {
+    return notFound();
+  }
 
   return tag;
 });
@@ -68,7 +70,7 @@ export default async function SinglePostPage({
         <h1>{tag?.name}</h1>
         <div className="line mb-10"></div>
         <div className="w-full mx-auto mt-10 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-3 justify-center items-center gap-10">
-          {tag.posts.length > 0 ? (
+          {tag?.posts && tag.posts.length > 0 ? (
             tag.posts.map((post) => (
               <div
                 key={post.id}

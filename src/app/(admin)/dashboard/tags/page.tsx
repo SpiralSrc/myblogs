@@ -36,7 +36,7 @@ export default async function page() {
                 </td>
               </tr>
             </thead>
-            {tags ? (
+            {tags.length !== 0 ? (
               tags.map((tag) => (
                 <tbody key={tag.id}>
                   <tr className="border-pink-400/5">

@@ -13,8 +13,6 @@ import {
   tagsSchema,
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
-import { disconnect } from "process";
-import { connect } from "http2";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -40,6 +38,22 @@ export async function deleteImage(publicId: string) {
       status: 500,
     });
   }
+}
+
+//----------------------------- User ---------------------------------
+
+// Delete User Admin only
+export async function deleteUser(formData: FormData) {
+  const clerkId = formData.get("clerkId") as string;
+
+  await prisma.user.delete({
+    where: {
+      clerkId,
+    },
+  });
+
+  revalidatePath("/dashboard/users");
+  redirect("/dashboard/users");
 }
 
 //----------------------------- Category ---------------------------------
