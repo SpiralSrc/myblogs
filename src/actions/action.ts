@@ -236,7 +236,7 @@ export async function createPost(formData: FormData) {
         title: parsedData.title,
         slug: newSlug,
         user: {
-          connect: { clerkId: userId },
+          connect: { clerkId: user.clerkId },
         },
         isPublished: parsedData.isPublished,
         desc: parsedData.desc,
