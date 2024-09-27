@@ -307,7 +307,7 @@ export async function updatePost(slug: string, formData: FormData) {
       },
     });
 
-    const newTags = parsedData.tags.filter((tag) => {
+    const newTags = parsedData.tags.filter((tag: string) => {
       const existingTag = existingTags?.tags.find(
         (t: any) => t.name === tag
       );
@@ -329,12 +329,12 @@ export async function updatePost(slug: string, formData: FormData) {
           // Disconnect tags that are no longer present
           disconnect: existingTags?.tags
             .filter(
-              (existingTag) =>
+              (existingTag: any) =>
                 !parsedData.tags.includes(existingTag.name)
             )
-            .map((existingTag) => ({ name: existingTag.name })),
+            .map((existingTag: any) => ({ name: existingTag.name })),
           // Connect or create new tags
-          connectOrCreate: parsedData.tags.map((tag) => ({
+          connectOrCreate: parsedData.tags.map((tag: string) => ({
             where: { name: tag },
             create: { name: tag },
           })),
