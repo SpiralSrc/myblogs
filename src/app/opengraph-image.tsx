@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { Inter } from "next/font/google";
 
 export const runtime = "edge";
 
@@ -9,13 +10,20 @@ export const size = {
   height: 630,
 };
 
+const inter = Inter({
+  subsets: ["cyrillic"],
+  weight: "400",
+  variable: "--font-inter",
+  style: ["normal"],
+});
+
 export const contentType = "../../public/seo-image.png";
 
 // Image generation
 export default async function Image() {
   // Font
   const interSemiBold = fetch(
-    new URL("./Inter-SemiBold.ttf", import.meta.url)
+    new URL(`${inter.variable}`, import.meta.url)
   ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
