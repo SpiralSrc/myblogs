@@ -63,7 +63,7 @@ body::-webkit-scrollbar {
   .post-body {
     color: antiquewhite;
 
-    @apply prose-blockquote:text-inherit inset-10 prose-blockquote:w-[95%] prose-blockquote:mx-auto prose-pre:bg-transparent prose-blockquote:border-none prose-video:rounded-lg prose-video:w-[90%] lg:prose-video:w-[60%] prose-video:mx-auto prose-img:rounded-lg prose-img:w-[90%] lg:prose-img:w-[60%] prose-img:mx-auto marker:text-pink-400/30;
+    @apply prose-blockquote:text-inherit inset-10 prose-blockquote:w-[95%] prose-blockquote:mx-auto prose-pre:bg-transparent prose-blockquote:border-none prose-video:rounded-lg prose-video:w-[90%] lg:prose-video:w-[60%] prose-video:mx-auto prose-img:rounded-lg prose-img:w-[90%] lg:prose-img:w-[60%] prose-img:mx-auto marker:text-pink-400/30 prose-em:text-inherit;
   }
 
   .card {
