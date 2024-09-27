@@ -245,7 +245,7 @@ export async function createPost(formData: FormData) {
           connect: { id: category.id },
         },
         tags: {
-          connectOrCreate: parsedData.tags.map((tag) => ({
+          connectOrCreate: parsedData.tags.map((tag: string) => ({
             where: { name: tag },
             create: { name: tag },
           })),
@@ -309,7 +309,7 @@ export async function updatePost(slug: string, formData: FormData) {
 
     const newTags = parsedData.tags.filter((tag) => {
       const existingTag = existingTags?.tags.find(
-        (t) => t.name === tag
+        (t: any) => t.name === tag
       );
       return existingTag ? existingTag.name : null;
     });
