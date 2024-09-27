@@ -72,6 +72,7 @@ const DashboardNavModal = ({ setNavModal, userId }: any) => {
               <ul className="w-[85%] flex flex-col justify-center items-center gap-2 md:gap-5 text-sm md:text-base">
                 <Link
                   href={"/dashboard"}
+                  onClick={() => setNavModal(false)}
                   className={`w-full flex justify-start pl-3 gap-2 items-center py-1 xxs:py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
                     path === "/dashboard"
                       ? "text-pink-400/60 bg-pink-300/20"
@@ -86,6 +87,7 @@ const DashboardNavModal = ({ setNavModal, userId }: any) => {
                     <Link
                       key={nav.name}
                       href={nav.path}
+                      onClick={() => setNavModal(false)}
                       className={`w-full flex justify-start pl-3 gap-2 items-center py-1 xxs:py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
                         nav.path === path
                           ? "text-pink-400/60 bg-pink-300/20"
@@ -101,6 +103,7 @@ const DashboardNavModal = ({ setNavModal, userId }: any) => {
 
                 <Link
                   href={"/"}
+                  onClick={() => setNavModal(false)}
                   className={`w-full flex justify-start pl-3 gap-2 items-center py-1 xxs:py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
                     path === "/"
                       ? "text-pink-400/60"
@@ -113,6 +116,7 @@ const DashboardNavModal = ({ setNavModal, userId }: any) => {
                 {userId && (
                   <Link
                     href={"/favorites"}
+                    onClick={() => setNavModal(false)}
                     className={`w-full flex justify-start pl-3 gap-2 items-center py-1 xxs:py-2 rounded-xl smooth-effect hover:text-pink-400/60 hover:bg-pink-300/20 ${
                       path === "/favorites"
                         ? "text-pink-400/60"
