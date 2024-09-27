@@ -34,6 +34,13 @@ export const metadata: Metadata = {
       "Welcome to my personal blog! This blog is my little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
     url: baseUrl,
     siteName: "SpiralSrc Blogs",
+    images: [
+      {
+        url: "../../public/seo-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 };
 
