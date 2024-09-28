@@ -10,44 +10,6 @@ import Link from "next/link";
 import { checkRole } from "@/lib/utils/roles";
 import { Edit, Trash2 } from "lucide-react";
 
-interface PostProps {
-  params: {
-    slug: string;
-    name: string;
-  };
-}
-
-const getSinglePost = cache(async (slug: string) => {
-  const tag = await prisma.post.findFirst({
-    where: { slug },
-    include: {
-      category: {
-        select: {
-          name: true,
-        },
-      },
-      tags: true,
-      comments: true,
-      likes: true,
-    },
-  });
-
-  if (!tag) notFound();
-
-  return tag;
-});
-
-export async function generateMetadata({
-  params: { slug },
-}: PostProps): Promise<Metadata> {
-  const post = await getSinglePost(slug);
-
-  return {
-    title: post.title + " - Tags",
-    description: `Posts related to ${post.title}`,
-  };
-}
-
 // code block
 const CodeBlock = ({ children, className, node, ...rest }: any) => {
   const match = /language-(\w+)/.exec(className || "");
@@ -83,9 +45,23 @@ export default async function SinglePostPage({
     return notFound();
   }
 
-  const id = params.slug;
+  const slug = params.slug;
 
-  const post = await getSinglePost(id);
+  const post = await prisma.post.findFirst({
+    where: { slug },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      tags: true,
+      comments: true,
+      likes: true,
+    },
+  });
+
+  if (!post) notFound();
 
   return (
     <div className="wrapper relative">
@@ -107,14 +83,14 @@ export default async function SinglePostPage({
         </Link>
       </div>
 
-      <h1 className="mt-10">{post?.title}</h1>
+      <h1 className="mt-10">{post.title}</h1>
       <div className="line"></div>
       <div className="flex flex-col justify-center items-center gap-5 mt-10">
         <div>
           <span className="cat">{post.category.name}</span>
         </div>
         <div className="flex gap-5">
-          {post?.tags.map((tag) => {
+          {post.tags.map((tag) => {
             return (
               <Link
                 href={`/dashboard/tags/${tag.name}`}

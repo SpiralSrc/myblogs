@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto, Sacramento } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
@@ -29,7 +27,8 @@ export const metadata: Metadata = {
   description:
     "Welcome to my personal blog! This blog is my little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
   openGraph: {
-    title: "SpiralSrc Blogs",
+    title:
+      "SpiralSrc Blogs - My little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
     description:
       "Welcome to my personal blog! This blog is my little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
     url: baseUrl,

@@ -9,7 +9,6 @@ import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
 import Image from "next/image";
 import RightSideBar from "@/components/shared/RightSideBar";
-// import CommentForm from "@/components/shared/CommentForm";
 import { Circle, Eye, User } from "lucide-react";
 import CommentForm from "@/components/client/posts/CommentForm";
 import ReplyForm from "@/components/client/posts/ReplyForm";
@@ -181,12 +180,12 @@ export default async function SinglePostPage({
       <div className="wrapper">
         <div className="w-full h-full flex flex-col lg:flex-row md:gap-2 gap-10">
           <div className="w-full lg:w-[80%] mx-auto flex flex-col">
-            <h1>{post?.title}</h1>
+            <h1>{post.title}</h1>
             <div className="line"></div>
 
             {/* ----- Author Owner ------ */}
 
-            <div className="w-[60%] mx-auto flex justify-between items-center gap-2 mt-3">
+            <div className="w-[80%] lg:w-[60%] mx-auto flex justify-between items-center gap-2 mt-3">
               {/* Author */}
               <div className="flex gap-2">
                 <span className="text-sm text-secondary/90">by:</span>
@@ -212,7 +211,7 @@ export default async function SinglePostPage({
 
               {/* ----- Like Button & Page View ----- */}
 
-              <div className="flex justify-center items-center gap-5">
+              <div className="flex justify-center items-center gap-4">
                 {/* Page View */}
                 <div className="flex justify-center items-center gap-2 text-sm">
                   {/* <ReportViews slug={post.slug} /> */}

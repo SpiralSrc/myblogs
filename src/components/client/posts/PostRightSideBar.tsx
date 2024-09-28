@@ -1,7 +1,7 @@
-import Tags from "./Tags";
-import Categories from "./Categories";
+import Categories from "@/components/shared/Categories";
+import Tags from "@/components/shared/Tags";
 
-const PostRightSideBar = () => {
+const RightSideBar = ({ post }: any) => {
   return (
     <div className="sidebar w-[98%] mx-auto lg:h-[95%] mt-16 justify-start flex flex-col px-5 gap-10 lg:gap-20 py-10 lg:py-20">
       <div className="flex flex-col gap-3">
@@ -21,4 +21,4 @@ const PostRightSideBar = () => {
     </div>
   );
 };
-export default PostRightSideBar;
+export default RightSideBar;
