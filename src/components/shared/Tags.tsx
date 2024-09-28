@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prismadb";
-import { Tag as TagData } from "@prisma/client";
 import Link from "next/link";
 
 const Tags = async () => {
@@ -22,7 +21,7 @@ const Tags = async () => {
           {tag.posts.length !== 0 && (
             <Link
               href={`/tags/${tag.name}`}
-              className="hover:text-blue-300/90 smooth-effect"
+              className="hover:text-blue-300/90 smooth-effect text-sm"
             >
               #{tag.name}
             </Link>

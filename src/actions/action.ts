@@ -82,7 +82,8 @@ export async function createCategory(formData: FormData) {
     }
 
     const newSlug = parsedData.name
-      .replace(/\s+/g, "-")
+      .replace(/[^\w\s-]/g, "") // Remove special characters except for whitespace and hyphens
+      .replace(/\s+/g, "-") // Replace whitespace with hyphens
       .toLowerCase();
 
     await prisma.category.create({
@@ -128,7 +129,8 @@ export async function updateCategory(
     }
 
     const newSlug = parsedData.name
-      .replace(/\s+|\/+/g, "-")
+      .replace(/[^\w\s-]/g, "") // Remove special characters except for whitespace and hyphens
+      .replace(/\s+/g, "-") // Replace whitespace with hyphens
       .toLowerCase();
 
     await prisma.category.update({
@@ -228,7 +230,8 @@ export async function createPost(formData: FormData) {
     }
 
     const newSlug = parsedData.title
-      .replace(/\s+/g, "-")
+      .replace(/[^\w\s-]/g, "") // Removing special characters except for whitespace and hyphens
+      .replace(/\s+/g, "-") // Replacing whitespace with hyphens
       .toLowerCase();
 
     await prisma.post.create({
@@ -286,7 +289,8 @@ export async function updatePost(slug: string, formData: FormData) {
     });
 
     const newSlug = parsedData.title
-      .replace(/\s+/g, "-")
+      .replace(/[^\w\s-]/g, "") // Remove special characters except for whitespace and hyphens
+      .replace(/\s+/g, "-") // Replace whitespace with hyphens
       .toLowerCase();
 
     const cat = await prisma.category.findFirst({
