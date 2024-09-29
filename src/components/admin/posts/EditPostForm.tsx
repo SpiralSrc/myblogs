@@ -85,8 +85,6 @@ const EditPostForm = ({ post }: PostProps) => {
     });
     formData.set("isPublished", isPublished ? "true" : "false");
 
-    console.log("Form Data:", Object.fromEntries(formData.entries()));
-
     try {
       {
         await updatePost(post.slug, formData);
@@ -120,8 +118,6 @@ const EditPostForm = ({ post }: PostProps) => {
       return newTags;
     });
   };
-
-  console.log(isPublished);
 
   return (
     <>
