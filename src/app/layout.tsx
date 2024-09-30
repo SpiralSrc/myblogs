@@ -27,8 +27,7 @@ export const metadata: Metadata = {
   description:
     "Welcome to my personal blog! This blog is my little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
   openGraph: {
-    title:
-      "SpiralSrc Blogs - My little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
+    title: "SpiralSrc Blogs - Welcome to my personal blog website!",
     description:
       "Welcome to my personal blog! This blog is my little corner of the internet where I share my thoughts, experiences, and insights on various subjects that pique my interest.",
     url: baseUrl,
