@@ -8,6 +8,7 @@ const Hero = () => {
         <Image
           src={HeroImage}
           alt="hero banner"
+          placeholder="blur"
           priority
           fill
           sizes="100vw"

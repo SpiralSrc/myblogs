@@ -60,7 +60,7 @@ const LikePostButton = ({
         >
           <button>
             <Heart
-              size={19}
+              size={17}
               className={`text-red-400/50 ${
                 optimisticLike.isLiked && user
                   ? "fill-red-400"

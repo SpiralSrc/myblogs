@@ -60,13 +60,28 @@ const config: Config = {
               color: "inherit",
               textTransform: "capitalize",
             },
-            a: {
-              display: "flex",
+            h5: {
+              width: "90%",
+              margin: "0 auto",
+              paddingLeft: "15px",
+              paddingRight: "15px",
               color: "inherit",
+              backgroundColor: "rgb(38 31 34 / 0.7)",
+            },
+            h6: {
+              width: "90%",
+              fontSize: "13px",
+              margin: "0 auto",
+              paddingLeft: "15px",
+              paddingRight: "15px",
+              color: "inherit",
+            },
+            a: {
+              color: "rgb(96 165 250)",
               textDecoration: "none",
 
               "&:hover": {
-                color: "#f59f99b0",
+                color: "rgb(236 72 153 / 0.9)",
                 transition: "all 500ms ease",
               },
             },
@@ -86,9 +101,9 @@ const config: Config = {
               },
             },
             hr: {
-              borderColor: "rgba(54, 41, 41, 0.322)",
-              marginLeft: "20px",
-              marginRight: "20px",
+              borderColor: "rgb(120 113 108 / 0.2)",
+              marginLeft: "5%",
+              marginRight: "5%",
             },
             ul: {
               marginLeft: "25px",

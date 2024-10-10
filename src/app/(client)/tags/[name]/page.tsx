@@ -19,6 +19,9 @@ const getTags = cache(async (name: string) => {
     where: { name },
     include: {
       posts: {
+        where: {
+          isPublished: true,
+        },
         include: {
           category: true,
           tags: true,

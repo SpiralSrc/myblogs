@@ -14,11 +14,17 @@ export default async function page() {
     orderBy: {
       title: "asc",
     },
+    where: {
+      isPublished: true,
+    },
   });
 
   const mostViewedPosts = await prisma.post.findMany({
     orderBy: {
       view_count: "desc",
+    },
+    where: {
+      isPublished: true,
     },
     include: {
       category: true,
@@ -31,6 +37,9 @@ export default async function page() {
       likes: {
         _count: "desc",
       },
+    },
+    where: {
+      isPublished: true,
     },
     include: {
       category: true,
@@ -49,7 +58,19 @@ export default async function page() {
     orderBy: {
       name: "asc",
     },
+    include: {
+      posts: {
+        where: {
+          isPublished: true,
+        },
+      },
+    },
   });
+
+  // Filter tags to only include those with at least one published post
+  const tagsWithPublishedPosts = tags.filter(
+    (tag) => tag.posts.length > 0
+  );
 
   return (
     <div className="wrapper">
@@ -80,7 +101,9 @@ export default async function page() {
             Total Tags
           </h3>
           <div className="line mb-4"></div>
-          <span className="text-center text-2xl">{tags.length}</span>
+          <span className="text-center text-2xl">
+            {tagsWithPublishedPosts.length}
+          </span>
         </div>
       </div>
 

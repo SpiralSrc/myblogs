@@ -9,6 +9,7 @@ import CategoryList from "@/components/shared/CategoryList";
 import { Check, Eye, X } from "lucide-react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "@/components/shared/CopyButton";
 import { useUser } from "@clerk/nextjs";
@@ -35,6 +36,15 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
     <code {...rest} className={className}>
       {children}
     </code>
+  );
+};
+
+// Custom Table component
+const TableDiv = ({ children, ...props }: any) => {
+  return (
+    <div className="max-w-[60%] flex mx-auto">
+      <table {...props}>{children}</table>
+    </div>
   );
 };
 
@@ -258,7 +268,8 @@ const WritePostForm = () => {
 
             <div className="p-2 mt-10">
               <ReactMarkdown
-                components={{ code: CodeBlock }}
+                components={{ code: CodeBlock, table: TableDiv }}
+                remarkPlugins={[gfm]}
                 className="w-[98%] mx-auto max-w-none prose prose-stone post-body"
               >
                 {content}

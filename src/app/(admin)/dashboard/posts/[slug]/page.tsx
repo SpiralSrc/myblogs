@@ -5,6 +5,7 @@ import { cache } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import gfm from "remark-gfm";
 import CopyButton from "@/components/shared/CopyButton";
 import Link from "next/link";
 import { checkRole } from "@/lib/utils/roles";
@@ -33,6 +34,15 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
     <code {...rest} className={className}>
       {children}
     </code>
+  );
+};
+
+// Custom Table component
+const TableDiv = ({ children, ...props }: any) => {
+  return (
+    <div className="max-w-[60%] flex mx-auto">
+      <table {...props}>{children}</table>
+    </div>
   );
 };
 
@@ -95,7 +105,7 @@ export default async function SinglePostPage({
               <Link
                 href={`/dashboard/tags/${tag.name}`}
                 key={tag.id}
-                className="text-secondary/90"
+                className="tag"
               >
                 #{tag.name}
               </Link>
@@ -105,14 +115,15 @@ export default async function SinglePostPage({
       </div>
       <div className="p-2 mt-10">
         <ReactMarkdown
-          components={{ code: CodeBlock }}
-          className="w-[98%] mx-auto max-w-none prose prose-stone post-body"
+          components={{ code: CodeBlock, table: TableDiv }}
+          remarkPlugins={[gfm]}
+          className="w-[98%] mx-auto max-w-none post-body"
         >
           {post.content}
         </ReactMarkdown>
       </div>
       <div className="line mt-10"></div>
-      <div className="w-full flex justify-between items-center mt-5">
+      <div className="w-full flex justify-between items-center mt-20">
         <Link href={"/dashboard"} className="btn">
           Back to Dashboard...
         </Link>

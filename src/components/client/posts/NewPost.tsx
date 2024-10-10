@@ -11,7 +11,7 @@ interface PostProps {
 }
 
 export default async function NewPost({ post }: PostProps) {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 1500));
 
   return (
     <>
@@ -32,10 +32,7 @@ export default async function NewPost({ post }: PostProps) {
             </div>
             <div className="flex gap-5">
               {post.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="text-sm text-secondary/90"
-                >
+                <span key={tag.id} className="text-sm text-stone-500">
                   #{tag.name}
                 </span>
               ))}

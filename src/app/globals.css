@@ -63,7 +63,7 @@ body::-webkit-scrollbar {
   .post-body {
     color: antiquewhite;
 
-    @apply prose-blockquote:text-inherit inset-10 prose-blockquote:w-[95%] prose-blockquote:mx-auto prose-pre:bg-transparent prose-blockquote:border-none prose-video:rounded-lg prose-video:w-[90%] lg:prose-video:w-[60%] prose-video:mx-auto prose-img:rounded-lg prose-img:w-[90%] lg:prose-img:w-[60%] prose-img:mx-auto marker:text-pink-400/30 prose-em:text-inherit;
+    @apply prose prose-stone prose-sm md:prose-base lg:prose-lg prose-blockquote:text-inherit inset-10 prose-blockquote:w-[95%] prose-blockquote:mx-auto prose-pre:bg-transparent prose-blockquote:border-none prose-video:rounded-lg prose-video:w-[90%] lg:prose-video:w-[60%] prose-video:mx-auto prose-img:rounded-lg prose-img:w-[90%] lg:prose-img:w-[60%] prose-img:mx-auto marker:text-inherit prose-em:text-inherit prose-table:text-inherit prose-table:flex prose-th:text-inherit prose-tr:border-pink-400/5 prose-thead:border-pink-400/30 prose-td:px-4 prose-th:px-4 prose-th:flex-1 prose-td:flex-1 prose-td:text-wrap prose-th:text-wrap prose-th:pt-2 prose-h2:text-left;
   }
 
   .card {
@@ -111,7 +111,7 @@ body::-webkit-scrollbar {
   }
 
   .tag {
-    @apply text-sm text-secondary/90 hover:text-blue-300/90 smooth-effect;
+    @apply text-sm text-stone-500 hover:text-blue-300/90 smooth-effect;
   }
 
   .img-overlay {

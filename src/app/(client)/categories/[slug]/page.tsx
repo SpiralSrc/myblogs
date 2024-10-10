@@ -82,6 +82,7 @@ export default async function page({
             <Image
               src={category.imageUrl}
               alt={category.name}
+              placeholder="blur"
               fill
               className="object-cover"
             />

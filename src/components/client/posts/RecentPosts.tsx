@@ -11,7 +11,7 @@ interface PostProps {
 }
 
 export default async function RecentPosts({ post }: PostProps) {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 1500));
 
   return (
     <Link

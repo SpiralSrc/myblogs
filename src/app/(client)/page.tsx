@@ -52,16 +52,24 @@ export default async function ClientHome({
                 <h3 className="text-left font-bold text-lg md:text-xl mt-10">
                   Recent Posts
                 </h3>
-                <div className="w-[94%] xxs:w-[85%] md:w-full mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 gap-7">
-                  <Suspense fallback={<RecentPostsSkeleton />}>
-                    {newPost &&
-                      newPost
-                        .slice(1, 7)
-                        .map((post) => (
-                          <RecentPosts post={post} key={post.id} />
-                        ))}
-                  </Suspense>
-                </div>
+                {newPost.slice(1, 7).length !== 0 ? (
+                  <div className="w-[94%] xxs:w-[85%] md:w-full mx-auto mt-4 grid grid-cols-1 md:grid-cols-2 gap-7">
+                    <Suspense fallback={<RecentPostsSkeleton />}>
+                      {newPost &&
+                        newPost
+                          .slice(1, 7)
+                          .map((post) => (
+                            <RecentPosts post={post} key={post.id} />
+                          ))}
+                    </Suspense>
+                  </div>
+                ) : (
+                  <div className="w-full mt-10 flex justify-center">
+                    <p className="text-center font-medium">
+                      There are no recent posts published.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           ) : (

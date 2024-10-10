@@ -6,10 +6,11 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
 import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CopyButton from "@/components/shared/CopyButton";
+import gfm from "remark-gfm";
 import Link from "next/link";
 import Image from "next/image";
 import RightSideBar from "@/components/shared/RightSideBar";
-import { Circle, Eye, User } from "lucide-react";
+import { Circle, Eye, Heart, User } from "lucide-react";
 import CommentForm from "@/components/client/posts/CommentForm";
 import ReplyForm from "@/components/client/posts/ReplyForm";
 import { auth } from "@clerk/nextjs/server";
@@ -138,6 +139,15 @@ const CodeBlock = ({ children, className, node, ...rest }: any) => {
   );
 };
 
+// Custom Table component
+const TableDiv = ({ children, ...props }: any) => {
+  return (
+    <div className="max-w-[60%] flex mx-auto">
+      <table {...props}>{children}</table>
+    </div>
+  );
+};
+
 export default async function SinglePostPage({
   params,
   searchParams,
@@ -163,6 +173,7 @@ export default async function SinglePostPage({
         <Image
           src={post.category.imageUrl}
           alt={post.category.name}
+          placeholder="blur"
           fill
           className="object-cover"
         />
@@ -227,6 +238,17 @@ export default async function SinglePostPage({
                 {/* Like */}
 
                 <div className="flex justify-center items-center gap-2 my-2">
+                  <div className="flex justify-center items-center gap-1 text-sm">
+                    <span className="text-sm">
+                      {post.likes.length}
+                    </span>
+                    {!user && (
+                      <Link href={"/sign-in"} className="text-sm">
+                        <Heart size={16} className="fill-white" />
+                      </Link>
+                    )}
+                  </div>
+
                   <LikePostButton
                     slug={post.slug}
                     user={user}
@@ -234,15 +256,6 @@ export default async function SinglePostPage({
                       (like) => like.user.clerkId
                     )}
                   />
-
-                  <div className="flex gap-1 text-sm">
-                    <span className="text-sm">
-                      {post.likes.length}
-                    </span>
-                    <span className="text-sm">
-                      {post.likes.length > 1 ? "Likes" : "Like"}
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -277,8 +290,9 @@ export default async function SinglePostPage({
 
             <div className="p-2 mt-10 mb-20">
               <ReactMarkdown
-                components={{ code: CodeBlock }}
-                className="w-full mx-auto max-w-none prose prose-stone post-body"
+                components={{ code: CodeBlock, table: TableDiv }}
+                remarkPlugins={[gfm]}
+                className="w-[98%] mx-auto max-w-none post-body"
               >
                 {post.content}
               </ReactMarkdown>

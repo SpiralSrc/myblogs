@@ -10,22 +10,30 @@ const Tags = async () => {
     },
     select: {
       name: true,
-      posts: true,
+      posts: {
+        where: {
+          isPublished: true,
+        },
+      },
     },
     take: 12,
   });
+
+  // Filter tags to only include those with at least one published post
+  const tagsWithPublishedPosts = tags.filter(
+    (tag) => tag.posts.length > 0
+  );
+
   return (
     <>
-      {tags.map((tag) => (
+      {tagsWithPublishedPosts.map((tag) => (
         <div key={tag.name}>
-          {tag.posts.length !== 0 && (
-            <Link
-              href={`/tags/${tag.name}`}
-              className="hover:text-blue-300/90 smooth-effect text-sm"
-            >
-              #{tag.name}
-            </Link>
-          )}
+          <Link
+            href={`/tags/${tag.name}`}
+            className="hover:text-blue-300/90 smooth-effect text-sm"
+          >
+            #{tag.name}
+          </Link>
         </div>
       ))}
     </>

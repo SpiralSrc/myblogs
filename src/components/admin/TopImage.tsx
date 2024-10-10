@@ -7,6 +7,7 @@ const TopImage = () => {
       <div className="relative w-full h-full">
         <Image
           src={DashboardImage}
+          placeholder="blur"
           alt="hero banner"
           priority
           fill
